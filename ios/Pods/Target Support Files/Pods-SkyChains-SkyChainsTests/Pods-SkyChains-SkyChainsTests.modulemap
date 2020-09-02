@@ -1,0 +1,6 @@
+module Pods_SkyChains_SkyChainsTests {
+  umbrella header "Pods-SkyChains-SkyChainsTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
