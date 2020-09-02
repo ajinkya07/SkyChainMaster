@@ -1,0 +1,140 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.skychains"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+9        android:targetSdkVersion="28" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\debug\AndroidManifest.xml:5:5-77
+11-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\debug\AndroidManifest.xml:5:22-75
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:3:3-65
+12-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:3:20-62
+13    <uses-permission android:name="android.permission.CAMERA" />
+13-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:4:5-64
+13-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:4:22-62
+14
+15    <uses-feature
+15-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:5:5-85
+16        android:name="android.hardware.camera"
+16-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:5:19-57
+17        android:required="false" />
+17-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:5:58-82
+18    <uses-feature
+18-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:6:5-91
+19        android:name="android.hardware.camera.front"
+19-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:6:19-63
+20        android:required="false" />
+20-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:6:64-88
+21
+22    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+22-->[com.facebook.flipper:flipper:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\7354fb8401db8510e8dc026c1e6794cc\jetified-flipper-0.33.1\AndroidManifest.xml:16:5-76
+22-->[com.facebook.flipper:flipper:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\7354fb8401db8510e8dc026c1e6794cc\jetified-flipper-0.33.1\AndroidManifest.xml:16:22-73
+23    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+23-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-81
+23-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:22-78
+24
+25    <application
+25-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:3-16:17
+26        android:name="com.skychains.MainApplication"
+26-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:16-47
+27        android:allowBackup="false"
+27-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:162-189
+28        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+28-->[androidx.core:core:1.1.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\4f509a65121478d6153615d7ef5b7c5f\core-1.1.0\AndroidManifest.xml:24:18-86
+29        android:debuggable="true"
+30        android:icon="@mipmap/ic_launcher"
+30-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:81-115
+31        android:label="@string/app_name"
+31-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:48-80
+32        android:roundIcon="@mipmap/ic_launcher_round"
+32-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:116-161
+33        android:theme="@style/AppTheme"
+33-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:190-221
+34        android:usesCleartextTraffic="true" >
+34-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:8:222-257
+35        <activity
+35-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:5-14:16
+36            android:name="com.skychains.MainActivity"
+36-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:15-43
+37            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+37-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:77-154
+38            android:label="@string/app_name"
+38-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:44-76
+39            android:launchMode="singleTask"
+39-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:192-223
+40            android:screenOrientation="portrait"
+40-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:155-191
+41            android:windowSoftInputMode="adjustResize" >
+41-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:9:224-266
+42            <intent-filter>
+42-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:10:7-13:23
+43                <action android:name="android.intent.action.MAIN" />
+43-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:11:9-61
+43-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:11:17-58
+44
+45                <category android:name="android.intent.category.LAUNCHER" />
+45-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:12:9-69
+45-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:12:19-66
+46            </intent-filter>
+47        </activity>
+48        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+48-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:15:5-82
+48-->C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\android\app\src\main\AndroidManifest.xml:15:15-79
+49
+50        <provider
+50-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:9-21:20
+51            android:name="androidx.core.content.FileProvider"
+51-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-62
+52            android:authorities="com.skychains.provider"
+52-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-60
+53            android:exported="false"
+53-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-37
+54            android:grantUriPermissions="true" >
+54-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:13-47
+55            <meta-data
+55-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:13-20:58
+56                android:name="android.support.FILE_PROVIDER_PATHS"
+56-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:17-67
+57                android:resource="@xml/provider_paths" />
+57-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:20:17-55
+58        </provider>
+59
+60        <activity
+60-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:23:9-25:72
+61            android:name="com.yalantis.ucrop.UCropActivity"
+61-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:13-60
+62            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+62-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:25:13-69
+63
+64        <provider
+64-->[:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:9-20:20
+65            android:name="cl.json.RNShareFileProvider"
+65-->[:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-55
+66            android:authorities="com.skychains.rnshare.fileprovider"
+66-->[:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-72
+67            android:exported="false"
+67-->[:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-37
+68            android:grantUriPermissions="true" >
+68-->[:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-47
+69            <meta-data
+69-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:13-20:58
+70                android:name="android.support.FILE_PROVIDER_PATHS"
+70-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:17-67
+71                android:resource="@xml/share_download_paths" />
+71-->[:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\NewSkyChainsMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:20:17-55
+72        </provider>
+73
+74        <meta-data
+74-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\35b47d4547addc0b700aafd28b6b8784\okhttp3-integration-4.11.0\AndroidManifest.xml:11:9-13:43
+75            android:name="com.bumptech.glide.integration.okhttp3.OkHttpGlideModule"
+75-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\35b47d4547addc0b700aafd28b6b8784\okhttp3-integration-4.11.0\AndroidManifest.xml:12:13-84
+76            android:value="GlideModule" />
+76-->[com.github.bumptech.glide:okhttp3-integration:4.11.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\35b47d4547addc0b700aafd28b6b8784\okhttp3-integration-4.11.0\AndroidManifest.xml:13:13-40
+77    </application>
+78
+79</manifest>
