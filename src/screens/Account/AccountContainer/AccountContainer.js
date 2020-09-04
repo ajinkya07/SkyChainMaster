@@ -161,8 +161,8 @@ export default class AccountContainer extends Component {
                 style={styles.profileImageStyle}
                 source={IconPack.PROFILE}
               />
-              <Text style={styles.profileName}>Aziz</Text>
-              <TouchableOpacity onPress={() => null}>
+              <Text style={styles.profileName}>Aziz Khan</Text>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfile')}>
                 <Text style={styles.editProfileText}>EDIT PROFILE</Text>
               </TouchableOpacity>
             </View>
@@ -390,23 +390,29 @@ const styles = StyleSheet.create({
     height: hp(11),
     borderRadius: hp(5),
     overflow: 'hidden',
+    alignSelf:'center'
   },
   editProfileText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
     fontSize: hp(2),
     textDecorationLine: 'underline',
+    textAlign:'center'
+
   },
   profileName: {
     color: '#FFFFFF',
     paddingTop: 8,
     paddingBottom: 10,
     fontSize: hp(3),
+    textAlign:'center'
   },
   topViewContainer: {
-    marginBottom: 55,
-    marginLeft: 16,
+    marginBottom: 50,
+   // marginLeft: 16,
     marginTop: hp(2),
+    alignSelf:'center',
+    
   },
   accountRowViewContainer: {
     flexDirection: 'row',

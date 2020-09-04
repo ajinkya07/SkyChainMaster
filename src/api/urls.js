@@ -84,6 +84,24 @@ export const urls = {
     CustomizeOrder:{
         url:  url + 'Customized_Order'
     },       
+    GetProfile:{
+        url:  url + 'User_registration/get_profile_data'
+    }, 
     
+    AllParameter:{
+        url:  url + 'All_Parameters'
+    },       
+
+    GetStateList:{
+        url:  url + 'User_registration/getStates'
+    },  
+    
+    GetCityList:{
+        url:  url + 'User_registration/getCities'
+    },  
+    
+    UpdateProfile:{
+        url:  url + 'User_registration/update_profile'
+    },  
     
 }

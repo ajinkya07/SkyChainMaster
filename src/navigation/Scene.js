@@ -23,6 +23,7 @@ import Banner from '@homepage/Banner';
 import BannerImage from '@category/BannerImage'
 import CartContainer from '@cartContainer/CartContainer'
 
+import EditProfile from '@editProfile/EditProfile'
 
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -123,6 +124,10 @@ class Scene extends React.Component {
           component={CartContainer} options={{ headerShown: false }}
         />
 
+        <Stack.Screen name="EditProfile"
+          component={EditProfile} options={{ headerShown: false }}
+        />
+
       </Stack.Navigator>
 
     );
@@ -191,6 +196,9 @@ class Scene extends React.Component {
         <Stack.Screen name="CartContainer"
           component={CartContainer} options={{ headerShown: false }}
         />
+        <Stack.Screen name="EditProfile"
+          component={EditProfile} options={{ headerShown: false }}
+        />
 
       </Stack.Navigator>
 
@@ -215,6 +223,3 @@ class Scene extends React.Component {
 
 export default Scene;
 
-// FOR LOG OUT
-// global.userId =  "";
-// AsyncStorage.setItem('userId', "")

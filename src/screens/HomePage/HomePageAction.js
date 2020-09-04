@@ -25,6 +25,11 @@ import {
   ADD_TO_CART_PLUS_ONE_DATA_ERROR,
   ADD_TO_CART_PLUS_ONE_DATA_RESET_REDUCER,
 
+  
+  ALL_PARAMETER_DATA,
+  ALL_PARAMETER_DATA_SUCCESS,
+  ALL_PARAMETER_DATA_ERROR,
+  ALL_PARAMETER_DATA_RESET_REDUCER,
 
 } from "@redux/types";
 
@@ -61,13 +66,10 @@ export function onFailure(error, type) {
 }
 
 export function getHomePageData(data) {
-  console.log("getHomePageData", data);
-
   return dispatch => {
     dispatch(showLoadingIndicator(HOMEPAGE_DATA));
 
     axios.post(urls.HomePage.url, data, header).then(response => {
-      console.log("getHomePageData", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, HOMEPAGE_DATA_SUCCESS)
@@ -80,8 +82,6 @@ export function getHomePageData(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, HOMEPAGE_DATA_ERROR)
         );
@@ -90,13 +90,10 @@ export function getHomePageData(data) {
 }
 
 export function getTotalCartCount(data) {
-  console.log("getTotalCartCount", data);
-
   return dispatch => {
     dispatch(showLoadingIndicator(TOTAL_CART_COUNT_DATA));
 
     axios.post(urls.TotalCartCount.url, data, header).then(response => {
-      console.log("getTotalCartCount", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, TOTAL_CART_COUNT_DATA_SUCCESS)
@@ -109,8 +106,6 @@ export function getTotalCartCount(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, TOTAL_CART_COUNT_DATA_ERROR)
         );
@@ -119,13 +114,10 @@ export function getTotalCartCount(data) {
 }
 
 export function addToWishlist(data) {
-  console.log("addToWishlist", data);
-
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_TO_WISHLIST_DATA));
 
     axios.post(urls.addToCartWishlist.url, data, header).then(response => {
-      console.log("addToWishlist", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, ADD_TO_WISHLIST_DATA_SUCCESS)
@@ -138,7 +130,6 @@ export function addToWishlist(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_TO_WISHLIST_DATA_ERROR)
         );
@@ -148,13 +139,10 @@ export function addToWishlist(data) {
 
 
 export function addToCart(data) {
-  console.log("addToCart", data);
-
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_TO_CART_DATA));
 
     axios.post(urls.addToCartWishlist.url, data, header).then(response => {
-      console.log("addToCart", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, ADD_TO_CART_DATA_SUCCESS)
@@ -178,13 +166,10 @@ export function addToCart(data) {
 
 
 export function addRemoveFromCartByOne(data) {
-  console.log("addRemoveFromCartByOne", data);
-
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_TO_CART_PLUS_ONE_DATA));
 
     axios.post(urls.addToCartGridAdd.url, data, header).then(response => {
-      console.log("addRemoveFromCartByOne response", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, ADD_TO_CART_PLUS_ONE_DATA_SUCCESS)
@@ -200,6 +185,32 @@ export function addRemoveFromCartByOne(data) {
         console.log("addToCartPlusOne ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_TO_CART_PLUS_ONE_DATA_ERROR)
+        );
+      });
+  }
+}
+
+
+export function allParameters(data) {
+  return dispatch => {
+    dispatch(showLoadingIndicator(ALL_PARAMETER_DATA));
+
+    axios.post(urls.AllParameter.url, data, header).then(response => {
+      if (response.data) {
+        dispatch(
+          onSuccess(response.data, ALL_PARAMETER_DATA_SUCCESS)
+        )
+      }
+      else {
+        dispatch(
+          onFailure(response.data.msg, ALL_PARAMETER_DATA_ERROR)
+        )
+      }
+    })
+      .catch(function (error) {
+        console.log("addToCartPlusOne ERROR", error);
+        dispatch(
+          onFailure(strings.serverFailedMsg, ALL_PARAMETER_DATA_ERROR)
         );
       });
   }

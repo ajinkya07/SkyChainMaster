@@ -173,3 +173,36 @@ export const CUSTOMIZE_ORDER_DATA = "customizeOrderDataData";
 export const CUSTOMIZE_ORDER_DATA_SUCCESS = "customizeOrderDataSuccess";
 export const CUSTOMIZE_ORDER_DATA_ERROR = "customizeOrderDataError";
 export const CUSTOMIZE_ORDER_DATA_RESET_REDUCER = "customizeOrderDataResetReducer";
+
+
+export const GET_PROFILE = "getProfileData";
+export const GET_PROFILE_SUCCESS = "getProfileDataSuccess";
+export const GET_PROFILE_ERROR = "getProfileDataError";
+export const GET_PROFILE_RESET_REDUCER = "getProfileDataResetReducer";
+
+
+export const ALL_PARAMETER_DATA = "allParameterData";
+export const ALL_PARAMETER_DATA_SUCCESS = "allParameterDataSuccess";
+export const ALL_PARAMETER_DATA_ERROR = "allParameterDataError";
+export const ALL_PARAMETER_DATA_RESET_REDUCER = "allParameterDataResetReducer";
+
+
+export const GET_STATE_LIST = "stateListData";
+export const GET_STATE_LIST_SUCCESS = "stateListDataSuccess";
+export const GET_STATE_LIST_ERROR = "stateListDataError";
+export const GET_STATE_LIST_RESET_REDUCER = "stateListDataResetReducer";
+
+
+
+export const GET_CITY_LIST = "cityListData";
+export const GET_CITY_LIST_SUCCESS = "cityListDataSuccess";
+export const GET_CITY_LIST_ERROR = "cityListDataError";
+export const GET_CITY_LIST_RESET_REDUCER = "cityListDataResetReducer";
+
+
+
+export const UPDATE_PROFILE = "updateProfileData";
+export const UPDATE_PROFILE_SUCCESS = "updateProfileDataSuccess";
+export const UPDATE_PROFILE_ERROR = "updateProfileDataError";
+export const UPDATE_PROFILE_RESET_REDUCER = "updateProfileDataResetReducer";
+

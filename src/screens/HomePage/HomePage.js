@@ -30,6 +30,7 @@ import {
   addToWishlist,
   addToCart,
   addRemoveFromCartByOne,
+  allParameters
 } from '@homepage/HomePageAction';
 import { connect } from 'react-redux';
 import FastImage from 'react-native-fast-image';
@@ -71,6 +72,10 @@ class HomePage extends Component {
       successAddToCartPlusOneVersion: 0,
       errorAddToCartPlusOneVersion: 0,
       plusOnecartValue: '',
+
+      successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+
     };
     userId = global.userId;
   }
@@ -89,6 +94,12 @@ class HomePage extends Component {
     data2.append('table', 'cart');
 
     await this.props.getTotalCartCount(data2);
+
+    const data3 = new FormData();
+    data3.append('user_id', userId);
+
+    await this.props.allParameters(data3)
+
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -103,6 +114,8 @@ class HomePage extends Component {
       errorAddToCartVersion,
       successAddToCartPlusOneVersion,
       errorAddToCartPlusOneVersion,
+      successAllParameterVersion,
+      errorAllParamaterVersion
     } = nextProps;
     let newState = null;
 
@@ -171,6 +184,19 @@ class HomePage extends Component {
         errorAddToCartPlusOneVersion: nextProps.errorAddToCartPlusOneVersion,
       };
     }
+    if (successAllParameterVersion > prevState.successAllParameterVersion) {
+      newState = {
+        ...newState,
+        successAllParameterVersion: nextProps.successAllParameterVersion,
+      };
+    }
+
+    if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+      newState = {
+        ...newState,
+        errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
+      };
+    }
 
     return newState;
   }
@@ -183,6 +209,7 @@ class HomePage extends Component {
       addToCartData,
       homePageData,
       addToCartPlusOneData,
+      allParameterData
     } = this.props;
 
     const { finalCollection, productId } = this.state;
@@ -322,16 +349,23 @@ class HomePage extends Component {
         });
       }
     }
-    if (
-      this.state.errorAddToCartPlusOneVersion >
-      prevState.errorAddToCartPlusOneVersion
-    ) {
+    if (this.state.errorAddToCartPlusOneVersion > prevState.errorAddToCartPlusOneVersion) {
       Toast.show({
         text: errorMsg && errorMsg,
         type: 'danger',
         duration: 2500,
       });
     }
+
+    if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+
+    }
+
+
+    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+
+    }
+
   }
 
   failedView = () => {
@@ -1119,6 +1153,13 @@ function mapStateToProps(state) {
     errorAddToCartPlusOneVersion:
       state.homePageReducer.errorAddToCartPlusOneVersion,
     addToCartPlusOneData: state.homePageReducer.addToCartPlusOneData,
+
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+
+
+
   };
 }
 
@@ -1130,5 +1171,6 @@ export default connect(
     addToWishlist,
     addToCart,
     addRemoveFromCartByOne,
+    allParameters
   },
 )(withNavigationFocus(HomePage));

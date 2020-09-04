@@ -10,6 +10,7 @@ import productDetailsReducer from '@category/ProductDetailsReducer'
 
 import orderHistoryReducer from '@orderHistory/OrderHistoryReducer'
 import customOrderReducer from '@customOrder/CustomOrderReducer'
+import editProfileReducer from '@editProfile/EditProfileReducer'
 
 
 
@@ -22,7 +23,8 @@ const appReducer = combineReducers({
     cartContainerReducer,
     productDetailsReducer,
     orderHistoryReducer,
-    customOrderReducer
+    customOrderReducer,
+    editProfileReducer
 });
 
 const rootReducer = (state, action) => {

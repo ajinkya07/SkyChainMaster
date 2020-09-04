@@ -11,6 +11,7 @@ import {
 import _Text from '@text/_Text';
 import { connect } from 'react-redux';
 import { color } from '@values/colors';
+import IconPack from '../../OnBoarding/Login/IconPack';
 
 
 const data = [
@@ -43,7 +44,9 @@ export default class Notification extends Component {
                                     borderWidth: 0.4, borderColor: color.gray
                                 }}
                                 source={item.image}
-                                defaultSource={require('../../../assets/image/default.png')}
+//                                defaultSource={require('../../../assets/image/default.png')}
+                                defaultSource={IconPack.APP_LOGO}
+
                             />
                         </View>
 
