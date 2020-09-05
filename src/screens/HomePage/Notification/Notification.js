@@ -95,6 +95,7 @@ export default class Notification extends Component {
                     LeftBtnPress={() => this.props.navigation.goBack()}
                     RightBtnPressTwo={() => this.props.navigation.navigate('SearchScreen')}
                     rightIconHeight2={hp(3.5)}
+                    backgroundColor="#19af81"
                 />
                 <View style={{ justifyContent: 'center', width: wp(100), paddingVertical: hp(1) }}>
                     <FlatList

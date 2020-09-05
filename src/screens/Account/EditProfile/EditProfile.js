@@ -180,7 +180,7 @@ class EditProfile extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    const { getProfileData, allParameterData, stateList,cityList } = this.props;
+    const { getProfileData, allParameterData, stateList,cityList,updateProfileData } = this.props;
 
     if (this.state.successGetProfileVersion > prevState.successGetProfileVersion) {
       this.setState({

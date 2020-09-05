@@ -23,11 +23,12 @@ import { color } from '@values/colors';
 import Modal from 'react-native-modal';
 import IconPack from '@login/IconPack';
 import CheckBox from '@react-native-community/checkbox';
+import { toUpper } from 'lodash';
 const { width } = Dimensions.get('window');
 
 
 
-export default class SearchScreen extends Component {
+ class SearchScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,22 +39,56 @@ export default class SearchScreen extends Component {
             fromDate: new Date(),
             toDate: new Date(),
             isModalVisible: false,
+            isContinueClicked:false,
             check: {},
-
+            collection:[],
+            selectedCategories:[]
         };
     }
 
+    componentDidMount = ()=>{
+        const{homePageData} = this.props
+
+        if (homePageData && homePageData.collection) {
+            this.setState({ collection:homePageData && homePageData.collection? homePageData.collection : [],
+            });
+          }
+    
+    }
     toggleModal = () => {
-        this.setState({ isModalVisible: true });
+        this.setState({ isModalVisible: true,isContinueClicked:false });
     };
     closeModal = () => {
-        this.setState({ isModalVisible: false });
+        this.setState({ isModalVisible: false,isContinueClicked:false });
     };
 
-    checkBox_Test = id => {
+    checkBox_Test = (id,name) => {
+
+        const{selectedCategories} = this.state
+
         const checkCopy = { ...this.state.check };
-        if (checkCopy[id]) checkCopy[id] = false;
-        else checkCopy[id] = true;
+        if (checkCopy[id]) {
+            checkCopy[id] = false;
+
+            var index = selectedCategories.map(x => {
+                return x.id;
+              }).indexOf(id);
+
+              console.warn("index",index);
+              
+              selectedCategories.splice(index, 1);
+        }
+        else {
+            checkCopy[id] = true;
+
+            let array = [];
+            let array2 = []
+            array = [{id,name}]
+            array2.push(...selectedCategories,...array);  
+            this.setState({ selectedCategories:array2 });
+   
+        }
+        
         this.setState({ check: checkCopy });
     };
 
@@ -212,9 +247,20 @@ export default class SearchScreen extends Component {
     }
 
     selectCategories = () => {
+        const{selectedCategories, isContinueClicked} = this.state
+        console.warn("selectedCategories",selectedCategories.length);
         return (
             <View style={{ marginHorizontal: wp(3), }}>
                 <_Text fsHeading>Select Categories:</_Text>
+                
+                {selectedCategories.length > 0 && isContinueClicked &&
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', top: 3 }}>
+                        {selectedCategories.length > 0 && <_Text fsSmall>Selectd: </_Text>}
+                        {selectedCategories.map(s => {
+                            return <_Text fsSmall> {s.name},</_Text>
+                        })}
+                    </View>
+                }
 
                 <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => this.toggleModal()}>
@@ -244,7 +290,20 @@ export default class SearchScreen extends Component {
         )
     }
 
+     continuecategoryModal = () => {
+         
+         this.setState({
+             isModalVisible: false,
+             isContinueClicked:true
+         })
+     }
+
+
     render() {
+
+        const{collection,selectedCategories} = this.state
+        console.warn("selectedCategories",selectedCategories);
+
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                 <_CustomHeader
@@ -253,6 +312,7 @@ export default class SearchScreen extends Component {
                     LeftBtnPress={() => this.props.navigation.goBack()}
                     RightBtnPressTwo={() => this.props.navigation.navigate('Notification')}
                     rightIconHeight2={hp(3.5)}
+                    backgroundColor="#19af81"
                 />
                 <ScrollView>
 
@@ -318,26 +378,17 @@ export default class SearchScreen extends Component {
                                 <FlatList
                                     style={{ backgroundColor: '#ffffff' }}
                                     showsVerticalScrollIndicator={false}
-                                    data={[
-                                        { id: 1, categoryTitle: 'Choco Chains' },
-                                        { id: 2, categoryTitle: 'Mens Italian Chains' },
-                                        { id: 3, categoryTitle: 'IMP ASSEMBLE' },
-                                        { id: 4, categoryTitle: 'IMP FANCY CHAINS' },
-                                        { id: 5, categoryTitle: 'IMP HALF SETS' },
-                                        { id: 6, categoryTitle: 'IMP LONG MALA' },
-                                        { id: 7, categoryTitle: 'Mens bracelet' },
-                                        { id: 8, categoryTitle: 'Assemble Dokiya Chains' },
-                                    ]}
+                                    data={collection && collection}
                                     renderItem={({ item }) => (
                                         <View style={styles.categoryContainer}>
                                             <Text style={styles.categoryText}>
-                                                {item.categoryTitle}
+                                                {item.col_name}
                                             </Text>
                                             <CheckBox
                                                 style={styles.checkBox}
                                                 tintColors={{ true: '#11255a', false: 'gray' }}
                                                 value={this.state.check[item.id]}
-                                                onChange={() => this.checkBox_Test(item.id)}
+                                                onChange={() => this.checkBox_Test(item.id,item.col_name)}
                                                 boxType="square"
                                                 onFillColor="#11255a"
                                                 onTintColor="gray"
@@ -349,17 +400,14 @@ export default class SearchScreen extends Component {
                                 <View style={styles.buttonContainer}>
                                     <ActionButtonRounded
                                         title="CONTINUE"
-                                        onButonPress={() => Alert.alert('Continue')}
+                                        onButonPress={() => this.continuecategoryModal()}
                                         containerStyle={styles.buttonStyle}
                                     />
                                 </View>
                             </View>
                             <View style={styles.closeIconView}>
                                 <TouchableOpacity
-                                    onPress={() =>
-                                        this.setState({
-                                            isModalVisible: false,
-                                        })
+                                    onPress={() =>this.setState({isModalVisible: false})
                                     }>
                                     <Image style={styles.closeIcon} source={IconPack.CLOSE} />
                                 </TouchableOpacity>
@@ -373,6 +421,24 @@ export default class SearchScreen extends Component {
         );
     }
 }
+
+
+function mapStateToProps(state) {
+    return {
+      isFetching: state.homePageReducer.isFetching,
+      error: state.homePageReducer.error,
+      errorMsg: state.homePageReducer.errorMsg,
+      successHomePageVersion: state.homePageReducer.successHomePageVersion,
+      errorHomePageVersion: state.homePageReducer.errorHomePageVersion,
+      homePageData: state.homePageReducer.homePageData,
+  
+  
+    };
+  }
+  
+  export default connect(mapStateToProps,null)(SearchScreen);
+
+  
 
 const styles = StyleSheet.create({
     border: {
@@ -467,12 +533,10 @@ const styles = StyleSheet.create({
 });
 
 ///--------------------------------ActionButton------------------
-const ActionButtonRounded = ({ title, onButonPress, containerStyle }) => {
+const ActionButtonRounded = ({ title, onButonPress, containerStyle, }) => {
     return (
         <TouchableOpacity
-            onPress={() => {
-                onButonPress();
-            }}>
+            onPress={() => {onButonPress()}}>
             <View
                 style={[
                     actionButtonRoundedStyle.mainContainerStyle,

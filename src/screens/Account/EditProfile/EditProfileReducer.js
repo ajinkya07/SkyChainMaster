@@ -145,7 +145,7 @@ import {
         case UPDATE_PROFILE_SUCCESS:
           return {
             ...state,
-            errorMsg: action.msg,
+            errorMsg: action.data.msg,
             isFetching: false,
             updateProfileData: action.data,
             successUpdateProfileVersion: ++state.successUpdateProfileVersion,

@@ -321,7 +321,6 @@ class ProductGrid extends Component {
       ) {
         let array = [];
         let array2 = [];
-        console.log('page55', this.state.page);
         array =
           this.state.page === 0
             ? filteredProductData.products

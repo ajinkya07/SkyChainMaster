@@ -135,11 +135,8 @@ import {
       dispatch(showLoadingIndicator(UPDATE_PROFILE));
   
       axios.post(urls.UpdateProfile.url, data, header).then(response => { 
-        console.warn("response update",response.data); 
         if (response.data.ack === '1') {
-          dispatch(
-            onSuccess(response.data, UPDATE_PROFILE_SUCCESS)
-          )
+          dispatch(onSuccess(response.data, UPDATE_PROFILE_SUCCESS))
         }
         else {
           dispatch(
