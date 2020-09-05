@@ -99,7 +99,7 @@ class ProductGrid extends Component {
 
   componentDidMount = () => {
     const {categoryData, page} = this.state;
-
+console.warn("categoryData",categoryData);
     if (categoryData.subcategory.length === 0) {
       const data = new FormData();
       data.append('table', 'product_master');
@@ -286,7 +286,6 @@ class ProductGrid extends Component {
       this.state.successProductGridVersion > prevState.successProductGridVersion
     ) {
       if (productGridData.products && productGridData.products.length > 0) {
-        console.log('page56', this.state.page);
         this.setState({
           //gridData: productGridData,
           gridData:
@@ -1019,7 +1018,6 @@ class ProductGrid extends Component {
 
     const {filterParamsData} = this.props;
 
-    console.warn('filterParamsData', filterParamsData);
 
     const filterData = new FormData();
     filterData.append('table', 'product_master');

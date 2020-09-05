@@ -25,6 +25,8 @@ import CartContainer from '@cartContainer/CartContainer'
 
 import EditProfile from '@editProfile/EditProfile'
 
+import SearchProductGrid from '@search/SearchProductGrid'
+
 
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -128,6 +130,12 @@ class Scene extends React.Component {
           component={EditProfile} options={{ headerShown: false }}
         />
 
+        <Stack.Screen name="SearchProductGrid"
+          component={SearchProductGrid} options={{ headerShown: false }}
+        />
+
+
+
       </Stack.Navigator>
 
     );
@@ -199,6 +207,11 @@ class Scene extends React.Component {
         <Stack.Screen name="EditProfile"
           component={EditProfile} options={{ headerShown: false }}
         />
+
+        <Stack.Screen name="SearchProductGrid"
+          component={SearchProductGrid} options={{ headerShown: false }}
+        />
+
 
       </Stack.Navigator>
 

@@ -103,5 +103,11 @@ export const urls = {
     UpdateProfile:{
         url:  url + 'User_registration/update_profile'
     },  
+    SearchGrid:{
+        url:  url + 'products_Grid/advanced_search_grid'
+    },  
+
+    
+
     
 }

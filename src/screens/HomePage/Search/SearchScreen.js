@@ -23,12 +23,18 @@ import { color } from '@values/colors';
 import Modal from 'react-native-modal';
 import IconPack from '@login/IconPack';
 import CheckBox from '@react-native-community/checkbox';
-import { toUpper } from 'lodash';
+import { Toast } from 'native-base'
+import { strings } from '@values/strings'
+
+import { searchProducts } from '@search/SearchAction'
+import FromDatePicker from './FromDatePicker'
+import ToDatePicker from './ToDatePicker'
+
 const { width } = Dimensions.get('window');
 
 
 
- class SearchScreen extends Component {
+class SearchScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -36,35 +42,89 @@ const { width } = Dimensions.get('window');
             gwTo: '',
             nwFrom: '',
             nwTo: '',
-            fromDate: new Date(),
-            toDate: new Date(),
+            fromDate: '',
+            toDate: '',
             isModalVisible: false,
-            isContinueClicked:false,
+            isContinueClicked: false,
             check: {},
-            collection:[],
-            selectedCategories:[]
+            collection: [],
+            selectedCategories: [],
+
+            successSearchbyCategoryVersion: 0,
+            errorSearchbyCategoryVersion: 0,
+
         };
+        userId = global.userId;
+
     }
 
-    componentDidMount = ()=>{
-        const{homePageData} = this.props
+    componentDidMount = () => {
+        const { homePageData } = this.props
 
         if (homePageData && homePageData.collection) {
-            this.setState({ collection:homePageData && homePageData.collection? homePageData.collection : [],
+            this.setState({
+                collection: homePageData && homePageData.collection ? homePageData.collection : [],
             });
-          }
-    
+        }
     }
+
+
+
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { successSearchbyCategoryVersion, errorSearchbyCategoryVersion,
+        } = nextProps;
+
+        let newState = null;
+
+        if (successSearchbyCategoryVersion > prevState.successSearchbyCategoryVersion) {
+            newState = {
+                ...newState,
+                successSearchbyCategoryVersion: nextProps.successSearchbyCategoryVersion,
+            };
+        }
+        if (errorSearchbyCategoryVersion > prevState.errorSearchbyCategoryVersion) {
+            newState = {
+                ...newState,
+                errorSearchbyCategoryVersion: nextProps.errorSearchbyCategoryVersion,
+            };
+        }
+
+
+        return newState;
+    }
+
+    async componentDidUpdate(prevProps, prevState) {
+        const { searchByCategoryData } = this.props;
+        if (this.state.successSearchbyCategoryVersion > prevState.successSearchbyCategoryVersion) {
+                this.props.navigation.navigate('SearchProductGrid')
+        }
+        if (this.state.errorSearchbyCategoryVersion > prevState.errorSearchbyCategoryVersion) {
+            this.showToast(this.props.errorMsgSearch,'danger')
+        }
+
+    }
+
+    showToast = (msg, type, duration) => {
+        Toast.show({
+          text: msg ? msg : strings.serverFailedMsg,
+          type: type ? type : 'danger',
+          duration: duration ? duration : 2500,
+        });
+      };
+    
+
+
     toggleModal = () => {
-        this.setState({ isModalVisible: true,isContinueClicked:false });
+        this.setState({ isModalVisible: true, isContinueClicked: false });
     };
     closeModal = () => {
-        this.setState({ isModalVisible: false,isContinueClicked:false });
+        this.setState({ isModalVisible: false, isContinueClicked: false });
     };
 
-    checkBox_Test = (id,name) => {
+    checkBox_Test = (id, name) => {
 
-        const{selectedCategories} = this.state
+        const { selectedCategories } = this.state
 
         const checkCopy = { ...this.state.check };
         if (checkCopy[id]) {
@@ -72,33 +132,35 @@ const { width } = Dimensions.get('window');
 
             var index = selectedCategories.map(x => {
                 return x.id;
-              }).indexOf(id);
+            }).indexOf(id);
 
-              console.warn("index",index);
-              
-              selectedCategories.splice(index, 1);
+            selectedCategories.splice(index, 1);
         }
         else {
             checkCopy[id] = true;
 
             let array = [];
             let array2 = []
-            array = [{id,name}]
-            array2.push(...selectedCategories,...array);  
-            this.setState({ selectedCategories:array2 });
-   
+            array = [{ id, name }]
+            array2.push(...selectedCategories, ...array);
+            this.setState({ selectedCategories: array2 });
+
         }
-        
+
         this.setState({ check: checkCopy });
     };
 
 
-    setToDate(newDate) {
+    setToDate =(newDate)=> {
+        console.warn("toDate",newDate);
+
         this.setState({ toDate: newDate });
     }
-
-    setFromDate(newDate) {
+fSEAR
+    setFromDate =(newDate) =>{
+        console.warn("fromDate",newDate);
         this.setState({ fromDate: newDate });
+        
     }
 
 
@@ -180,37 +242,29 @@ const { width } = Dimensions.get('window');
         )
     }
 
+    
     productReleaseDate = () => {
         return (
             <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Product Release Between:</_Text>
                 <View style={{ marginTop: hp(0.5), flexDirection: 'row', width: wp(100), justifyContent: 'space-between' }}>
                     <View style={{ flexDirection: 'row', width: wp(40) }}>
-                        <DatePicker
-                            defaultDate={new Date()}
-                            // minimumDate={new Date(2018, 1, 1)}
-                            //maximumDate={new Date(2018, 12, 31)}
-                            locale={"en"}
-                            timeZoneOffsetInMinutes={undefined}
-                            modalTransparent={false}
-                            animationType={"fade"}
-                            androidMode={"default"}
-                            placeHolderText="From Date"
-                            textStyle={{ marginTop: hp(0.5), fontSize: 20 }}
-                            placeHolderTextStyle={{ color: "gray", fontSize: 20 }}
-                            onDateChange={() => this.setFromDate()}
+                        <FromDatePicker
+                            dateLabel="From Date"
+                            setFromDate={(d) => this.setFromDate(d)}
+                            fromDate={this.state.fromDate}
                         />
 
                     </View>
                     <_Text fsMedium style={{ marginTop: hp(1.5) }}>AND   </_Text>
 
                     <View style={{ flexDirection: 'row', width: wp(40) }}>
-                        <DatePicker
+                        {/* <DatePicker
                             defaultDate={new Date()}
                             // minimumDate={new Date(2018, 1, 1)}
                             //maximumDate={new Date(2018, 12, 31)}
                             locale={"en"}
-                            timeZoneOffsetInMinutes={undefined}
+                            // timeZoneOffsetInMinutes={undefined}
                             modalTransparent={false}
                             animationType={"fade"}
                             androidMode={"default"}
@@ -218,7 +272,13 @@ const { width } = Dimensions.get('window');
                             textStyle={{ marginTop: hp(0.5), fontSize: 20 }}
                             placeHolderTextStyle={{ color: "gray", fontSize: 20 }}
                             onDateChange={() => this.setToDate()}
+                        /> */}
+                        <ToDatePicker
+                            dateLabel="To Date"
+                            setToDate={(d) => this.setToDate(d)}
+                            toDate={this.state.toDate}
                         />
+
                     </View>
                 </View>
             </View>
@@ -247,17 +307,16 @@ const { width } = Dimensions.get('window');
     }
 
     selectCategories = () => {
-        const{selectedCategories, isContinueClicked} = this.state
-        console.warn("selectedCategories",selectedCategories.length);
+        const { selectedCategories, isContinueClicked } = this.state
         return (
-            <View style={{ marginHorizontal: wp(3), }}>
+            <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Select Categories:</_Text>
-                
+
                 {selectedCategories.length > 0 && isContinueClicked &&
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', top: 3 }}>
-                        {selectedCategories.length > 0 && <_Text fsSmall>Selectd: </_Text>}
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', top: 3, }}>
+                        {selectedCategories.length > 0 && <_Text fsPrimary>Selected: </_Text>}
                         {selectedCategories.map(s => {
-                            return <_Text fsSmall> {s.name},</_Text>
+                            return <_Text fsPrimary> {s.name},</_Text>
                         })}
                     </View>
                 }
@@ -279,7 +338,7 @@ const { width } = Dimensions.get('window');
     searchButton = () => {
         return (
             <View style={{ marginBottom: hp(4), marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity onPress={null}>
+                <TouchableOpacity onPress={() => this.searchProducts()}>
                     <View style={styles.roundedButtonSearch}>
                         <View style={styles.buttonText}>
                             <_Text fsHeading bold textColor={'#fbcb84'}>SEARCH</_Text>
@@ -290,19 +349,51 @@ const { width } = Dimensions.get('window');
         )
     }
 
-     continuecategoryModal = () => {
-         
-         this.setState({
-             isModalVisible: false,
-             isContinueClicked:true
-         })
-     }
+    continuecategoryModal = () => {
+
+        this.setState({
+            isModalVisible: false,
+            isContinueClicked: true
+        })
+    }
+
+    searchProducts = () => {
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories } = this.state
+
+        //  melting id and collection id kam baki ahe
+
+        if(selectedCategories.length>0){
+
+        const s = new FormData()
+
+        s.append('table', 'product_master')
+        s.append('mode_type', 'filter_data')
+        s.append('user_id', userId)
+        s.append('record', 10)
+        s.append('page_no', 0)
+        s.append('collection_ids', '26,28')
+        s.append('sort_by', 2)
+        s.append('min_gross_weight', gwFrom ? gwFrom : '')
+        s.append('max_gross_weight', gwTo ? gwTo : '')
+        s.append('min_net_weight', nwFrom ? nwFrom : '')
+        s.append('max_net_weight', nwTo ? nwTo : '')
+        s.append('product_status', '')
+        s.append('melting_id  ', '')
+        s.append('created_date_from', fromDate ? fromDate : '')
+        s.append('created_date_to', toDate ? toDate : '')
+
+        this.props.searchProducts(s)
+        }
+        else{
+            this.showToast('Please select category')
+        }
+    }
+
 
 
     render() {
 
-        const{collection,selectedCategories} = this.state
-        console.warn("selectedCategories",selectedCategories);
+        const { collection, selectedCategories } = this.state
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
@@ -339,6 +430,7 @@ const { width } = Dimensions.get('window');
 
                     <View style={{ paddingVertical: hp(1.5), }}>
                         {this.productReleaseDate()}
+                        
                     </View>
 
                     <View style={{ paddingVertical: hp(0.5), }}>
@@ -348,10 +440,10 @@ const { width } = Dimensions.get('window');
                     <View style={{ paddingVertical: 0, }}>
                         {this.selectCategories()}
                     </View>
-                     
+
                     <View style={{ paddingVertical: hp(0.5), }}>
                         {this.searchButton()}
-                    </View> 
+                    </View>
 
                 </ScrollView>
 
@@ -388,7 +480,7 @@ const { width } = Dimensions.get('window');
                                                 style={styles.checkBox}
                                                 tintColors={{ true: '#11255a', false: 'gray' }}
                                                 value={this.state.check[item.id]}
-                                                onChange={() => this.checkBox_Test(item.id,item.col_name)}
+                                                onChange={() => this.checkBox_Test(item.id, item.col_name)}
                                                 boxType="square"
                                                 onFillColor="#11255a"
                                                 onTintColor="gray"
@@ -407,7 +499,7 @@ const { width } = Dimensions.get('window');
                             </View>
                             <View style={styles.closeIconView}>
                                 <TouchableOpacity
-                                    onPress={() =>this.setState({isModalVisible: false})
+                                    onPress={() => this.setState({ isModalVisible: false })
                                     }>
                                     <Image style={styles.closeIcon} source={IconPack.CLOSE} />
                                 </TouchableOpacity>
@@ -415,7 +507,6 @@ const { width } = Dimensions.get('window');
                         </>
                     </TouchableWithoutFeedback>
                 </Modal>
-
 
             </SafeAreaView>
         );
@@ -425,20 +516,26 @@ const { width } = Dimensions.get('window');
 
 function mapStateToProps(state) {
     return {
-      isFetching: state.homePageReducer.isFetching,
-      error: state.homePageReducer.error,
-      errorMsg: state.homePageReducer.errorMsg,
-      successHomePageVersion: state.homePageReducer.successHomePageVersion,
-      errorHomePageVersion: state.homePageReducer.errorHomePageVersion,
-      homePageData: state.homePageReducer.homePageData,
-  
-  
-    };
-  }
-  
-  export default connect(mapStateToProps,null)(SearchScreen);
+        isFetching: state.homePageReducer.isFetching,
+        error: state.homePageReducer.error,
+        errorMsg: state.homePageReducer.errorMsg,
+        successHomePageVersion: state.homePageReducer.successHomePageVersion,
+        errorHomePageVersion: state.homePageReducer.errorHomePageVersion,
+        homePageData: state.homePageReducer.homePageData,
 
-  
+        isFetchingSearch: state.searchReducer.isFetchingSearch,
+        errorSearch: state.searchReducer.errorSearch,
+        errorMsgSearch: state.searchReducer.errorMsgSearch,
+        successSearchbyCategoryVersion: state.searchReducer.successSearchbyCategoryVersion,
+        errorSearchbyCategoryVersion: state.searchReducer.errorSearchbyCategoryVersion,
+        searchByCategoryData: state.searchReducer.searchByCategoryData,
+
+    };
+}
+
+export default connect(mapStateToProps, { searchProducts })(SearchScreen);
+
+
 
 const styles = StyleSheet.create({
     border: {
@@ -536,7 +633,7 @@ const styles = StyleSheet.create({
 const ActionButtonRounded = ({ title, onButonPress, containerStyle, }) => {
     return (
         <TouchableOpacity
-            onPress={() => {onButonPress()}}>
+            onPress={() => { onButonPress() }}>
             <View
                 style={[
                     actionButtonRoundedStyle.mainContainerStyle,

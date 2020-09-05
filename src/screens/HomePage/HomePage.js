@@ -418,7 +418,7 @@ class HomePage extends Component {
                         resizeMode='cover'
                     /> */}
           <FastImage
-            style={{ height: hp(25), width: wp(100) }}
+            style={{ height: hp(26.5), width: wp(100) }}
             source={{
               uri: baseUrl + data.brand_image,
               // cache: FastImage.cacheControl.cacheOnly,
@@ -434,7 +434,7 @@ class HomePage extends Component {
     return (
       <View
         style={{
-          height: hp(25),
+          height: hp(26.5),
           width: wp(100),
         }}>
         {bannerData ? (
@@ -466,7 +466,7 @@ class HomePage extends Component {
             activeDot={
               <View
                 style={{
-                  backgroundColor: color.white,
+                  backgroundColor: '#19af81',
                   width: 10,
                   height: 10,
                   borderRadius: 5,

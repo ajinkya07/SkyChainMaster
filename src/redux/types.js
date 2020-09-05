@@ -206,3 +206,8 @@ export const UPDATE_PROFILE_SUCCESS = "updateProfileDataSuccess";
 export const UPDATE_PROFILE_ERROR = "updateProfileDataError";
 export const UPDATE_PROFILE_RESET_REDUCER = "updateProfileDataResetReducer";
 
+export const SEARCH_BY_CATEGORY = "searchByCategoryData";
+export const SEARCH_BY_CATEGORY_SUCCESS = "searchByCategoryDataSuccess";
+export const SEARCH_BY_CATEGORY_ERROR = "searchByCategoryDataError";
+export const SEARCH_BY_CATEGORY_RESET_REDUCER = "searchByCategoryDataResetReducer";
+
