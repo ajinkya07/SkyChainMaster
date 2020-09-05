@@ -47,8 +47,8 @@ class SearchProductGrid extends Component {
         productInventoryId: '',
         isProductImageModalVisibel: false,
         productImageToBeDisplayed: '',
-  
-  
+        clickedLoadMore: false,
+        selectedSortById: '2',  
 
 
     };
@@ -299,7 +299,11 @@ class SearchProductGrid extends Component {
   };
 
   addProductToWishlist = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const {gridData, page, selectedSortById} = this.state;
+
+    console.warn("gridData", gridData[0].collection_id);
+    let id = gridData && gridData[0].collection_id
+
     let wishlistData = new FormData();
 
     wishlistData.append('product_id', item.product_inventory_id);
@@ -313,17 +317,17 @@ class SearchProductGrid extends Component {
     const data1 = new FormData();
     data1.append('table', 'product_master');
     data1.append('mode_type', 'normal');
-    data1.append('collection_id', categoryData.id);
+    data1.append('collection_id', id);
     data1.append('user_id', userId);
     data1.append('record', 10);
     data1.append('page_no', page);
     data1.append('sort_by', selectedSortById);
 
-    await this.props.getProductSubCategoryData(data1);
+   await this.props.getProductSubCategoryData(data1);
   };
 
   addProductToCart = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { page, selectedSortById} = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -345,7 +349,7 @@ class SearchProductGrid extends Component {
   };
 
   addProductToCartPlusOne = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { page, selectedSortById} = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -366,7 +370,7 @@ class SearchProductGrid extends Component {
   };
 
   removeProductFromCartByOne = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { page, selectedSortById} = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -442,19 +446,22 @@ class SearchProductGrid extends Component {
   };
 
   LoadRandomData = () => {
-    const {categoryData, page} = this.state;
+    const {gridData, page} = this.state;
 
-    const data = new FormData();
-    data.append('table', 'product_master');
-    data.append('mode_type', 'normal');
-    data.append('collection_id', categoryData.id);
-    data.append('user_id', userId);
-    data.append('record', 10);
-    data.append('page_no', page);
-    data.append('sort_by', '2');
+      console.warn("gridData", gridData[0].collection_id);
+      let id = gridData && gridData[0].collection_id
 
-    this.props.getProductSubCategoryData(data);
-  };
+      const data = new FormData();
+      data.append('table', 'product_master');
+      data.append('mode_type', 'normal');
+      data.append('collection_id', id);
+      data.append('user_id', userId);
+      data.append('record', 10);
+      data.append('page_no', page);
+      data.append('sort_by', '2');
+
+//    this.props.getProductSubCategoryData(data);
+ };
 
   footer = () => {
     return (
@@ -713,5 +720,5 @@ function mapStateToProps(state) {
 }
 
 export default connect(
-  mapStateToProps , null
+  mapStateToProps , {getTotalCartCount}
 )(SearchProductGrid);
