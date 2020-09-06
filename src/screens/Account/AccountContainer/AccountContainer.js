@@ -153,7 +153,9 @@ export default class AccountContainer extends Component {
   };
   render() {
     return (
+      
       <View style={{flex: 1, width: wp(100)}}>
+      
         <ScrollView showsVerticalScrollIndicator={false}>
           <ImageBackground source={IconPack.LOGIN_BG} style={styles.bgImage}>
             <View style={styles.topViewContainer}>
@@ -166,6 +168,7 @@ export default class AccountContainer extends Component {
                 <Text style={styles.editProfileText}>EDIT PROFILE</Text>
               </TouchableOpacity>
             </View>
+            
             <AccountRow
               title="Order History"
               icon={IconPack.ORDER_HISTORY}
@@ -186,6 +189,15 @@ export default class AccountContainer extends Component {
               icon={IconPack.ABOUT}
               onPress={() => this.props.navigation.navigate('AboutUs')}
             />
+            <AccountRow
+              title="Privacy Policy"
+              icon={IconPack.ABOUT}
+              onPress={() => this.props.navigation.navigate('PrivacyPolicy')}
+            /><AccountRow
+            title="Terms & Conditions"
+            icon={IconPack.ABOUT}
+            onPress={() => this.props.navigation.navigate('TermsConditions')}
+          />
             <AccountRow
               title="Call / Email Us"
               icon={IconPack.EMAIL}
@@ -408,7 +420,7 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   topViewContainer: {
-    marginBottom: 50,
+    marginBottom: 40,
    // marginLeft: 16,
     marginTop: hp(2),
     alignSelf:'center',
@@ -417,9 +429,9 @@ const styles = StyleSheet.create({
   accountRowViewContainer: {
     flexDirection: 'row',
     //justifyContent: 'space-between',
-    marginHorizontal: 32,
+    marginHorizontal: 25,
     alignItems: 'center',
-    padding: 12,
+    padding: 10,
   },
   titleText: {
     fontSize: hp(2.2),

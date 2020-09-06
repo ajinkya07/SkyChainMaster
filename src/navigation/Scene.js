@@ -9,6 +9,9 @@ import ForgotPassword from '@forgotPassword/ForgotPassword';
 import VerifyOtp from '@forgotPassword/VerifyOtp';
 import VerifyOtpForRegister from '@register/VerifyOtpForRegister';
 import AboutUs from '@aboutUs/AboutUs';
+import TermsConditions from '@aboutUs/TermsConditions';
+import PrivacyPolicy from '@aboutUs/PrivacyPolicy';
+
 import OrderHistory from '@orderHistory/OrderHistory';
 import OrderHistoryDetail from '@orderHistory/OrderHistoryDetail';
 import CustomOrder from '@accountCustomOrder/CustomOrder';
@@ -96,6 +99,14 @@ class Scene extends React.Component {
         <Stack.Screen name="AboutUs"
           component={AboutUs} options={{ headerShown: false }}
         />
+        <Stack.Screen name="PrivacyPolicy"
+          component={PrivacyPolicy} options={{ headerShown: false }}
+        />
+
+        <Stack.Screen name="TermsConditions"
+          component={TermsConditions} options={{ headerShown: false }}
+        />
+
         <Stack.Screen name="ProductGrid"
           component={ProductGrid} options={{ headerShown: false }}
         />
@@ -175,6 +186,15 @@ class Scene extends React.Component {
         <Stack.Screen name="AboutUs"
           component={AboutUs} options={{ headerShown: false }}
         />
+
+        <Stack.Screen name="PrivacyPolicy"
+          component={PrivacyPolicy} options={{ headerShown: false }}
+        />
+
+        <Stack.Screen name="TermsConditions"
+          component={TermsConditions} options={{ headerShown: false }}
+        />
+
         <Stack.Screen name="ProductGrid"
           component={ProductGrid} options={{ headerShown: false }}
         />
