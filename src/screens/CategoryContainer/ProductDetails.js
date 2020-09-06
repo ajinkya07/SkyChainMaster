@@ -431,7 +431,7 @@ class ProductDetails extends React.Component {
 
   render() {
     const headerOpacity = this.scrollY.interpolate({
-      inputRange: [0, 282, 283],
+      inputRange: [0, 222, 223],
       outputRange: [0, 0, 1],
       extrapolate: 'clamp',
     });

@@ -552,10 +552,10 @@ class HomePage extends Component {
           <View style={horizontalLatestDesign}>
             <View style={latestDesign}>
               <TouchableOpacity
+              style={{width:'100%',overflow:'hidden',borderTopLeftRadius:10,borderTopRightRadius:10}}
                 // onPress={() => this.props.navigation.navigate('ProductDetails', { productItemDetails: item })}
                 onLongPress={() => this.showImageModal(item)}>
                 <Image
-                  // resizeMode={'cover'}
                   style={latestImage}
                   //defaultSource={require('../../assets/image/default.png')}
                   defaultSource={IconPack.APP_LOGO}

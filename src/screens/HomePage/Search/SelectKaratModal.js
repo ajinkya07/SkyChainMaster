@@ -16,6 +16,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Theme from '../../../values/Theme';
+
+
 export default class SelectKaratModal extends Component {
   state = {
     isModalVisible: false,
@@ -35,6 +37,7 @@ export default class SelectKaratModal extends Component {
       toggleCheckBox: val,
     });
   };
+  
   render() {
     const list = ['22k', '18k'];
     return (

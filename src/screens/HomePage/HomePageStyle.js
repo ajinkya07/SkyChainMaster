@@ -134,17 +134,20 @@ export default {
   latestDesign: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: wp(39),
+    // width: wp(39),
   },
+
   latestImage: {
     height: hp(17),
-    width: wp(38),
+    // width: wp(38),
+    width:'100%',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    borderRadius: 10,
-    top: 1,
+    // borderRadius: 10,
+    //top: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    resizeMode:'cover'
   },
   latestTextView: {
     flexDirection: 'row',

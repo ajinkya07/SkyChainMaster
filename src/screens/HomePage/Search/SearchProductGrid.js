@@ -40,6 +40,7 @@ class SearchProductGrid extends Component {
   constructor(props) {
     super(props);
 
+    const from = this.props.route.params.fromCodeSearch;
 
     this.state = {
         gridData: [],
@@ -48,7 +49,8 @@ class SearchProductGrid extends Component {
         isProductImageModalVisibel: false,
         productImageToBeDisplayed: '',
         clickedLoadMore: false,
-        selectedSortById: '2',  
+        selectedSortById: '2',
+        fromCodeSearch:from
 
 
     };
@@ -59,8 +61,6 @@ class SearchProductGrid extends Component {
     const{searchByCategoryData} = this.props
     const{gridData} = this.state
 
-
-    console.warn("searchByCategoryData",searchByCategoryData);
     if(searchByCategoryData && searchByCategoryData.data.products && searchByCategoryData.data.products.length>0){
         this.setState({
             gridData:this.state.page === 0 ? searchByCategoryData.data.products
@@ -513,14 +513,14 @@ class SearchProductGrid extends Component {
 
 
   render() {
-    const {gridData, productImageToBeDisplayed, isProductImageModalVisibel} = this.state;
+    const {gridData, productImageToBeDisplayed, isProductImageModalVisibel,fromCodeSearch} = this.state;
 
       let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#f3fcf9'}}>
         <_CustomHeader
-          Title={`(${gridData.length.toString()})` + ' ' + 'Advanced search'}
+          Title={`(${gridData.length.toString()})` + ' ' + `${!fromCodeSearch ? 'Advanced Search' : ' Search By Code' }`}
           // Subtitle={ `(${(gridData.length).toString()})`}
           RightBtnIcon1={require('../../../assets/image/BlueIcons/Search-White.png')}
           RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}

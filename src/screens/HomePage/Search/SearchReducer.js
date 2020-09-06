@@ -23,7 +23,7 @@ import {
     
     successSearchbyCodeVersion:0,
     errorSearchbyCodeVersion:0,
-    searchByCodeData:[]
+   // searchByCodeData:[]
     
 
   };
@@ -72,7 +72,7 @@ import {
             ...state,
             errorMsgSearch: "",
             isFetchingSearch: false,
-            searchByCodeData: action.data,
+            searchByCategoryData: action.data,
             successSearchbyCodeVersion: ++state.successSearchbyCodeVersion,
             errorSearch: false
           };

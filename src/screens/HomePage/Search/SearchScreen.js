@@ -117,13 +117,13 @@ class SearchScreen extends Component {
     async componentDidUpdate(prevProps, prevState) {
         const { searchByCategoryData, searchByCodeData } = this.props;
         if (this.state.successSearchbyCategoryVersion > prevState.successSearchbyCategoryVersion) {
-            this.props.navigation.navigate('SearchProductGrid')
+            this.props.navigation.navigate('SearchProductGrid',{fromCodeSearch:false})
         }
         if (this.state.errorSearchbyCategoryVersion > prevState.errorSearchbyCategoryVersion) {
             this.showToast(this.props.errorMsgSearch, 'danger')
         }
         if (this.state.successSearchbyCodeVersion > prevState.successSearchbyCodeVersion) {
-            this.props.navigation.navigate('SearchProductGrid')
+            this.props.navigation.navigate('SearchProductGrid',{fromCodeSearch:true})
         }
         if (this.state.errorSearchbyCodeVersion > prevState.errorSearchbyCodeVersion) {
             this.showToast(this.props.errorMsgSearch, 'danger')
@@ -438,13 +438,16 @@ class SearchScreen extends Component {
 
              this.props.searchByCode(byCode)
 
-
             this.setState({
                 isSearchCodeVisible: false
             })    
         }
         else{
-            this.showToast('please enter code','danger')
+            this.showToast('please enter design code','danger')
+            
+            this.setState({
+                isSearchCodeVisible: false
+            })  
         }
 
         console.warn("searchText",searchText);
@@ -704,13 +707,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     buttonContainer: {
-        justifyContent: 'flex-end',
         height: 54,
         backgroundColor: '#ffffff',
         borderBottomLeftRadius: 14,
         borderBottomRightRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
+        marginBottom:hp(2)
     },
     closeIconView: {
         position: 'absolute',
