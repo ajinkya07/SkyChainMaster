@@ -4,6 +4,11 @@ import {
     SEARCH_BY_CATEGORY_ERROR,
     SEARCH_BY_CATEGORY_RESET_REDUCER,
 
+    SEARCH_BY_CODE,
+    SEARCH_BY_CODE_SUCCESS,
+    SEARCH_BY_CODE_ERROR,
+    SEARCH_BY_CODE_RESET_REDUCER,
+  
 
   } from "@redux/types";
   
@@ -14,7 +19,11 @@ import {
     errorMsgSearch: "",
     successSearchbyCategoryVersion:0,
     errorSearchbyCategoryVersion:0,
-    searchByCategoryData:[]
+    searchByCategoryData:[],
+    
+    successSearchbyCodeVersion:0,
+    errorSearchbyCodeVersion:0,
+    searchByCodeData:[]
     
 
   };
@@ -50,6 +59,36 @@ import {
       case SEARCH_BY_CATEGORY_RESET_REDUCER:
         return initialState;
   
+
+        case SEARCH_BY_CODE:
+          return {
+            ...state,
+            isFetchingSearch: true
+          };
+    
+        case SEARCH_BY_CODE_SUCCESS:
+          console.warn("action",action.data);
+          return {
+            ...state,
+            errorMsgSearch: "",
+            isFetchingSearch: false,
+            searchByCodeData: action.data,
+            successSearchbyCodeVersion: ++state.successSearchbyCodeVersion,
+            errorSearch: false
+          };
+    
+        case SEARCH_BY_CODE_ERROR:
+          return {
+            ...state,
+            isFetchingSearch: false,
+            errorSearch: true,
+            errorMsgSearch: action.error,
+            errorSearchbyCodeVersion: ++state.errorSearchbyCodeVersion
+          };
+    
+        case SEARCH_BY_CODE_RESET_REDUCER:
+          return initialState;
+    
       
       default:
         return state;

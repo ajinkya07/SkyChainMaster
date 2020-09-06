@@ -26,13 +26,15 @@ import CheckBox from '@react-native-community/checkbox';
 import { Toast } from 'native-base'
 import { strings } from '@values/strings'
 
-import { searchProducts } from '@search/SearchAction'
+import { searchProducts , searchByCode} from '@search/SearchAction'
 import FromDatePicker from './FromDatePicker'
 import ToDatePicker from './ToDatePicker'
+import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
+import Theme from '../../../values/Theme';
 
 const { width } = Dimensions.get('window');
 
-
+var categoryIds=[]
 
 class SearchScreen extends Component {
     constructor(props) {
@@ -52,6 +54,11 @@ class SearchScreen extends Component {
 
             successSearchbyCategoryVersion: 0,
             errorSearchbyCategoryVersion: 0,
+            searchText: '',
+            isSearchCodeVisible:false,
+
+            successSearchbyCodeVersion: 0,
+            errorSearchbyCodeVersion: 0,
 
         };
         userId = global.userId;
@@ -73,6 +80,7 @@ class SearchScreen extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const { successSearchbyCategoryVersion, errorSearchbyCategoryVersion,
+            successSearchbyCodeVersion, errorSearchbyCodeVersion
         } = nextProps;
 
         let newState = null;
@@ -90,20 +98,38 @@ class SearchScreen extends Component {
             };
         }
 
+        if (successSearchbyCodeVersion > prevState.successSearchbyCodeVersion) {
+            newState = {
+                ...newState,
+                successSearchbyCodeVersion: nextProps.successSearchbyCodeVersion,
+            };
+        }
+        if (errorSearchbyCodeVersion > prevState.errorSearchbyCodeVersion) {
+            newState = {
+                ...newState,
+                errorSearchbyCodeVersion: nextProps.errorSearchbyCodeVersion,
+            };
+        }
 
         return newState;
     }
 
     async componentDidUpdate(prevProps, prevState) {
-        const { searchByCategoryData } = this.props;
+        const { searchByCategoryData, searchByCodeData } = this.props;
         if (this.state.successSearchbyCategoryVersion > prevState.successSearchbyCategoryVersion) {
-                this.props.navigation.navigate('SearchProductGrid')
+            this.props.navigation.navigate('SearchProductGrid')
         }
         if (this.state.errorSearchbyCategoryVersion > prevState.errorSearchbyCategoryVersion) {
-            this.showToast(this.props.errorMsgSearch,'danger')
+            this.showToast(this.props.errorMsgSearch, 'danger')
         }
-
+        if (this.state.successSearchbyCodeVersion > prevState.successSearchbyCodeVersion) {
+            this.props.navigation.navigate('SearchProductGrid')
+        }
+        if (this.state.errorSearchbyCodeVersion > prevState.errorSearchbyCodeVersion) {
+            this.showToast(this.props.errorMsgSearch, 'danger')
+        }
     }
+
 
     showToast = (msg, type, duration) => {
         Toast.show({
@@ -152,11 +178,9 @@ class SearchScreen extends Component {
 
 
     setToDate =(newDate)=> {
-        console.warn("toDate",newDate);
-
         this.setState({ toDate: newDate });
     }
-fSEAR
+
     setFromDate =(newDate) =>{
         console.warn("fromDate",newDate);
         this.setState({ fromDate: newDate });
@@ -350,6 +374,10 @@ fSEAR
     }
 
     continuecategoryModal = () => {
+        const{selectedCategories} = this.state
+
+         categoryIds = selectedCategories.map(x => { return x.id})
+         console.warn("categoryIds--",categoryIds);
 
         this.setState({
             isModalVisible: false,
@@ -358,9 +386,9 @@ fSEAR
     }
 
     searchProducts = () => {
-        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories } = this.state
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories, } = this.state
 
-        //  melting id and collection id kam baki ahe
+        // collction id & melting id required
 
         if(selectedCategories.length>0){
 
@@ -389,7 +417,38 @@ fSEAR
         }
     }
 
+    searchModal = () => {
+        this.setState({ isSearchCodeVisible: !this.state.isSearchCodeVisible });
+    };
 
+    handleSearchChange = newText =>
+        this.setState({
+            searchText: newText,
+        });
+
+    searchByCode = () => {
+        const{searchText} = this.state
+        if(searchText!==''){
+
+            const byCode = new FormData()
+             byCode.append("table",'product_master')
+             byCode.append("mode_type",'filter_data')
+             byCode.append("user_id",userId)
+             byCode.append("design_number",searchText)
+
+             this.props.searchByCode(byCode)
+
+
+            this.setState({
+                isSearchCodeVisible: false
+            })    
+        }
+        else{
+            this.showToast('please enter code','danger')
+        }
+
+        console.warn("searchText",searchText);
+    }
 
     render() {
 
@@ -409,7 +468,7 @@ fSEAR
 
                     <View style={{ paddingVertical: hp(1.5), justifyContent: 'center', alignItems: 'center' }}>
                         <_Text fsHeading>Code Search:</_Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>this.searchModal()}>
                             <View style={styles.roundedButton}>
                                 <View style={styles.buttonText}>
                                     <_Text fsHeading bold>SEARCH BY CODE</_Text>
@@ -508,6 +567,49 @@ fSEAR
                     </TouchableWithoutFeedback>
                 </Modal>
 
+
+        <View style={styles.flex}>
+          <Modal isVisible={this.state.isSearchCodeVisible} style={{margin: 30}}>
+            <View style={styles.container}>
+              <View style={styles.topContainer}>
+                <Text style={styles.title}>Search By Code</Text>
+              </View>
+              <View style={styles.bottomConatiner}>
+                <View style={styles.flexRow}>
+                  <View style={styles.searchImgView}>
+                    <Image
+                      style={{height: hp(3.2), width: hp(3.2)}}
+                      source={IconPack.SEARCH_WHITE}
+                    />
+                  </View>
+
+                  <View style={{marginRight: 15, flex: 1}}>
+                    <FloatingLabelTextInput
+                      label="Search"
+                      value={this.state.searchText}
+                      onChangeText={this.handleSearchChange}
+                      resetValue=""
+                      width="100%"
+                    />
+                  </View>
+                </View>
+                <ActionButtonRounded
+                  title="CONTINUE"
+                  onButonPress={() => this.searchByCode()}
+                  containerStyle={styles.buttonStyle}
+                />
+              </View>
+
+              <TouchableOpacity style={styles.imageView} onPress={()=> this.setState({isSearchCodeVisible:false})}>
+                <Image
+                  source={IconPack.WHITE_CLOSE}
+                  style={styles.imageStyle}
+                />
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        </View>
+      
             </SafeAreaView>
         );
     }
@@ -530,10 +632,16 @@ function mapStateToProps(state) {
         errorSearchbyCategoryVersion: state.searchReducer.errorSearchbyCategoryVersion,
         searchByCategoryData: state.searchReducer.searchByCategoryData,
 
+        successSearchbyCodeVersion: state.searchReducer.successSearchbyCodeVersion,
+        errorSearchbyCodeVersion: state.searchReducer.errorSearchbyCodeVersion,
+        searchByCodeData: state.searchReducer.searchByCodeData,
+
+
+
     };
 }
 
-export default connect(mapStateToProps, { searchProducts })(SearchScreen);
+export default connect(mapStateToProps, { searchProducts, searchByCode })(SearchScreen);
 
 
 
@@ -627,6 +735,60 @@ const styles = StyleSheet.create({
     checkBox: {
         marginRight: 12,
     },
+    flex: {
+        flex: 1,
+      },
+      container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 200,
+        borderRadius: 15,
+      },
+      topContainer: {
+        flex: 1,
+        backgroundColor: '#19af81',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+      },
+      bottomConatiner: {
+        flex: 3,
+        backgroundColor: '#FFFFFF',
+        width: '100%',
+        alignItems: 'center',
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+      },
+      title: {
+        color: '#FFFFFF',
+        ...Theme.ffLatoRegular20,
+      },
+      imageStyle: {
+        width: hp(2.5),
+        height: hp(2.5),
+        resizeMode: 'contain',
+      },
+      imageView: {
+        position: 'absolute',
+        top: 16,
+        right: 14,
+      },
+      buttonStyle: {
+        marginTop: 20,
+        marginBottom: 10,
+      },
+      flexRow: {
+        flexDirection: 'row',
+        marginTop: 10,
+      },
+      searchImgView: {
+        marginHorizontal: 10,
+        marginTop: 8,
+        justifyContent: 'center',
+      },
+    
 });
 
 ///--------------------------------ActionButton------------------

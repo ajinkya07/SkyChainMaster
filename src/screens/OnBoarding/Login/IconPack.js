@@ -45,4 +45,7 @@ export default {
   REMARK: require('../../../assets/image/BlueIcons/Remark.png'),
   SKY_LOGO: require('../../../assets/image/Account/skychainLogo.jpeg'),
   APP_LOGO: require('../../../assets/image/LoginIcons/SkyChainsLogo.png'),
+
+  SEARCH_WHITE: require('../../../assets/image/search_5.png'),
+  WHITE_CLOSE:require('../../../assets/image/Close.png')
 };

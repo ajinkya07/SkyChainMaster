@@ -211,3 +211,9 @@ export const SEARCH_BY_CATEGORY_SUCCESS = "searchByCategoryDataSuccess";
 export const SEARCH_BY_CATEGORY_ERROR = "searchByCategoryDataError";
 export const SEARCH_BY_CATEGORY_RESET_REDUCER = "searchByCategoryDataResetReducer";
 
+
+export const SEARCH_BY_CODE = "searchByCodeData";
+export const SEARCH_BY_CODE_SUCCESS = "searchByCodeDataSuccess";
+export const SEARCH_BY_CODE_ERROR = "searchByCodeDataError";
+export const SEARCH_BY_CODE_RESET_REDUCER = "searchByCodeDataResetReducer";
+
