@@ -8,6 +8,7 @@ MERGED from C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\andro
 MERGED from [com.facebook.flipper:flipper:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\7354fb8401db8510e8dc026c1e6794cc\jetified-flipper-0.33.1\AndroidManifest.xml:8:1-18:12
 MERGED from [com.facebook.flipper:flipper-network-plugin:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\fa9d249d56579007dba70f8ee4dd5b3f\flipper-network-plugin-0.33.1\AndroidManifest.xml:8:1-15:12
 MERGED from [com.facebook.flipper:flipper-fresco-plugin:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\5a1065d4748ae359265a740b2069d44b\flipper-fresco-plugin-0.33.1\AndroidManifest.xml:8:1-15:12
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\2c67e628ec5e10a6dc480e38352e91b8\multidex-2.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [:react-native-community_async-storage] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\async-storage\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-community_checkbox] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\checkbox\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-community_clipboard] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\clipboard\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-9:12
@@ -20,6 +21,7 @@ MERGED from [:react-native-reanimated] C:\Users\itsupport.lth\Desktop\Ajinkya\Pr
 MERGED from [:react-native-safe-area-context] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-safe-area-context\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-screens\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-11:12
 MERGED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-23:12
+MERGED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:2:1-23:12
 MERGED from [com.facebook.react:react-native:0.62.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\6bb2f768598bcbe0df1c6a03417bcd0d\jetified-react-native-0.62.2\AndroidManifest.xml:2:1-13:12
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\055a171d10c43231a2795117ecd4c3fd\swiperefreshlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [org.webkit:android-jsc:r245459] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\1ed26cdc1f47a6754ce1546799dd43a1\android-jsc-r245459\AndroidManifest.xml:2:1-11:12
@@ -122,6 +124,8 @@ MERGED from [:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Aji
 MERGED from [:react-native-image-crop-picker] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-image-crop-picker\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:5-26:19
 MERGED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-21:19
 MERGED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-21:19
+MERGED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-21:19
+MERGED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-21:19
 MERGED from [com.facebook.react:react-native:0.62.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\6bb2f768598bcbe0df1c6a03417bcd0d\jetified-react-native-0.62.2\AndroidManifest.xml:11:5-20
 MERGED from [com.facebook.react:react-native:0.62.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\6bb2f768598bcbe0df1c6a03417bcd0d\jetified-react-native-0.62.2\AndroidManifest.xml:11:5-20
 MERGED from [com.facebook.soloader:soloader:0.8.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\a682a4f61b53a5eb0b34ff17728f4b20\soloader-0.8.2\AndroidManifest.xml:11:5-20
@@ -204,6 +208,8 @@ MERGED from [com.facebook.flipper:flipper-network-plugin:0.33.1] C:\Users\Admin\
 MERGED from [com.facebook.flipper:flipper-network-plugin:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\fa9d249d56579007dba70f8ee4dd5b3f\flipper-network-plugin-0.33.1\AndroidManifest.xml:11:5-13:41
 MERGED from [com.facebook.flipper:flipper-fresco-plugin:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\5a1065d4748ae359265a740b2069d44b\flipper-fresco-plugin-0.33.1\AndroidManifest.xml:11:5-13:41
 MERGED from [com.facebook.flipper:flipper-fresco-plugin:0.33.1] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\5a1065d4748ae359265a740b2069d44b\flipper-fresco-plugin-0.33.1\AndroidManifest.xml:11:5-13:41
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\2c67e628ec5e10a6dc480e38352e91b8\multidex-2.0.0\AndroidManifest.xml:20:5-43
+MERGED from [androidx.multidex:multidex:2.0.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\2c67e628ec5e10a6dc480e38352e91b8\multidex-2.0.0\AndroidManifest.xml:20:5-43
 MERGED from [:react-native-community_async-storage] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\async-storage\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-community_async-storage] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\async-storage\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-community_checkbox] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\@react-native-community\checkbox\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-7:41
@@ -228,6 +234,8 @@ MERGED from [:react-native-screens] C:\Users\itsupport.lth\Desktop\Ajinkya\Proje
 MERGED from [:react-native-screens] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-screens\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
 MERGED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
+MERGED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.62.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\6bb2f768598bcbe0df1c6a03417bcd0d\jetified-react-native-0.62.2\AndroidManifest.xml:7:5-9:41
 MERGED from [com.facebook.react:react-native:0.62.2] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\6bb2f768598bcbe0df1c6a03417bcd0d\jetified-react-native-0.62.2\AndroidManifest.xml:7:5-9:41
 MERGED from [androidx.swiperefreshlayout:swiperefreshlayout:1.0.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\055a171d10c43231a2795117ecd4c3fd\swiperefreshlayout-1.0.0\AndroidManifest.xml:20:5-44
@@ -382,6 +390,16 @@ ADDED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects
 		ADDED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-37
 	android:name
 		ADDED from [:react-native-share] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-share\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-55
+provider#com.reactnativecommunity.webview.RNCWebViewFileProvider
+ADDED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:9-20:20
+	android:grantUriPermissions
+		ADDED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-47
+	android:authorities
+		ADDED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:13-64
+	android:exported
+		ADDED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-37
+	android:name
+		ADDED from [:react-native-webview] C:\Users\itsupport.lth\Desktop\Ajinkya\Projects\SkyChainMaster\node_modules\react-native-webview\android\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:13-83
 meta-data#com.bumptech.glide.integration.okhttp3.OkHttpGlideModule
 ADDED from [com.github.bumptech.glide:okhttp3-integration:4.11.0] C:\Users\Admin\.gradle\caches\transforms-2\files-2.1\35b47d4547addc0b700aafd28b6b8784\okhttp3-integration-4.11.0\AndroidManifest.xml:11:9-13:43
 	android:value
