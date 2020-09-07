@@ -16,5 +16,6 @@ export const color = {
     textNote: "#999999",
     hyperlinkColor:'blue',
     golden:'#fbcb84',
-    headerColor:'#EEF8F7'
+    headerColor:'#EEF8F7',
+    green:'#19af81'
 }

@@ -411,7 +411,7 @@ class SearchScreen extends Component {
                 <TouchableOpacity onPress={() => this.searchProducts()}>
                     <View style={styles.roundedButtonSearch}>
                         <View style={styles.buttonText}>
-                            <_Text fsHeading bold textColor={'#fbcb84'}>SEARCH</_Text>
+                            <_Text fsHeading bold textColor={'#FFFFFF'}>SEARCH</_Text>
                         </View>
                     </View>
                 </TouchableOpacity>
@@ -634,7 +634,7 @@ class SearchScreen extends Component {
                                         <TouchableOpacity
                                             onPress={() => this.setState({ isModalVisible: false })
                                             }>
-                                            <Image style={styles.closeIcon} source={IconPack.CLOSE} />
+                                            <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                                         </TouchableOpacity>
                                     </View>
 
@@ -735,9 +735,16 @@ class SearchScreen extends Component {
           style={{margin: 0}}>
           <TouchableWithoutFeedback >
             <View style={styles.container1}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.titleText}>Select Karat</Text>
-              </View>
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.titleText}>Select Karat</Text>
+                                <View style={styles.closeIconView}>
+                                    <TouchableOpacity
+                                        onPress={() => this.setState({ isKaratModalVisible: false })
+                                        }>
+                                        <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
               <TextInput
                 onChangeText={search => this.setState({search})}
                 style={styles.searchBar}
@@ -842,7 +849,7 @@ const styles = StyleSheet.create({
     },
     roundedButtonSearch: {
         marginTop: hp(1.5),
-        backgroundColor: '#11255a', height: 50, alignItems: 'center',
+        backgroundColor: color.green, height: 50, alignItems: 'center',
         width: wp(85), justifyContent: 'center', borderRadius: 40,
     },
     buttonText: {
@@ -865,7 +872,7 @@ const styles = StyleSheet.create({
     },
     selectCategoriesContainer: {
         height: 50,
-        backgroundColor: '#11255a',
+        backgroundColor: color.green,
         borderTopLeftRadius: 14,
         borderTopRightRadius: 14,
         alignItems: 'center',
@@ -875,7 +882,9 @@ const styles = StyleSheet.create({
     selectCategoryText: {
         fontSize: 21,
         fontFamily: 'Helvetica',
-        color: '#fbcb84',
+        color: '#FFFFFF',
+        ...Theme.ffLatoBold20,
+
     },
     scrollView: {
         backgroundColor: '#ffffff',
@@ -941,7 +950,7 @@ const styles = StyleSheet.create({
       },
       title: {
         color: '#FFFFFF',
-        ...Theme.ffLatoRegular20,
+        ...Theme.ffLatoBold20,
       },
       imageStyle: {
         width: hp(2.5),
@@ -972,8 +981,8 @@ const styles = StyleSheet.create({
       },
       titleContainer: {
         //marginLeft: 10,
-        backgroundColor:"#19af81"
-
+        backgroundColor:"#19af81",
+        alignItems:'center'
       },
       titleText: {
         ...Theme.ffLatoBold20,
@@ -1073,7 +1082,7 @@ const ActionButtonRounded = ({ title, onButonPress, containerStyle, }) => {
 
 const actionButtonRoundedStyle = StyleSheet.create({
     mainContainerStyle: {
-        backgroundColor: '#11255a',
+        backgroundColor: color.green,
         height: 44,
         width: width - 255,
         justifyContent: 'center',
@@ -1086,7 +1095,7 @@ const actionButtonRoundedStyle = StyleSheet.create({
         alignItems: 'center',
     },
     titleStyle: {
-        color: '#fbcb84',
+        color: '#FFFFFF',
         fontSize: 14,
         textAlign: 'center',
         alignItems: 'center',
