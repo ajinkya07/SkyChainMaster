@@ -927,14 +927,16 @@ class HomePage extends Component {
                       source={{uri : userStatus.image}}
                       defaultSource={IconPack.APP_LOGO}
                       style={{
-                        height: hp(49),
+                        height: hp(45),
                         width: wp(83),
                         borderColor: 'gray',
                         borderWidth: 1,
-                        bottom: hp(2.5),
+                        bottom: hp(2),
                       }}
                       resizeMode='contain'
                     />
+
+                    <_Text fsHeading style={{textAlign:'center',marginBottom:hp(2)}}>{userStatus.description}</_Text>
 
                     <_CustomButton
                       onPress={() => this.onOkPressed()}
