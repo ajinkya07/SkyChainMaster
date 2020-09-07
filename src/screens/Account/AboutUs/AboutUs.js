@@ -20,6 +20,8 @@ export default class AboutUs extends React.Component {
                 <_CustomHeader
                     Title='About Us'
                     LeftBtnPress={() => this.props.navigation.goBack()}
+                    backgroundColor="#19af81"
+
                 />
                 <Content>
                     <SafeAreaView style={styles.viewContainer}>

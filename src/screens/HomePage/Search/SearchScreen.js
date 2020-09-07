@@ -49,6 +49,8 @@ class SearchScreen extends Component {
             isModalVisible: false,
             isContinueClicked: false,
             check: {},
+            karat:{},
+            selectedKarat:[],
             collection: [],
             selectedCategories: [],
 
@@ -61,8 +63,14 @@ class SearchScreen extends Component {
             errorSearchbyCodeVersion: 0,
             search:'',
             isKaratModalVisible:false,
-            toggleCheckBox:true
+            toggleCheckBox:true,
+
+            successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+      karatData:[]
+
         };
+
         userId = global.userId;
 
     }
@@ -82,8 +90,9 @@ class SearchScreen extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const { successSearchbyCategoryVersion, errorSearchbyCategoryVersion,
-            successSearchbyCodeVersion, errorSearchbyCodeVersion
-        } = nextProps;
+            successSearchbyCodeVersion, errorSearchbyCodeVersion,
+      errorAllParamaterVersion, successAllParameterVersion,
+            } = nextProps;
 
         let newState = null;
 
@@ -113,11 +122,26 @@ class SearchScreen extends Component {
             };
         }
 
+        if (successAllParameterVersion > prevState.successAllParameterVersion) {
+            newState = {
+              ...newState,
+              successAllParameterVersion: nextProps.successAllParameterVersion,
+            };
+          }
+      
+          if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+            newState = {
+              ...newState,
+              errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
+            };
+          }
+
         return newState;
     }
 
     async componentDidUpdate(prevProps, prevState) {
-        const { searchByCategoryData, searchByCodeData } = this.props;
+        const { searchByCategoryData, searchByCodeData,allParameterData } = this.props;
+
         if (this.state.successSearchbyCategoryVersion > prevState.successSearchbyCategoryVersion) {
             this.props.navigation.navigate('SearchProductGrid',{fromCodeSearch:false})
         }
@@ -130,6 +154,14 @@ class SearchScreen extends Component {
         if (this.state.errorSearchbyCodeVersion > prevState.errorSearchbyCodeVersion) {
             this.showToast(this.props.errorMsgSearch, 'danger')
         }
+
+        if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+                
+        }
+        if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+    
+        }
+    
     }
 
 
@@ -313,15 +345,27 @@ class SearchScreen extends Component {
 
 
     selectKarat = () => {
+        const { selectedKarat } = this.state
+
         return (
             <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Karat:</_Text>
-                <TouchableOpacity onPress={()=>this.karatModal()}>
+                <TouchableOpacity onPress={() => this.karatModal()}>
                     <View style={{
                         marginTop: hp(1), flexDirection: 'row',
                         justifyContent: 'space-between', width: wp(90),
                     }}>
-                        <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Karat:</_Text>
+                        {selectedKarat.length == 0 &&
+                            <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Karat:</_Text>
+                        }
+                        {selectedKarat.length > 0 &&
+                            <View style={{ flexDirection: 'row', flexWrap: 'wrap',  }}>
+                                {selectedKarat.map(s => {
+                                return <_Text fsHeading style={{ marginLeft: wp(3) }}> {s.value},</_Text>
+                            })}
+                            </View>
+                        }
+
                         <Image
                             style={{ height: hp(2.5), width: hp(2.5), marginTop: hp(0.5) }}
                             source={require('../../../assets/image/DownArrow.png')}
@@ -379,7 +423,6 @@ class SearchScreen extends Component {
         const{selectedCategories} = this.state
 
          categoryIds = selectedCategories.map(x => { return x.id})
-         console.warn("categoryIds--",categoryIds);
 
         this.setState({
             isModalVisible: false,
@@ -461,14 +504,42 @@ class SearchScreen extends Component {
 
       filterList(list) {
         return list.filter(listItem =>
-          listItem.toLowerCase().includes(this.state.search.toLowerCase()),
+          (listItem.melting_name).toLowerCase().includes(this.state.search.toLowerCase()),
         );
       }
 
-      setToggleCheckBox = val => {
-        this.setState({
-          toggleCheckBox: val,
-        });
+      setToggleCheckBox = (id,value )=> {
+         
+          const { selectedKarat,toggleCheckBox } = this.state
+
+          const val = { ...this.state.karat };
+          if (val[id]) {
+              console.warn("here",val[id]);
+              val[id] = false;
+  
+              var index = selectedKarat.map(x => {
+                  return x.id;
+              }).indexOf(id);
+  
+              selectedKarat.splice(index, 1);
+          }
+          else {
+              val[id] = true;
+              console.warn("here else",val[id]);
+
+              let array = [];
+              let array2 = []
+              array = [{ id ,value}]
+              array2.push(...selectedKarat, ...array);
+              this.setState({ selectedKarat: array2 });
+  
+          }
+  
+          this.setState({ karat: val });
+
+        // this.setState({
+        //   toggleCheckBox: val,
+        // });
       };
      
 
@@ -481,8 +552,10 @@ class SearchScreen extends Component {
 
     render() {
 
-        const { collection, selectedCategories } = this.state
-        const list = ['22k', '18k'];
+        const { collection, selectedCategories,selectedKarat,karatData } = this.state
+        const{allParameterData} = this.props
+
+        const list = allParameterData.melting
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
@@ -540,6 +613,9 @@ class SearchScreen extends Component {
                     isVisible={this.state.isModalVisible}
                     transparent={true}
                     onRequestClose={() => this.closeModal()}
+                    onBackdropPress={() =>  this.closeModal()}
+                    onBackButtonPress={() =>  this.closeModal()}
+                  
                     style={{ margin: 28 }}>
                     <TouchableWithoutFeedback
                         style={{ flex: 1 }}
@@ -554,6 +630,14 @@ class SearchScreen extends Component {
                                     <Text style={styles.selectCategoryText}>
                                         Select Categories
                                   </Text>
+                                    <View style={styles.closeIconView}>
+                                        <TouchableOpacity
+                                            onPress={() => this.setState({ isModalVisible: false })
+                                            }>
+                                            <Image style={styles.closeIcon} source={IconPack.CLOSE} />
+                                        </TouchableOpacity>
+                                    </View>
+
                                 </View>
 
                                 <FlatList
@@ -586,20 +670,19 @@ class SearchScreen extends Component {
                                     />
                                 </View>
                             </View>
-                            <View style={styles.closeIconView}>
-                                <TouchableOpacity
-                                    onPress={() => this.setState({ isModalVisible: false })
-                                    }>
-                                    <Image style={styles.closeIcon} source={IconPack.CLOSE} />
-                                </TouchableOpacity>
-                            </View>
+                           
                         </>
                     </TouchableWithoutFeedback>
                 </Modal>
 
 
                 <View style={styles.flex}>
-                    <Modal isVisible={this.state.isSearchCodeVisible} style={{ margin: 30 }}>
+                    <Modal isVisible={this.state.isSearchCodeVisible} 
+                      onBackdropPress={() => this.setState({ isSearchCodeVisible: false })}
+                      onBackButtonPress={() => this.setState({ isSearchCodeVisible: false })}
+                    onRequestClose={()=>this.setState({ isSearchCodeVisible: false })}
+
+                    style={{ margin: 30 }}>
                         <View style={styles.container}>
                             <View style={styles.topContainer}>
                                 <Text style={styles.title}>Search By Code</Text>
@@ -630,7 +713,8 @@ class SearchScreen extends Component {
                                 />
                             </View>
 
-                            <TouchableOpacity style={styles.imageView} onPress={() => this.setState({ isSearchCodeVisible: false })}>
+                            <TouchableOpacity style={styles.imageView}
+                             onPress={() => this.setState({ isSearchCodeVisible: false })}>
                                 <Image
                                     source={IconPack.WHITE_CLOSE}
                                     style={styles.imageStyle}
@@ -645,6 +729,9 @@ class SearchScreen extends Component {
           isVisible={this.state.isKaratModalVisible}
           transparent={true}
           onRequestClose={() => this.closeKaratModal()}
+          onBackdropPress={() => this.closeKaratModal()}
+          onBackButtonPress={() => this.closeKaratModal()}
+
           style={{margin: 0}}>
           <TouchableWithoutFeedback >
             <View style={styles.container1}>
@@ -657,28 +744,29 @@ class SearchScreen extends Component {
                 placeholder="Find Karat"
                 placeholderTextColor="#757575"
               />
-              {this.filterList(list).length !== 0 ? (
+              { list && list.length>0 && this.filterList(list).length !== 0 ? (
                 this.filterList(list).map((listItem, index) => (
                   <View style={styles.dataContainer}>
                     <Text key={index} style={styles.itemText}>
-                      {listItem}
+                      {listItem.melting_name}
                     </Text>
 
                     <View style={{marginRight: 10}}>
                       <CheckBox
                         disabled={false}
-                        value={this.state.toggleCheckBox}
-                        onValueChange={newValue =>
-                          this.setToggleCheckBox(newValue)
-                        }
-                        onFillColor="#FFFFFF"
+                        value={this.state.karat[listItem.id]}
+                        onChange={() => this.setToggleCheckBox(listItem.id,listItem.melting_name)}
+                       // onFillColor="#FFFFFF"
+                        onFillColor="#11255a"
+                        onTintColor="gray"
+                        onCheckColor="#ffffff"
                       />
                     </View>
                   </View>
                 ))
               ) : (
                 <View style={styles.noContainView}>
-                  <Text style={styles.noFoundText}>Not Data found!</Text>
+                  <Text style={styles.noFoundText}>No Data found!</Text>
                 </View>
               )}
               <View style={styles.bottomView}>
@@ -721,7 +809,10 @@ function mapStateToProps(state) {
         errorSearchbyCodeVersion: state.searchReducer.errorSearchbyCodeVersion,
         searchByCodeData: state.searchReducer.searchByCodeData,
 
-
+        allParameterData: state.homePageReducer.allParameterData,
+        successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+        errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+    
 
     };
 }
@@ -779,6 +870,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection:'row'
     },
     selectCategoryText: {
         fontSize: 21,
@@ -789,13 +881,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
     },
     buttonContainer: {
-        height: 54,
+        height: 60,
         backgroundColor: '#ffffff',
         borderBottomLeftRadius: 14,
         borderBottomRightRadius: 14,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom:hp(2)
+       // marginBottom:hp(2)
+       
     },
     closeIconView: {
         position: 'absolute',
@@ -878,13 +971,17 @@ const styles = StyleSheet.create({
        // flex: 1,
       },
       titleContainer: {
-        marginLeft: 10,
+        //marginLeft: 10,
+        backgroundColor:"#19af81"
+
       },
       titleText: {
         ...Theme.ffLatoBold20,
-        color: '#000000',
+        color: '#FFFFFF',
         marginLeft: 10,
         marginTop: Platform.OS === 'android' ? 8 : 12,
+        marginBottom: Platform.OS === 'android' ? 8 : 12,
+
       },
       borderStyle: {
         borderBottomColor: '#d2d2d2',
@@ -898,7 +995,7 @@ const styles = StyleSheet.create({
       container1: {
         backgroundColor: '#ffffff',
         marginHorizontal: 16,
-      },
+              },
       spaceHorizontal: {
         marginHorizontal: 18,
         marginTop: 15,
@@ -910,11 +1007,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderColor: '#d2d2d2',
         borderWidth: 1,
-        marginLeft: 5,
+        //marginLeft: 7,
       },
       itemText: {
         margin: 1,
-        color: '#FFFFFF',
+       // color: '#FFFFFF',
+       
         ...Theme.ffLatoBold15,
         //backgroundColor: '#657fd6',
         height: 45,
@@ -936,7 +1034,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 0,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        backgroundColor: '#657fd6',
+        // backgroundColor: '#657fd6',
         borderBottomColor: '#d2d2d2',
         borderBottomWidth: 1,
         alignItems: 'center',
