@@ -50,7 +50,7 @@ class HomePage extends Component {
     super(props);
     this.state = {
       currentPage: 0,
-      isModalVisible: false,
+      isModalVisible: true,
       successHomePageVersion: 0,
       errorHomePageVersion: 0,
       isImageModalVisibel: false,
@@ -856,7 +856,7 @@ class HomePage extends Component {
       socialTextView,
     } = HomePageStyle;
 
-    const { homePageData, isFetching } = this.props;
+    const { homePageData, isFetching,allParameterData } = this.props;
     const { imageToBeDisplayed, finalCollection, collection } = this.state;
 
     var bannerData =
@@ -865,6 +865,9 @@ class HomePage extends Component {
         : [];
 
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+
+    let userStatus = allParameterData && allParameterData.splash_popup &&  allParameterData.splash_popup[0]
+
 
     return (
       <View style={mainContainer}>
@@ -876,16 +879,14 @@ class HomePage extends Component {
             />
           }
           showsVerticalScrollIndicator={false}>
-          {this.state.isModalVisible && (
+          {this.state.isModalVisible  && userStatus.status == 'Active' && (
             <View>
               <Modal
                 style={{ justifyContent: 'center' }}
                 isVisible={this.state.isModalVisible}
                 onRequestClose={() => this.setState({ isModalVisible: false })}
                 onBackdropPress={() => this.setState({ isModalVisible: false })}
-                onBackButtonPress={() =>
-                  this.setState({ isModalVisible: false })
-                }>
+                onBackButtonPress={() => this.setState({ isModalVisible: false }) }>
                 <SafeAreaView>
                   <View
                     style={{
@@ -923,25 +924,26 @@ class HomePage extends Component {
                       </TouchableOpacity>
                     </View>
                     <Image
-                      source={require('../../assets/image/insta.png')}
-                      //defaultSource={require('../../assets/image/default.png')}
+                      source={{uri : userStatus.image}}
                       defaultSource={IconPack.APP_LOGO}
                       style={{
-                        height: hp(50),
+                        height: hp(49),
                         width: wp(83),
                         borderColor: 'gray',
                         borderWidth: 1,
-                        bottom: hp(2),
+                        bottom: hp(2.5),
                       }}
+                      resizeMode='contain'
                     />
 
                     <_CustomButton
                       onPress={() => this.onOkPressed()}
                       title="OK"
-                      height={hp(7.2)}
+                      height={hp(7.1)}
                       width={wp(80)}
                       fontSize={hp(2.5)}
                       fontWeight={Platform.OS === 'ios' ? '400' : 'bold'}
+                      backgroundColor={color.green}
                     />
                   </View>
                 </SafeAreaView>

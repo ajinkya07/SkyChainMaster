@@ -171,6 +171,7 @@ class CategoryContainer extends Component {
             RightBtnPressTwo={()=> this.props.navigation.navigate('Notification')}
             rightIconHeight2={hp(3.5)}
             LeftBtnPress={() => this.props.navigation.goBack()}
+            backgroundColor={color.green}
           />}
 
         <View style={{
