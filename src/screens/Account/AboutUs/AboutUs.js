@@ -12,6 +12,8 @@ import {
     Toast,
 } from 'native-base';
 import _CustomHeader from '@customHeader/_CustomHeader'
+import WebViewComponent from './WebViewComponent'
+
 
 export default class AboutUs extends React.Component {
     render() {
@@ -24,93 +26,8 @@ export default class AboutUs extends React.Component {
 
                 />
                 <Content>
-                    <SafeAreaView style={styles.viewContainer}>
-                        <Text style={styles.HeadingText}>SAR</Text>
-                        <Text style={{ fontWeight: 'bold', fontSize: 24, textAlign: 'center' }}>
-                            A Royal Chains Brand Leading Jewellery Manufacturer
-                         </Text>
-                        <Text
-                            style={{
-                                marginTop: 21,
-                                fontWeight: '700',
-                                marginBottom: 18,
-                                fontSize: 18,
-                            }}>
-                            Company Overview
-          </Text>
-                        <View>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                            <Text style={{ fontSize: 18, color: '#808080', marginBottom: 12 }}>
-                                SAR is the root & essence ofRoyal Group, Established in 1987, it
-                                started its business as a traditional gold chain producer,since
-                                years it has evolved with the touch of modern technology &
-                                experienced a total reformation in product
-                                variety,technology,management & marketing structure.
-            </Text>
-                        </View>
-                    </SafeAreaView>
+                    
+                    <WebViewComponent />
                 </Content>
             </Container>
         );

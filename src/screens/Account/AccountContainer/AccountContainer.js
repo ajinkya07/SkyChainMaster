@@ -12,6 +12,7 @@ import {
   ImageBackground,
   Dimensions,
   Linking,
+  Platform,
 } from 'react-native';
 import {Container, Content, Icon, Toast} from 'native-base';
 import IconPack from '../../OnBoarding/Login/IconPack';
@@ -21,17 +22,17 @@ import {
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
 import {strings} from '@values/strings';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, Link} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Modal from 'react-native-modal';
 import {color} from '@values/colors';
+import {connect} from 'react-redux'
 
 import {version} from '../../../../package.json';
 import Theme from '../../../values/Theme';
 const {width} = Dimensions.get('window');
 import Share from 'react-native-share';
 
-var fullName = '';
 
 const AccountRow = ({icon, title, onPress}) => {
   return (
@@ -50,7 +51,7 @@ const AccountRow = ({icon, title, onPress}) => {
   );
 };
 
-export default class AccountContainer extends Component {
+ class AccountContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,9 +60,10 @@ export default class AccountContainer extends Component {
     };
   }
 
-  // componentDidMount() {
-  // fullName =   this.getItem();
-  // }
+  componentDidMount() {
+    const {allParameterData} = this.props
+    
+  }
 
   async getItem() {
     let value = await AsyncStorage.getItem('fullName');
@@ -133,25 +135,79 @@ export default class AccountContainer extends Component {
   hideCallPopup = () => {
     this.setState({isCallModalVisible: false});
   };
-  async myCustomShare() {
-    console.log('sharecalled');
+
+    myCustomShare  = async ()=> {
+     const { allParameterData } = this.props
+     
+     let type = Platform.OS === 'ios' ? 'ios' : 'android'
+
+     let androidLink = allParameterData.android_app_link
+     let iosLink = allParameterData.ios_app_link
+
     const shareOptions = {
-      message:
-        'https://play.google.com/store/apps/details?id=com.project.jewelmart.royalchains',
-    };
+      message: type == 'ios' ? iosLink : androidLink    };
+
     try {
       const ShareResponse = await Share.open(shareOptions);
     } catch (error) {
       console.log('Error =>', error);
     }
   }
+
+
+
+
+   rateApp = async()=> {
+    const { allParameterData } = this.props
+    let type1 = Platform.OS === 'ios' ? 'ios' : 'android'
+
+    let androidLink1 = allParameterData.android_app_link
+    let iosLink1 = allParameterData.ios_app_link
+
+    let link = type1 == 'ios' ? iosLink1 : androidLink1
+
+    Linking.openURL(link)
+
+ }
+
+
   _pressCall = () => {
-    const url = 'tel:+123456789';
+    const { allParameterData} = this.props
+
+   const c = allParameterData.call
+  
+    const url = Platform.OS == 'ios' ? `tel://${c}` : `tel:${c}`;
     //TODO ios
     //const url = 'tel://+123456789';
     Linking.openURL(url);
   };
+
+
+  sentEmail = () =>{
+    const { allParameterData} = this.props
+
+    const email = allParameterData.email
+
+    Linking.openURL(
+      `mailto:${email}?subject=write a subject`,
+    );
+    // this.setState({
+    //   accountEmailModal:false
+    // })
+  }
+
+
   render() {
+    const {allParameterData} = this.props
+
+    const aboutUS = allParameterData.about_us
+    const privacyPolicy = allParameterData.privacy_policy
+    const terms = allParameterData.terms_and_conditions
+    const whatsApp = allParameterData.whatsapp
+    const emailID = allParameterData.email
+    const call = allParameterData.call
+
+
     return (
       
       <View style={{flex: 1, width: wp(100)}}>
@@ -187,17 +243,23 @@ export default class AccountContainer extends Component {
             <AccountRow
               title="About Us"
               icon={IconPack.ABOUT}
-              onPress={() => this.props.navigation.navigate('AboutUs')}
+              onPress={() => Linking.openURL(aboutUS)}
+             // onPress={() => this.props.navigation.navigate('AboutUs')}
             />
             <AccountRow
               title="Privacy Policy"
               icon={IconPack.ABOUT}
-              onPress={() => this.props.navigation.navigate('PrivacyPolicy')}
-            /><AccountRow
-            title="Terms & Conditions"
-            icon={IconPack.ABOUT}
-            onPress={() => this.props.navigation.navigate('TermsConditions')}
-          />
+              onPress={() => Linking.openURL(privacyPolicy)}
+             // onPress={() => this.props.navigation.navigate('PrivacyPolicy')}
+            />
+            
+            <AccountRow
+              title="Terms & Conditions"
+              icon={IconPack.ABOUT}
+              onPress={() => Linking.openURL(terms)}
+            //onPress={() => this.props.navigation.navigate('TermsConditions')}
+            />
+
             <AccountRow
               title="Call / Email Us"
               icon={IconPack.EMAIL}
@@ -213,7 +275,7 @@ export default class AccountContainer extends Component {
               icon={IconPack.WHATS_UP}
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?phone=${917506604368}&text=${''}`,
+                  `whatsapp://send?phone=${'91'+whatsApp}&text=${''}`,
                 );
               }}
             />
@@ -225,7 +287,7 @@ export default class AccountContainer extends Component {
             <AccountRow
               title="Rate App"
               icon={IconPack.RATE}
-              onPress={() => this.myCustomShare()}
+              onPress={() => this.rateApp()}
             />
             <AccountRow
               title="Version"
@@ -285,14 +347,16 @@ export default class AccountContainer extends Component {
                         Address : Zaveri Bazar
                       </Text>
                       <Text style={styles.emailText}>
-                        Email : orders@royalchains.com
+                        Email : {emailID}
                       </Text>
                     </View>
                     <View style={styles.bottomContainer}>
                       <TouchableOpacity onPress={() => this.showCallPopup()}>
                         <Text style={styles.bottomText}>CALL</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => Alert.alert('email')}>
+                      <TouchableOpacity
+                       onPress={() => this.sentEmail()}
+                       >
                         <Text style={styles.bottomText}>EMAIL</Text>
                       </TouchableOpacity>
                     </View>
@@ -350,7 +414,7 @@ export default class AccountContainer extends Component {
                     }}>
                     <Text
                       style={{fontSize: 15, color: '#A9A9A9', marginBottom: 7}}>
-                      Contact : 8100000000
+                      Contact : {call}
                     </Text>
                     <Text
                       style={{fontSize: 15, color: '#A9A9A9', marginBottom: 7}}>
@@ -379,6 +443,8 @@ export default class AccountContainer extends Component {
     );
   }
 }
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -537,6 +603,7 @@ const styles = StyleSheet.create({
   },
 });
 
+
 const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
   return (
     <TouchableOpacity
@@ -555,6 +622,21 @@ const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
     </TouchableOpacity>
   );
 };
+
+
+
+function mapStateToProps(state) {
+  return {
+     
+      allParameterData: state.homePageReducer.allParameterData,
+      successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+      errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+  
+  };
+}
+
+export default connect(mapStateToProps,null)(AccountContainer);
+
 
 const actionButtonRoundedStyle = StyleSheet.create({
   mainContainerStyle: {

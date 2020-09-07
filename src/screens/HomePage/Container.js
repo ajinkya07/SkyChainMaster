@@ -123,6 +123,8 @@ class Container extends Component {
     // alert('call');
     this.showCallPopup();
   };
+
+
   _pressCall = () => {
     const url = 'tel:+123456789';
     //TODO ios
@@ -148,6 +150,7 @@ class Container extends Component {
           onNotificationPress={() => this.onNotificationPress()}>
           <_Tabs count={global.totalCartCount} />
         </_Container>
+        
         <Modal
           isVisible={this.state.isCallModalVisible}
           transparent={true}
@@ -189,6 +192,7 @@ class Container extends Component {
               </View>
 
               <CallComponent title="Phone Call" onPress={this._pressCall} />
+
               <CallComponent
                 title="WhatsApp"
                 onPress={() => {
