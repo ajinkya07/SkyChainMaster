@@ -112,6 +112,12 @@ export const urls = {
     Notification:{
         url:  url + 'Notification_List'
     },
+    CartSummery:{
+        url:  url + 'Cart_summary'
+    },
+    CartWeight:{
+        url:  url + 'Cart_summary/total_cart'
+    },
+
     
-   
 }

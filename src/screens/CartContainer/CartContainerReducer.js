@@ -44,7 +44,17 @@ import {
   PLACE_ORDER_DATA,
   PLACE_ORDER_DATA_SUCCESS,
   PLACE_ORDER_DATA_ERROR,
-  PLACE_ORDER_DATA_RESET_REDUCER
+  PLACE_ORDER_DATA_RESET_REDUCER,
+
+  CART_SUMMARY_DATA,
+  CART_SUMMARY_DATA_SUCCESS,
+  CART_SUMMARY_DATA_ERROR,
+  CART_SUMMARY_DATA_RESET_REDUCER,
+
+  CART_WEIGHT_DATA,
+  CART_WEIGHT_DATA_SUCCESS,
+  CART_WEIGHT_DATA_ERROR,
+  CART_WEIGHT_DATA_RESET_REDUCER
 
 
 } from "@redux/types";
@@ -87,7 +97,17 @@ const initialState = {
 
   successPlaceOrderVersion:0,
   errorPlaceOrderVersion:0,
-  placeOrderData:[]
+  placeOrderData:[],
+
+  errorCartSummaryVersion:0,
+  successCartSummaryVersion:0,
+  cartSummaryData:[],
+
+  
+  errorCartWeightVersion:0,
+  successCartWeightVersion:0,
+  cartWeightData:[]
+
 };
 
 
@@ -269,8 +289,6 @@ export default function dataReducer(state = initialState, action) {
       return initialState;
 
 
-
-
     case CLEAR_ALL_WISHLIST_DATA:
       return {
         ...state,
@@ -330,8 +348,6 @@ export default function dataReducer(state = initialState, action) {
       return initialState;
 
 
-
-
       
     case PLACE_ORDER_DATA:
       return {
@@ -340,7 +356,6 @@ export default function dataReducer(state = initialState, action) {
       };
 
     case PLACE_ORDER_DATA_SUCCESS:
-      console.warn("action.data.msg",action.data.msg);
       return {
         ...state,
         errorMsg: action.data.msg,
@@ -362,6 +377,64 @@ export default function dataReducer(state = initialState, action) {
       return initialState;
 
 
+
+      case CART_SUMMARY_DATA:
+        return {
+          ...state,
+          isFetching: true
+        };
+  
+      case CART_SUMMARY_DATA_SUCCESS:
+        return {
+          ...state,
+          errorMsg: action.data.msg,
+          isFetching: false,
+          successCartSummaryVersion: ++state.successCartSummaryVersion,
+          cartSummaryData:action.data,
+          error: false
+        };
+  
+      case CART_SUMMARY_DATA_ERROR:
+        return {
+          ...state,
+          isFetching: false,
+          error: true,
+          errorMsg: action.error,
+          errorCartSummaryVersion: ++state.errorCartSummaryVersion
+        };
+  
+      case CART_SUMMARY_DATA_RESET_REDUCER:
+        return initialState;
+  
+
+        case CART_WEIGHT_DATA:
+          return {
+            ...state,
+            isFetching: true
+          };
+    
+        case CART_WEIGHT_DATA_SUCCESS:
+          return {
+            ...state,
+            errorMsg: '',
+            isFetching: false,
+            successCartWeightVersion: ++state.successCartWeightVersion,
+            cartWeightData:action.data,
+            error: false
+          };
+    
+        case CART_WEIGHT_DATA_ERROR:
+          return {
+            ...state,
+            isFetching: false,
+            error: true,
+            errorMsg: action.error,
+            errorCartWeightVersion: ++state.errorCartWeightVersion
+          };
+    
+        case CART_WEIGHT_DATA_RESET_REDUCER:
+          return initialState;
+  
 
     default:
       return state;

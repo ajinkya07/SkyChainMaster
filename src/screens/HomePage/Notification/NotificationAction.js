@@ -56,9 +56,7 @@ console.warn("data--",data);
     dispatch(showLoadingIndicator());
     
     axios.post(urls.Notification.url, data, header).then(response => {
-    
-      console.warn("Notification_List response",response.data);
-    
+        
       if (response.data.ack === '1') {
         dispatch(onSuccess(response.data, NOTIFICATION_LIST_SUCCESS))
       }

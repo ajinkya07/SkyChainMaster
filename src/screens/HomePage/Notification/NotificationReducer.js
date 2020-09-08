@@ -25,7 +25,7 @@ export default function dataReducer(state = initialState, action) {
       };
 
     case NOTIFICATION_LIST_SUCCESS:
-      console.log("action.data",action.data);
+      console.log("notifi.data",action.data);
      return {
         ...state,
         errorMsg: "",
@@ -41,6 +41,7 @@ export default function dataReducer(state = initialState, action) {
         isFetching: false,
         error: true,
         errorMsg: action.error,
+        notificationData: [],
         errorNotificationVersion: ++state.errorNotificationVersion
       };
       

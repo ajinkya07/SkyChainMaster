@@ -223,3 +223,15 @@ export const NOTIFICATION_LIST_SUCCESS = "notificationDataSuccess";
 export const NOTIFICATION_LIST_ERROR = "notificationDataError";
 export const NOTIFICATION_LIST_RESET_REDUCER = "notificationDataResetReducer";
 
+
+export const CART_SUMMARY_DATA = "cartSummaryData";
+export const CART_SUMMARY_DATA_SUCCESS = "cartSummaryDataSuccess";
+export const CART_SUMMARY_DATA_ERROR = "cartSummaryDataError";
+export const CART_SUMMARY_DATA_RESET_REDUCER = "cartSummaryDataResetReducer";
+
+
+export const CART_WEIGHT_DATA = "cartWeightData";
+export const CART_WEIGHT_DATA_SUCCESS = "cartWeightDataSuccess";
+export const CART_WEIGHT_DATA_ERROR = "cartWeightDataError";
+export const CART_WEIGHT_DATA_RESET_REDUCER = "cartWeightDataResetReducer";
+

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-    View, Text, SafeAreaView, Image,
+    View, Text, SafeAreaView, Image,ActivityIndicator,
     ScrollView, FlatList, TouchableOpacity
 } from 'react-native';
 import _CustomHeader from '@customHeader/_CustomHeader'
@@ -140,9 +140,48 @@ class Notification extends Component {
         this.props.getNotificationList(data)
     }
 
+    renderLoader = () => {
+        return (
+          <View
+            style={{
+              position: 'absolute',
+              height: hp(80),
+              width: wp(100),
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <ActivityIndicator size="large" color={color.brandColor} />
+          </View>
+        );
+      };
+    
+      noDataFound = msg => {
+        return (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              bottom: hp(8),
+              flex:1
+            }}>
+            <Image
+              source={require('../../../assets/gif/noData.gif')}
+              style={{height: hp(20), width: hp(20)}}
+            />
+            <Text style={{fontSize: 18, fontWeight: '400', textAlign: 'center'}}>
+              {msg}
+            </Text>
+          </View>
+        );
+      };
 
+
+    
     render() {
         const { notificationData, isFetching } = this.props
+
+        console.warn("notificationData",notificationData);
+
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
@@ -156,7 +195,7 @@ class Notification extends Component {
                     <FlatList
                         onRefresh={() => this.onRefresh()}
                         refreshing={isFetching}
-                        data={data}
+                        data={notificationData && notificationData}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={item => item.id}
                         renderItem={({ item, index }) => (
@@ -164,6 +203,14 @@ class Notification extends Component {
                         )}
                     />
                 </View>
+
+                {this.props.isFetching ? this.renderLoader() : null}
+
+                {!this.props.isFetching &&
+                  this.props.notificationData.length === 0
+                  ? this.noDataFound(this.props.errorMsg)
+                  : null}
+
             </SafeAreaView>
         );
     }

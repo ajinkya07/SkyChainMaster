@@ -57,6 +57,7 @@ const AccountRow = ({icon, title, onPress}) => {
     this.state = {
       accountEmailModal: false,
       isCallModalVisible: false,
+      isSocialMediaModal:false
     };
   }
 
@@ -196,6 +197,19 @@ const AccountRow = ({icon, title, onPress}) => {
     // })
   }
 
+  openSocialMediaModal = ()=>{
+    this.setState({
+      isSocialMediaModal:true
+    })
+  }
+
+  closeSocialMediaModal = () =>{
+    this.setState({
+      isSocialMediaModal:false
+    })
+  }
+
+
 
   render() {
     const {allParameterData} = this.props
@@ -207,7 +221,11 @@ const AccountRow = ({icon, title, onPress}) => {
     const emailID = allParameterData.email
     const call = allParameterData.call
 
+    const instagram = allParameterData.instagram
+    const facebook = allParameterData.facebook
 
+    
+    
     return (
       
       <View style={{flex: 1, width: wp(100)}}>
@@ -268,7 +286,7 @@ const AccountRow = ({icon, title, onPress}) => {
             <AccountRow
               title="Social Media"
               icon={IconPack.PROFILE}
-              onPress={() => alert('Todo')}
+              onPress={() => this.openSocialMediaModal()}
             />
             <AccountRow
               title="WhatsApp"
@@ -313,12 +331,16 @@ const AccountRow = ({icon, title, onPress}) => {
               <>
                 <View style={styles.mainContainer}>
                   <View style={styles.content}>
-                    <View
-                      style={{
+                    <View style={{
                         flexDirection: 'row',
                         justifyContent: 'space-between',
+                        backgroundColor:color.green
                       }}>
-                      <Text style={styles.title}>Call / Email Us</Text>
+                      <Text style={{
+                        color: '#FFFFFF',
+                        fontSize: 18,
+                        margin: Platform.OS === 'android' ? 16 : 20,
+                      }}>Call / Email Us</Text>
                       <TouchableOpacity
                         onPress={() =>
                           this.setState({
@@ -327,7 +349,7 @@ const AccountRow = ({icon, title, onPress}) => {
                         }>
                         <Image
                           style={styles.closeIcon}
-                          source={IconPack.CLOSE}
+                          source={IconPack.WHITE_CLOSE}
                         />
                       </TouchableOpacity>
                     </View>
@@ -386,31 +408,31 @@ const AccountRow = ({icon, title, onPress}) => {
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
+                      backgroundColor:color.green,
+                      borderTopLeftRadius:10,borderTopRightRadius:10
                     }}>
                     <Text
                       style={{
                         fontSize: 18,
-                        marginLeft: 10,
-                        marginVertical: Platform.OS === 'android' ? 8 : 12,
+                        marginLeft: 15,
+                        marginVertical: Platform.OS === 'android' ? 8 : 10,
+                        color:'#FFFFFF'
                       }}>
                       Contacts
                     </Text>
                     <TouchableOpacity
-                      onPress={() =>
-                        this.setState({
-                          isCallModalVisible: false,
-                        })
-                      }>
-                      <Image style={styles.closeIcon} source={IconPack.CLOSE} />
+                      onPress={() => this.setState({ isCallModalVisible: false})}>
+                      <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                     </TouchableOpacity>
                   </View>
 
                   <View
                     style={{
-                      marginHorizontal: 18,
+                      marginTop: 10,
                       borderBottomWidth: 0.8,
                       borderColor: '#D3D3D3',
                       marginBottom: 12,
+                      marginLeft:20
                     }}>
                     <Text
                       style={{fontSize: 15, color: '#A9A9A9', marginBottom: 7}}>
@@ -437,7 +459,43 @@ const AccountRow = ({icon, title, onPress}) => {
             </Modal>
           </Modal>
 
-          {/* CALL POPUP */}
+          
+          {/* SOCIAL MEDIA MODAL */}
+          <Modal
+          isVisible={this.state.isSocialMediaModal}
+          transparent={true}
+          onRequestClose={() => this.closeSocialMediaModal()}
+          onBackdropPress={() => this.closeSocialMediaModal()}
+          onBackButtonPress={() => this.closeSocialMediaModal()}
+
+          style={{margin: 0}}>
+
+          <TouchableWithoutFeedback style={styles.flex}>
+            <View style={styles.contain}>
+             
+              <View style={styles.titleContainer}>
+                <Text style={styles.titleText2}>Social Media</Text>
+                <TouchableOpacity
+                  onPress={() => this.closeSocialMediaModal()}>
+                  <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.spaceHorizontal}>
+                <RowData title="Facebook" onPress={() => Linking.openURL(facebook)} />
+                <RowData title="Instagram" onPress={() => Linking.openURL(instagram)} />
+              </View>
+              <View style={styles.buttonContainer}>
+                <ActionButtonRounded
+                  title="CANCEL"
+                  onButonPress={() => this.closeSocialMediaModal()}
+                  containerStyle={styles.buttonStyle}
+                />
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
         </ScrollView>
       </View>
     );
@@ -450,6 +508,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  contain: {
+    backgroundColor: '#ffffff',
+    marginHorizontal: 16,
+    borderRadius: 14,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor:color.green,
+    borderTopLeftRadius:10,
+    borderTopRightRadius:10
+  },
+  spaceHorizontal: {
+    marginHorizontal: 18,
+    marginTop: 15,
+  },
+  titleText2: {
+    ...Theme.ffLatoMedium18,
+    color: '#FFFFFF',
+    marginLeft: 20,
+    marginTop: Platform.OS === 'android' ? 8 : 12,
+    textAlign:'center'
   },
   bgImage: {
     height: hp(100),
@@ -504,6 +585,16 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: 'Lato-Regular',
   },
+  borderStyle: {
+    borderBottomColor: '#d2d2d2',
+    borderBottomWidth: 1,
+  },
+  subTitleStyle: {
+    ...Theme.ffLatoRegular16,
+    color: '#757575',
+    marginVertical: 5,
+  },
+ 
   titleView: {
     flex: 1,
     marginLeft: 50,
@@ -604,6 +695,18 @@ const styles = StyleSheet.create({
 });
 
 
+const RowData = ({title, onPress}) => {
+  return (
+    <TouchableOpacity onPress={() => onPress()}>
+      <View style={{marginBottom: 14}}>
+        <Text style={styles.subTitleStyle}>{title}</Text>
+        <View style={styles.borderStyle} />
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+
 const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
   return (
     <TouchableOpacity
@@ -640,9 +743,9 @@ export default connect(mapStateToProps,null)(AccountContainer);
 
 const actionButtonRoundedStyle = StyleSheet.create({
   mainContainerStyle: {
-    backgroundColor: '#11255a',
+    backgroundColor: color.green,
     height: hp(6),
-    width: wp(40),
+    width: wp(35),
     justifyContent: 'center',
     borderRadius: 45,
   },

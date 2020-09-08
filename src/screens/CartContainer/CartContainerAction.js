@@ -42,8 +42,19 @@ import {
     PLACE_ORDER_DATA,
     PLACE_ORDER_DATA_SUCCESS,
     PLACE_ORDER_DATA_ERROR,
-    PLACE_ORDER_DATA_RESET_REDUCER
+    PLACE_ORDER_DATA_RESET_REDUCER,
 
+    
+    CART_SUMMARY_DATA,
+    CART_SUMMARY_DATA_SUCCESS,
+    CART_SUMMARY_DATA_ERROR,
+    CART_SUMMARY_DATA_RESET_REDUCER,
+
+    CART_WEIGHT_DATA,
+    CART_WEIGHT_DATA_SUCCESS,
+    CART_WEIGHT_DATA_ERROR,
+    CART_WEIGHT_DATA_RESET_REDUCER
+ 
   } from "@redux/types";
   
   import { strings } from '@values/strings'
@@ -208,7 +219,6 @@ export function moveProduct(data) {
 
 
 
-
 export function clearAllCart(data) {
   return dispatch => {
     dispatch(showLoadingIndicator(CLEAR_ALL_CART_DATA));
@@ -261,6 +271,7 @@ export function clearAllWishList(data) {
   }
 }
 
+
 export function updateEditedCartProduct(data) {
   console.warn(" updateEditedCartProduct",data);
   return dispatch => {
@@ -286,7 +297,6 @@ export function updateEditedCartProduct(data) {
       });
   }
 }
-
 
 
 
@@ -318,6 +328,52 @@ export function placeOrderFromCart(data) {
       .catch(function (error) {
         dispatch(
           onFailure(strings.serverFailedMsg, PLACE_ORDER_DATA_ERROR)
+        );
+      });
+  }
+}
+
+
+
+export function getCartSummary(data) {
+  return dispatch => {
+    dispatch(showLoadingIndicator(CART_SUMMARY_DATA));
+
+    axios.post(urls.CartSummery.url, data, header).then(response => {
+      if (response.data.ack == '1') {
+        dispatch(onSuccess(response.data, CART_SUMMARY_DATA_SUCCESS))
+      }
+
+      else {
+        dispatch(onFailure(response.data.msg, CART_SUMMARY_DATA_ERROR))
+      }
+    })
+      .catch(function (error) {
+        dispatch(
+          onFailure(strings.serverFailedMsg, CART_SUMMARY_DATA_ERROR)
+        );
+      });
+  }
+}
+
+export function getCartWeight(data) {
+
+  return dispatch => {
+    dispatch(showLoadingIndicator(CART_WEIGHT_DATA));
+
+    axios.post(urls.CartWeight.url, data, header).then(response => {
+   
+      if (response.data.ack == '1') {
+        dispatch(onSuccess(response.data, CART_WEIGHT_DATA_SUCCESS))
+      }
+
+      else {
+        dispatch(onFailure(response.data.msg, CART_WEIGHT_DATA_ERROR))
+      }
+    })
+      .catch(function (error) {
+        dispatch(
+          onFailure(strings.serverFailedMsg, CART_WEIGHT_DATA_ERROR)
         );
       });
   }

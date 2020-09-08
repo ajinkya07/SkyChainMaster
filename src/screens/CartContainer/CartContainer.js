@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, { Component, useState } from 'react';
 import {
   View,
   Text,
@@ -30,7 +30,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 import {
   getCartData,
   getWishlistData,
@@ -41,12 +41,15 @@ import {
   clearAllWishList,
   updateEditedCartProduct,
   placeOrderFromCart,
+
+  getCartSummary,
+  getCartWeight
 } from '@cartContainer/CartContainerAction';
-import {connect} from 'react-redux';
-import {urls} from '@api/urls';
+import { connect } from 'react-redux';
+import { urls } from '@api/urls';
 import Modal from 'react-native-modal';
-import {withNavigationFocus} from '@react-navigation/compat';
-import {strings} from '@values/strings';
+import { withNavigationFocus } from '@react-navigation/compat';
+import { strings } from '@values/strings';
 import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -55,9 +58,9 @@ import Theme from '../../values/Theme';
 
 var userId = '';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
+const ActionButtonRounded = ({ title, onButonPress, containerStyle }) => {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -78,7 +81,7 @@ const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
 
 const actionButtonRoundedStyle = StyleSheet.create({
   mainContainerStyle: {
-    backgroundColor: '#11255a',
+    backgroundColor: color.green,
     height: 42,
     width: width - 36,
     justifyContent: 'center',
@@ -91,7 +94,7 @@ const actionButtonRoundedStyle = StyleSheet.create({
     alignItems: 'center',
   },
   titleStyle: {
-    color: '#fbcb84',
+    color: '#FFFFFF',
     fontSize: 14,
     textAlign: 'center',
     alignItems: 'center',
@@ -100,7 +103,7 @@ const actionButtonRoundedStyle = StyleSheet.create({
   },
 });
 
-const ActionButtonRounded2 = ({title, onButonPress, containerStyle}) => {
+const ActionButtonRounded2 = ({ title, onButonPress, containerStyle }) => {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -134,7 +137,7 @@ const actionButtonRoundedStyle2 = StyleSheet.create({
     alignItems: 'center',
   },
   titleStyle2: {
-    color: '#fbcb84',
+    color: '#FFFFFF',
     fontSize: 14,
     textAlign: 'center',
     alignItems: 'center',
@@ -185,7 +188,8 @@ class CartContainer extends Component {
       productName: '',
       quantity: '',
       length: '',
-      weight: [],
+      weightArr: [],
+      weight:'',
       isModalVisible: false,
       date: '',
       isPlaceOrderModalVisible: false,
@@ -205,6 +209,14 @@ class CartContainer extends Component {
 
       successPlaceOrderVersion: 0,
       errorPlaceOrderVersion: 0,
+
+      errorCartSummaryVersion: 0,
+      successCartSummaryVersion: 0,
+
+      errorCartWeightVersion: 0,
+      successCartWeightVersion: 0,
+
+
     };
     userId = global.userId;
   }
@@ -223,6 +235,13 @@ class CartContainer extends Component {
     data2.append('table', 'wishlist');
 
     await this.props.getWishlistData(data2);
+
+    await this.props.getCartSummary(data)
+
+    const data3 = new FormData()
+    data3.append('user_id', userId)
+
+    await this.props.getCartWeight(data3)
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -245,6 +264,11 @@ class CartContainer extends Component {
       errorEditCartProductVersion,
       successPlaceOrderVersion,
       errorPlaceOrderVersion,
+      errorCartSummaryVersion,
+      successCartSummaryVersion,
+      errorCartWeightVersion,
+      successCartWeightVersion
+
     } = nextProps;
 
     let newState = null;
@@ -369,11 +393,37 @@ class CartContainer extends Component {
       };
     }
 
+    if (successCartSummaryVersion > prevState.successCartSummaryVersion) {
+      newState = {
+        ...newState,
+        successCartSummaryVersion: nextProps.successCartSummaryVersion,
+      };
+    }
+    if (errorCartSummaryVersion > prevState.errorCartSummaryVersion) {
+      newState = {
+        ...newState,
+        errorCartSummaryVersion: nextProps.errorCartSummaryVersion,
+      };
+    }
+
+    if (successCartWeightVersion > prevState.successCartWeightVersion) {
+      newState = {
+        ...newState,
+        successCartWeightVersion: nextProps.successCartWeightVersion,
+      };
+    }
+    if (errorCartWeightVersion > prevState.errorCartWeightVersion) {
+      newState = {
+        ...newState,
+        errorCartWeightVersion: nextProps.errorCartWeightVersion,
+      };
+    }
     return newState;
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    const {cartData, wishlistData, totalCartCountData} = this.props;
+    const { cartData, wishlistData, totalCartCountData, cartWeightData } = this.props;
+
 
     if (prevProps.isFocused !== this.props.isFocused) {
       const data3 = new FormData();
@@ -387,6 +437,7 @@ class CartContainer extends Component {
       data4.append('table', 'wishlist');
 
       await this.props.getWishlistData(data4);
+
     }
 
     if (this.state.successCartVersion > prevState.successCartVersion) {
@@ -426,6 +477,13 @@ class CartContainer extends Component {
         data7.append('table', 'cart');
 
         await this.props.getTotalCartCount(data7);
+
+        await this.props.getCartSummary(data7)
+
+        const d3 = new FormData()
+        d3.append('user_id', userId)
+
+        await this.props.getCartWeight(d3)
       }
     }
 
@@ -454,9 +512,7 @@ class CartContainer extends Component {
       global.totalCartCount = totalCartCountData.count;
     }
 
-    if (
-      this.state.successMoveProductVersion > prevState.successMoveProductVersion
-    ) {
+    if (this.state.successMoveProductVersion > prevState.successMoveProductVersion) {
       Toast.show({
         text: this.props.errorMsg ? this.props.errorMsg : '',
         duration: 2500,
@@ -472,11 +528,16 @@ class CartContainer extends Component {
       data8.append('table', 'wishlist');
 
       await this.props.getWishlistData(data8);
+
+      await this.props.getCartSummary(data9)
+
+      const d4 = new FormData()
+      d4.append('user_id', userId)
+
+      await this.props.getCartWeight(d4)
     }
 
-    if (
-      this.state.errorMoveProductVersion > prevState.errorMoveProductVersion
-    ) {
+    if (this.state.errorMoveProductVersion > prevState.errorMoveProductVersion) {
       Toast.show({
         text: this.props.errorMsg
           ? this.props.errorMsg
@@ -484,6 +545,17 @@ class CartContainer extends Component {
         duration: 2500,
         type: 'danger',
       });
+
+      const wt = new FormData();
+      wt.append('user_id', userId);
+      wt.append('table', 'cart');
+
+      await this.props.getCartSummary(wt)
+
+      const d4 = new FormData()
+      d4.append('user_id', userId)
+
+      await this.props.getCartWeight(d4)
     }
 
     if (
@@ -497,7 +569,6 @@ class CartContainer extends Component {
         duration: 2500,
       });
 
-      console.warn('to clear cart');
       const c = new FormData();
       c.append('user_id', userId);
       c.append('table', 'cart');
@@ -531,7 +602,6 @@ class CartContainer extends Component {
           : strings.serverFailedMsg,
         duration: 2500,
       });
-      console.warn('to clear wishlist');
 
       const w = new FormData();
       w.append('user_id', userId);
@@ -570,7 +640,14 @@ class CartContainer extends Component {
 
       await this.props.getCartData(a);
 
-      this.setState({editStateData: '', isModalVisible: false});
+      await this.props.getCartSummary(a)
+
+      const d5 = new FormData()
+      d5.append('user_id', userId)
+
+      await this.props.getCartWeight(d5)
+
+      this.setState({ editStateData: '', isModalVisible: false });
     }
 
     if (
@@ -642,9 +719,9 @@ class CartContainer extends Component {
         }}>
         <Image
           source={require('../../assets/gif/noData.gif')}
-          style={{height: hp(20), width: hp(20)}}
+          style={{ height: hp(20), width: hp(20) }}
         />
-        <Text style={{fontSize: 18, fontWeight: '400', textAlign: 'center'}}>
+        <Text style={{ fontSize: 18, fontWeight: '400', textAlign: 'center' }}>
           {msg}
         </Text>
       </View>
@@ -691,7 +768,7 @@ class CartContainer extends Component {
   };
 
   wishListView = data => {
-    const {isToggle, openMoreDetailsIdwish} = this.state;
+    const { isToggle, openMoreDetailsIdwish } = this.state;
 
     let baseurl = urls.imageUrl + data.zoom_image;
 
@@ -702,7 +779,7 @@ class CartContainer extends Component {
             <TouchableOpacity onLongPress={() => this.showImageModal(data)}>
               <Image
                 style={styles.imgStyle}
-                source={{uri: baseurl + data.images}}
+                source={{ uri: baseurl + data.images }}
               />
             </TouchableOpacity>
           </View>
@@ -724,7 +801,7 @@ class CartContainer extends Component {
           <View>
             <Image
               source={require('../../assets/image/DownArrow.png')}
-              style={{height: hp(2), width: hp(2)}}
+              style={{ height: hp(2), width: hp(2) }}
             />
           </View>
         </View>
@@ -808,13 +885,13 @@ class CartContainer extends Component {
         refreshing={this.props.isFetching}
         onRefresh={() => this.scrollDownToRefreshWishList()}
         showsVerticalScrollIndicator={false}
-        renderItem={({item}) => (
-          <View style={{marginBottom: hp(1), marginTop: hp(1)}}>
+        renderItem={({ item }) => (
+          <View style={{ marginBottom: hp(1), marginTop: hp(1) }}>
             {this.wishListView(item)}
           </View>
         )}
         keyExtractor={(item, index) => item.cart_wish_id.toString()}
-        style={{marginTop: hp(1)}}
+        style={{ marginTop: hp(1) }}
       />
     );
   };
@@ -842,13 +919,13 @@ class CartContainer extends Component {
       quantity: editData.values[2],
       comments: editData.values[3] !== null ? editData.values[3] : '',
       length: editData.values[4],
-      weight: editData.weight,
+      weightArr: editData.weight,
       editStateData: editData,
     });
   };
 
   closeEditModal = () => {
-    this.setState({isModalVisible: false});
+    this.setState({ isModalVisible: false });
   };
 
   handleProductcodeChange = newText => {
@@ -913,7 +990,7 @@ class CartContainer extends Component {
   // cart view
 
   cartView = item => {
-    const {isToogleTwo, openMoreDetailsIdCart} = this.state;
+    const { isToogleTwo, openMoreDetailsIdCart } = this.state;
 
     let baseurl2 = urls.imageUrl + item.zoom_image;
 
@@ -924,7 +1001,7 @@ class CartContainer extends Component {
             <TouchableOpacity onLongPress={() => this.showImageModal(item)}>
               <Image
                 style={styles.imgStyle}
-                source={{uri: baseurl2 + item.images}}
+                source={{ uri: baseurl2 + item.images }}
               />
             </TouchableOpacity>
           </View>
@@ -946,7 +1023,7 @@ class CartContainer extends Component {
           <View>
             <Image
               source={require('../../assets/image/DownArrow.png')}
-              style={{height: hp(2), width: hp(2)}}
+              style={{ height: hp(2), width: hp(2) }}
             />
           </View>
         </View>
@@ -1086,13 +1163,13 @@ class CartContainer extends Component {
         refreshing={this.props.isFetching}
         onRefresh={() => this.scrollDownToRefreshCart()}
         showsVerticalScrollIndicator={false}
-        renderItem={({item}) => (
-          <View style={{marginBottom: hp(1), marginTop: hp(1)}}>
+        renderItem={({ item }) => (
+          <View style={{ marginBottom: hp(1), marginTop: hp(1) }}>
             {this.cartView(item)}
           </View>
         )}
         keyExtractor={(item, index) => item.cart_wish_id.toString()}
-        style={{marginTop: hp(1)}}
+        style={{ marginTop: hp(1) }}
       />
     );
   };
@@ -1112,10 +1189,10 @@ class CartContainer extends Component {
     });
   };
 
-  openDeleteAllCartModal = () => [this.setState({isDeleteCartVisible: true})];
+  openDeleteAllCartModal = () => [this.setState({ isDeleteCartVisible: true })];
 
   deleteAllProduct = () => {
-    const {currentPage} = this.state;
+    const { currentPage } = this.state;
 
     const deleteData = new FormData();
     deleteData.append('user_id', userId);
@@ -1123,10 +1200,10 @@ class CartContainer extends Component {
 
     if (currentPage == 0) {
       this.props.clearAllCart(deleteData);
-      this.setState({isDeleteCartVisible: false});
+      this.setState({ isDeleteCartVisible: false });
     } else if (currentPage == 1) {
       this.props.clearAllWishList(deleteData);
-      this.setState({isDeleteCartVisible: false});
+      this.setState({ isDeleteCartVisible: false });
     }
   };
 
@@ -1163,7 +1240,7 @@ class CartContainer extends Component {
   };
 
   updateCartProduct = async () => {
-    const {editStateData, quantity, weight, comments, length} = this.state;
+    const { editStateData, quantity, weight, comments, length } = this.state;
 
     const edit = new FormData();
 
@@ -1179,7 +1256,7 @@ class CartContainer extends Component {
   };
 
   placeOrderFromCart = async () => {
-    const {comments1, date} = this.state;
+    const { comments1, date } = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -1217,31 +1294,37 @@ class CartContainer extends Component {
   };
 
   render() {
-    const {cartData, wishlistData, isFetching} = this.props;
+    const { cartData, wishlistData, isFetching, cartSummaryData,cartWeightData } = this.props;
     const {
       wishStateData,
       cartStateData,
       isCartImageModalVisibel,
       isDateTimePickerVisible,
       imageToBeDisplayed,
+      weight,
+      weightArr
     } = this.state;
 
-    // let url =
-    //   'http://jewel.jewelmarts.in/public/backend/product_images/zoom_image/';
 
-          let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
+    const cartSummary = cartSummaryData && cartSummaryData.cart_summary && cartSummaryData.cart_summary.product_master
+    const cartWeight= cartWeightData && cartWeightData.data && cartWeightData.data.cart_data
+
+    const weightData = cartWeight && cartWeight[0].cat_data
+    console.warn("cartWeightData",cartWeight && cartWeight[0].cat_data);
+   
+    let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
 
     return (
-      <Container style={{flex: 1}}>
+      <Container style={{ flex: 1 }}>
         <Tabs
-          tabBarUnderlineStyle={{backgroundColor: '#19af81'}}
-          onChangeTab={({i}) => this.setState({currentPage: i})}>
+          tabBarUnderlineStyle={{ backgroundColor: '#19af81' }}
+          onChangeTab={({ i }) => this.setState({ currentPage: i })}>
           <Tab
             heading={
-              <TabHeading style={{backgroundColor: '#ffffff'}}>
+              <TabHeading style={{ backgroundColor: '#ffffff' }}>
                 <Image
                   resizeMode="contain"
-                  style={{width: 22, height: 22}}
+                  style={{ width: 22, height: 22 }}
                   source={
                     this.state.currentPage
                       ? require('../../assets/image/GreyCart.png')
@@ -1255,10 +1338,10 @@ class CartContainer extends Component {
 
           <Tab
             heading={
-              <TabHeading style={{backgroundColor: '#ffffff'}}>
+              <TabHeading style={{ backgroundColor: '#ffffff' }}>
                 <Image
                   resizeMode="contain"
-                  style={{width: 22, height: 22}}
+                  style={{ width: 22, height: 22 }}
                   source={
                     this.state.currentPage
                       ? require('../../assets/image/BlueIcons/Green-Heart.png')
@@ -1284,7 +1367,7 @@ class CartContainer extends Component {
             <ActionButtonRounded
               title="CART WEIGHT"
               onButonPress={() =>
-                this.setState({isCartWeightSummeryVisible: true})
+                this.setState({ isCartWeightSummeryVisible: true })
               }
               containerStyle={styles.buttonStyle}
             />
@@ -1299,29 +1382,29 @@ class CartContainer extends Component {
         {this.props.isFetching ? this.renderLoader() : null}
 
         {!this.props.isFetching &&
-        this.props.cartData.length === 0 &&
-        this.state.currentPage === 0
+          this.props.cartData.length === 0 &&
+          this.state.currentPage === 0
           ? this.noDataFound(this.props.errorMsgCart)
           : null}
         {!this.props.isFetching &&
-        this.props.wishlistData.length === 0 &&
-        this.state.currentPage === 1
+          this.props.wishlistData.length === 0 &&
+          this.state.currentPage === 1
           ? this.noDataFound(this.props.errorMsgWishlist)
           : null}
 
         {this.state.isCartImageModalVisibel && (
           <View>
             <Modal
-              style={{justifyContent: 'center'}}
+              style={{ justifyContent: 'center' }}
               isVisible={this.state.isCartImageModalVisibel}
               onRequestClose={() =>
-                this.setState({isCartImageModalVisibel: false})
+                this.setState({ isCartImageModalVisibel: false })
               }
               onBackdropPress={() =>
-                this.setState({isCartImageModalVisibel: false})
+                this.setState({ isCartImageModalVisibel: false })
               }
               onBackButtonPress={() =>
-                this.setState({isCartImageModalVisibel: false})
+                this.setState({ isCartImageModalVisibel: false })
               }>
               <SafeAreaView>
                 <View
@@ -1332,7 +1415,7 @@ class CartContainer extends Component {
                     justifyContent: 'center',
                     borderRadius: 10,
                   }}>
-                  <_Text fsMedium style={{marginTop: hp(0.5)}}>
+                  <_Text fsMedium style={{ marginTop: hp(0.5) }}>
                     Code: {imageToBeDisplayed.collection_sku_code}
                   </_Text>
                   <View
@@ -1344,7 +1427,7 @@ class CartContainer extends Component {
                     }}
                   />
                   <Image
-                    source={{uri: url + imageToBeDisplayed.images}}
+                    source={{ uri: url + imageToBeDisplayed.images }}
                     defaultSource={require('../../assets/image/default.png')}
                     style={{
                       height: hp(35),
@@ -1372,7 +1455,7 @@ class CartContainer extends Component {
             onPress={() => this.openDeleteAllCartModal()}>
             <Image
               source={require('../../assets/image/Delete.png')}
-              style={{height: hp(3), width: hp(3)}}
+              style={{ height: hp(3), width: hp(3) }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -1391,7 +1474,7 @@ class CartContainer extends Component {
             onPress={() => this.openDeleteAllCartModal()}>
             <Image
               source={require('../../assets/image/Delete.png')}
-              style={{height: hp(3), width: hp(3)}}
+              style={{ height: hp(3), width: hp(3) }}
               resizeMode="contain"
             />
           </TouchableOpacity>
@@ -1407,15 +1490,15 @@ class CartContainer extends Component {
           }}
           isVisible={this.state.isModalVisible}
           transparent={true}
-          onRequestClose={() => this.setState({isModalVisible: false})}
-          onBackdropPress={() => this.setState({isModalVisible: false})}
-          onBackButtonPress={() => this.setState({isModalVisible: false})}>
+          onRequestClose={() => this.setState({ isModalVisible: false })}
+          onBackdropPress={() => this.setState({ isModalVisible: false })}
+          onBackButtonPress={() => this.setState({ isModalVisible: false })}>
           {/* <View style={styles.mainContainer}> */}
-          <TouchableWithoutFeedback style={{flex: 1}} onPress={() => null}>
+          <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
             <View
               style={[
                 styles.bottomContainer,
-                {borderBottomLeftRadius: 0, borderBottomRightRadius: 0},
+                { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
               ]}>
               <ScrollView>
                 <View
@@ -1425,15 +1508,15 @@ class CartContainer extends Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    marginHorizontal: 16,
+                    backgroundColor: color.green
                   }}>
-                  <Text style={{fontSize: 18, color: '#11255a'}}>
+                  <Text style={{ fontSize: 18, color: '#FFFFFF', marginLeft: 15 }}>
                     Edit Product
                   </Text>
                   <TouchableOpacity onPress={() => this.closeEditModal()}>
                     <Image
-                      source={IconPack.CLOSE}
-                      style={{width: 18, height: 18, resizeMode: 'cover'}}
+                      source={IconPack.WHITE_CLOSE}
+                      style={{ width: 18, height: 18, resizeMode: 'cover', marginRight: 15 }}
                     />
                   </TouchableOpacity>
                 </View>
@@ -1444,7 +1527,7 @@ class CartContainer extends Component {
                     borderBottomWidth: 0.5,
                   }}></View>
 
-                <View style={{marginHorizontal: 20, marginTop: 5}}>
+                <View style={{ marginHorizontal: 20, marginTop: 5 }}>
                   <FloatingLabelTextInput
                     label="Code"
                     value={this.state.productcode}
@@ -1479,29 +1562,28 @@ class CartContainer extends Component {
                 </View>
                 <View style={{}}>
                   <Text
-                    style={{marginLeft: 58, fontSize: 16, color: '#a3a3a3'}}>
+                    style={{ marginLeft: 58, fontSize: 16, color: '#a3a3a3' }}>
                     Select Weight
                   </Text>
                   <Picker
                     iosIcon={
                       <Icon
                         name="arrow-down"
-                        style={{marginRight: hp(3), fontSize: 25}}
+                        style={{ marginRight: hp(3), fontSize: 25 }}
                       />
                     }
                     mode="dropdown"
-                    style={{marginLeft: 52, height: 45, width: '70%'}}
+                    style={{ marginLeft: 52, height: 45, width: '70%' }}
                     selectedValue={this.state.weight}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.setSelectedValue(itemValue)
+                    onValueChange={(value) => this.setSelectedValue(value)
                     }>
-                    {this.state.weight.map(w => (
+                    {this.state.weightArr!=null && this.state.weightArr.map(w => (
                       <Picker.Item label={w.toString()} value={parseInt(w)} />
                     ))}
                   </Picker>
                 </View>
 
-                <View style={{marginHorizontal: 20, marginTop: 10}}>
+                <View style={{ marginHorizontal: 20, marginTop: 10 }}>
                   <FloatingLabelTextInput
                     label="Length (inches)"
                     value={this.state.length}
@@ -1530,8 +1612,8 @@ class CartContainer extends Component {
                       containerStyle={styles.buttonStyle}
                     />
                   ) : (
-                    <ActivityIndicator size="small" color={color.brandColor} />
-                  )}
+                      <ActivityIndicator size="small" color={color.brandColor} />
+                    )}
                 </View>
               </ScrollView>
             </View>
@@ -1550,19 +1632,19 @@ class CartContainer extends Component {
           isVisible={this.state.isPlaceOrderModalVisible}
           transparent={true}
           onRequestClose={() =>
-            this.setState({isPlaceOrderModalVisible: false})
+            this.setState({ isPlaceOrderModalVisible: false })
           }
           onBackdropPress={() =>
-            this.setState({isPlaceOrderModalVisible: false})
+            this.setState({ isPlaceOrderModalVisible: false })
           }
           onBackButtonPress={() =>
-            this.setState({isPlaceOrderModalVisible: false})
+            this.setState({ isPlaceOrderModalVisible: false })
           }>
-          <TouchableWithoutFeedback style={{flex: 1}} onPress={() => null}>
+          <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
             <View
               style={[
                 styles.bottomContainer,
-                {borderBottomLeftRadius: 0, borderBottomRightRadius: 0},
+                { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
               ]}>
               <View
                 style={{
@@ -1579,7 +1661,7 @@ class CartContainer extends Component {
                 }}>
                 <TouchableOpacity
                   onPress={() =>
-                    this.setState({isPlaceOrderModalVisible: false})
+                    this.setState({ isPlaceOrderModalVisible: false })
                   }
                   hitSlop={{
                     position: 'absolute',
@@ -1590,13 +1672,13 @@ class CartContainer extends Component {
                   }}>
                   <Image
                     source={require('../../assets/image/remove.png')}
-                    style={{height: hp(5), width: hp(5)}}
+                    style={{ height: hp(5), width: hp(5) }}
                   />
                 </TouchableOpacity>
               </View>
 
               <ScrollView>
-                <View style={{marginHorizontal: 20, marginTop: 5}}>
+                <View style={{ marginHorizontal: 20, marginTop: 5 }}>
                   <FloatingLabelTextInput
                     label="Name"
                     value={this.state.name}
@@ -1640,10 +1722,10 @@ class CartContainer extends Component {
                       marginTop: 32,
                       flexDirection: 'row',
                     }}>
-                    <View style={{marginRight: 10}}>
+                    <View style={{ marginRight: 10 }}>
                       <Image
                         source={require('../../assets/image/BlueIcons/Date.png')}
-                        style={{width: 25, height: 25, resizeMode: 'cover'}}
+                        style={{ width: 25, height: 25, resizeMode: 'cover' }}
                       />
                     </View>
                     <View
@@ -1673,17 +1755,17 @@ class CartContainer extends Component {
                   )}
                 </View>
 
-                <View style={[styles.btnView, {marginVertical: 15}]}>
+                <View style={[styles.btnView, { marginVertical: 15 }]}>
                   {this.state.isPlaceOrderModalVisible &&
-                  !this.props.isFetching ? (
-                    <ActionButtonRounded
-                      title="PLACE ORDER"
-                      onButonPress={() => this.placeOrderFromCart()}
-                      containerStyle={styles.buttonStyle}
-                    />
-                  ) : (
-                    <ActivityIndicator size="small" color={color.brandColor} />
-                  )}
+                    !this.props.isFetching ? (
+                      <ActionButtonRounded
+                        title="PLACE ORDER"
+                        onButonPress={() => this.placeOrderFromCart()}
+                        containerStyle={styles.buttonStyle}
+                      />
+                    ) : (
+                      <ActivityIndicator size="small" color={color.brandColor} />
+                    )}
                 </View>
               </ScrollView>
             </View>
@@ -1696,27 +1778,28 @@ class CartContainer extends Component {
         <Modal
           isVisible={this.state.isContinueModalVisible}
           transparent={true}
-          onRequestClose={() => this.setState({isContinueModalVisible: false})}
-          onBackdropPress={() => this.setState({isContinueModalVisible: false})}
+          onRequestClose={() => this.setState({ isContinueModalVisible: false })}
+          onBackdropPress={() => this.setState({ isContinueModalVisible: false })}
           onBackButtonPress={() =>
-            this.setState({isContinueModalVisible: false})
+            this.setState({ isContinueModalVisible: false })
           }>
           <TouchableWithoutFeedback
-            style={{flex: 1}}
-            onPress={() => this.setState({isContinueModalVisible: false})}>
+            style={{ flex: 1 }}
+            onPress={() => this.setState({ isContinueModalVisible: false })}>
             <View style={styles.mainContainer}>
-              <TouchableWithoutFeedback style={{flex: 1}} onPress={() => null}>
+              <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
                 <View>
                   <View style={styles.alertContainer}>
                     <Image source={IconPack.RATE} style={styles.alertIcon} />
                     <Text style={styles.alertText}>Alert !</Text>
                   </View>
+
                   <TouchableOpacity
                     onPress={() =>
-                      this.setState({isContinueModalVisible: false})
+                      this.setState({ isContinueModalVisible: false })
                     }
                     style={styles.closeIconContainer}>
-                    <Image source={IconPack.CLOSE} style={styles.closeIcon} />
+                    <Image source={IconPack.WHITE_CLOSE} style={styles.closeIcon} />
                   </TouchableOpacity>
 
                   <View style={styles.bottomContainer}>
@@ -1724,11 +1807,11 @@ class CartContainer extends Component {
                     <View style={styles.middleViewContainer}>
                       <Text style={styles.middleText}>Product Master :</Text>
                       <Text style={styles.middleText}>
-                        Gross Weight : 1,015.000
+                        Gross Weight : {cartSummary && cartSummary.gross_wt ? cartSummary.gross_wt : ''}
                       </Text>
-                      <Text style={styles.middleText}>Quantity : 15</Text>
+                      <Text style={styles.middleText}>Quantity : {cartSummary && cartSummary.quantity ? cartSummary.quantity : ''}</Text>
                     </View>
-                    <View style={{marginHorizontal: 20}}>
+                    <View style={{ marginHorizontal: 20 }}>
                       <Text style={styles.middleText}>
                         Are you sure ? You want to check out, Click continue to
                         proceed further
@@ -1752,32 +1835,32 @@ class CartContainer extends Component {
         <Modal
           isVisible={this.state.isDeleteCartVisible}
           transparent={true}
-          onBackdropPress={() => this.setState({isDeleteCartVisible: false})}
-          onBackButtonPress={() => this.setState({isDeleteCartVisible: false})}
-          onRequestClose={() => this.setState({isDeleteCartVisible: false})}>
+          onBackdropPress={() => this.setState({ isDeleteCartVisible: false })}
+          onBackButtonPress={() => this.setState({ isDeleteCartVisible: false })}
+          onRequestClose={() => this.setState({ isDeleteCartVisible: false })}>
           <TouchableWithoutFeedback
-            style={{flex: 1}}
+            style={{ flex: 1 }}
             onPress={() =>
               this.setState({
                 isDeleteCartVisible: false,
               })
             }>
             <View style={styles.mainContainer}>
-              <TouchableWithoutFeedback style={{flex: 1}} onPress={() => null}>
+              <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
                 <View>
                   <View style={styles.alertContainer}>
                     <Image source={IconPack.RATE} style={styles.alertIcon} />
                     <Text style={styles.alertText}>Alert !</Text>
                   </View>
                   <TouchableOpacity
-                    onPress={() => this.setState({isDeleteCartVisible: false})}
+                    onPress={() => this.setState({ isDeleteCartVisible: false })}
                     style={styles.closeIconContainer}>
-                    <Image source={IconPack.CLOSE} style={styles.closeIcon} />
+                    <Image source={IconPack.WHITE_CLOSE} style={styles.closeIcon} />
                   </TouchableOpacity>
                   <View style={styles.bottomContainer}>
-                    <View style={{marginHorizontal: 20, marginTop: 20}}>
+                    <View style={{ marginHorizontal: 20, marginTop: 20 }}>
                       <Text style={styles.middleText}>
-                        Are you sure ? You want to delete all Cart item, Click
+                        Are you sure ? You want to delete all item, Click
                         continue to proceed further
                       </Text>
                     </View>
@@ -1800,13 +1883,13 @@ class CartContainer extends Component {
           isVisible={this.state.isCartWeightSummeryVisible}
           transparent={true}
           onBackButtonPress={() =>
-            this.setState({isCartWeightSummeryVisible: false})
+            this.setState({ isCartWeightSummeryVisible: false })
           }
           onRequestClose={() =>
-            this.setState({isCartWeightSummeryVisible: false})
+            this.setState({ isCartWeightSummeryVisible: false })
           }
           onRequestClose={() =>
-            this.setState({isCartWeightSummeryVisible: false})
+            this.setState({ isCartWeightSummeryVisible: false })
           }
           style={{
             marginLeft: 20,
@@ -1814,25 +1897,22 @@ class CartContainer extends Component {
             paddingTop: hp(11),
             paddingBottom: hp(11),
           }}>
-          {/* <TouchableWithoutFeedback
-            style={{flex: 1}}
-            onPress={() =>this.setState({isCartWeightSummeryVisible: false,})}> */}
           <>
             <View style={styles.flex}>
               <View style={styles.cartSummaryContainer}>
-                <Text style={[styles.alertText, {marginLeft: 20}]}>
+                <Text style={[styles.alertText, { marginLeft: 20 }]}>
                   Cart Summary
                 </Text>
 
                 <View style={styles.closeIconView}>
                   <TouchableOpacity onPress={() => this.closeSummeryModal()}>
-                    <Image style={styles.closeIcon} source={IconPack.CLOSE} />
+                    <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                   </TouchableOpacity>
                 </View>
               </View>
 
               <FlatList
-                style={{backgroundColor: '#ffffff'}}
+                style={{ backgroundColor: '#ffffff' }}
                 showsVerticalScrollIndicator={false}
                 data={[
                   {
@@ -1852,44 +1932,17 @@ class CartContainer extends Component {
                     TotalQuantity: 2,
                     TotalWT: 2,
                   },
-
-                  {
-                    id: 3,
-                    category: 'IMP ASSEMBLE',
-                    Description:
-                      ' - Design No: IMP ASS 001(Grows Wt : 0.000, Net Wt: 0.000,Quantity: 1)',
-                    TotalQuantity: 2,
-                    TotalWT: 2,
-                  },
-
-                  {
-                    id: 4,
-                    category: 'IMP ASSEMBLE',
-                    Description:
-                      ' - Design No: IMP ASS 001(Grows Wt : 0.000, Net Wt: 0.000,Quantity: 1)',
-                    TotalQuantity: 2,
-                    TotalWT: 2,
-                  },
-
-                  {
-                    id: 5,
-                    category: 'IMP ASSEMBLE',
-                    Description:
-                      ' - Design No: IMP ASS 001(Grows Wt : 0.000, Net Wt: 0.000,Quantity: 1)',
-                    TotalQuantity: 2,
-                    TotalWT: 2,
-                  },
                 ]}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <View
                     style={{
                       marginHorizontal: 16,
                       marginTop: 20,
                     }}>
-                    <View style={{marginBottom: 20}}>
+                    <View style={{ marginBottom: 20 }}>
                       <Text>{`category: ${item.category}`}</Text>
                     </View>
-                    <View style={{marginBottom: 30}}>
+                    <View style={{ marginBottom: 30 }}>
                       <Text>{`Description: \n${item.Description}`}</Text>
                     </View>
                     <View
@@ -1918,13 +1971,13 @@ class CartContainer extends Component {
                     marginTop: 30,
                   }}>
                   <View>
-                    <Text style={{fontSize: 16}}>Total WT: 276.000</Text>
+                    <Text style={{ fontSize: 16 }}>Total WT: 276.000</Text>
                   </View>
-                  <View style={{marginLeft: 30}}>
-                    <Text style={{fontSize: 16}}>Total Quantity: 6</Text>
+                  <View style={{ marginLeft: 30 }}>
+                    <Text style={{ fontSize: 16 }}>Total Quantity: 6</Text>
                   </View>
                 </View>
-                <View style={[styles.btnView, {bottom: 10}]}>
+                <View style={[styles.btnView, { bottom: 10 }]}>
                   <ActionButtonRounded
                     title="OK"
                     onButonPress={() => this.closeSummeryModal()}
@@ -1944,7 +1997,7 @@ class CartContainer extends Component {
 const styles = StyleSheet.create({
   cartSummaryContainer: {
     height: 50,
-    backgroundColor: '#11255a',
+    backgroundColor: color.green,
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
     alignItems: 'flex-start',
@@ -1953,8 +2006,9 @@ const styles = StyleSheet.create({
   closeIconView: {
     position: 'absolute',
     top: 14,
-    right: 10,
+    right: 15,
     bottom: 0,
+
   },
   buttonContainer: {
     justifyContent: 'flex-end',
@@ -1981,8 +2035,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   alertContainer: {
-    height: 100,
-    backgroundColor: '#11255a',
+    height: 80,
+    backgroundColor: color.green,
     alignItems: 'center',
     justifyContent: 'space-around',
     borderTopLeftRadius: 16,
@@ -1990,22 +2044,23 @@ const styles = StyleSheet.create({
   },
   alertText: {
     fontSize: 21,
-    color: '#fbcb84',
+    color: '#FFFFFF',
+    textAlign: 'center'
   },
   alertIcon: {
-    width: 32,
-    height: 32,
+    width: 28,
+    height: 28,
     resizeMode: 'contain',
   },
   closeIcon: {
-    width: 22,
-    height: 22,
+    width: 18,
+    height: 18,
     resizeMode: 'contain',
   },
   closeIconContainer: {
     position: 'absolute',
-    top: 12,
-    right: 10,
+    top: 15,
+    right: 15,
     bottom: 0,
   },
   bottomContainer: {
@@ -2142,7 +2197,7 @@ const styles = StyleSheet.create({
     color: '#757575',
   },
   buttonStyle: {
-    backgroundColor: '#11255a',
+    backgroundColor: color.green,
     height: 42,
     width: 140,
     justifyContent: 'center',
@@ -2197,9 +2252,17 @@ function mapStateToProps(state) {
     errorEditCartProductVersion:
       state.cartContainerReducer.errorEditCartProductVersion,
 
-    successPlaceOrderVersion:
-      state.cartContainerReducer.successPlaceOrderVersion,
+    successPlaceOrderVersion: state.cartContainerReducer.successPlaceOrderVersion,
     errorPlaceOrderVersion: state.cartContainerReducer.errorPlaceOrderVersion,
+
+    successCartSummaryVersion: state.cartContainerReducer.successCartSummaryVersion,
+    errorCartSummaryVersion: state.cartContainerReducer.errorCartSummaryVersion,
+    cartSummaryData: state.cartContainerReducer.cartSummaryData,
+
+    successCartWeightVersion: state.cartContainerReducer.successCartWeightVersion,
+    errorCartWeightVersion: state.cartContainerReducer.errorCartWeightVersion,
+    cartWeightData: state.cartContainerReducer.cartWeightData,
+
   };
 }
 
@@ -2215,5 +2278,7 @@ export default connect(
     clearAllWishList,
     updateEditedCartProduct,
     placeOrderFromCart,
+    getCartSummary,
+    getCartWeight
   },
 )(withNavigationFocus(CartContainer));
