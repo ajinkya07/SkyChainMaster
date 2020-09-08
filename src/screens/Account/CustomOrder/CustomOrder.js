@@ -13,6 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import { color } from '@values/colors';
 
 
 const CustomOrderDetails = () => {
@@ -91,14 +92,15 @@ export default class CustomOrder extends Component {
       <SafeAreaView style={{ flex: 1 }}>
         <_CustomHeader
           Title='Custom Order History'
-          RightBtnIcon1={require('../../../assets/image/BlueIcons/Search.png')}
-          RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification.png')}
+         // RightBtnIcon1={require('../../../assets/image/BlueIcons/Search.png')}
+          RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}
           LeftBtnPress={() => this.props.navigation.goBack()}
-          RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
+          //RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
           RightBtnPressTwo={()=> this.props.navigation.navigate('Notification')}
           rightIconHeight2={hp(3.5)}
-
           LeftBtnPress={() => this.props.navigation.goBack()}
+          backgroundColor={color.green}
+
         />
         <ScrollView showsVerticalScrollIndicator={false}>
           <CustomOrderDetails />

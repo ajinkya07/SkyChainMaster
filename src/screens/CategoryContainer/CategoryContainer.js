@@ -164,10 +164,10 @@ class CategoryContainer extends Component {
         {fromSeeMore &&
           <_CustomHeader
             Title={'Category'}
-            RightBtnIcon1={require('../../assets/image/BlueIcons/Search.png')}
-            RightBtnIcon2={require('../../assets/image/BlueIcons/Notification.png')}
+          //  RightBtnIcon1={require('../../assets/image/BlueIcons/Search.png')}
+            RightBtnIcon2={require('../../assets/image/BlueIcons/Notification-White.png')}
             LeftBtnPress={() => this.props.navigation.goBack()}
-            RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
+            //RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
             RightBtnPressTwo={()=> this.props.navigation.navigate('Notification')}
             rightIconHeight2={hp(3.5)}
             LeftBtnPress={() => this.props.navigation.goBack()}

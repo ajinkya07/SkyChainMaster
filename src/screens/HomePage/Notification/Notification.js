@@ -91,9 +91,9 @@ export default class Notification extends Component {
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                 <_CustomHeader
                     Title={'Notifications'}
-                    RightBtnIcon2={require('../../../assets/image/BlueIcons/Search.png')}
+                   // RightBtnIcon2={require('../../../assets/image/BlueIcons/Search.png')}
                     LeftBtnPress={() => this.props.navigation.goBack()}
-                    RightBtnPressTwo={() => this.props.navigation.navigate('SearchScreen')}
+                    //RightBtnPressTwo={() => this.props.navigation.navigate('SearchScreen')}
                     rightIconHeight2={hp(3.5)}
                     backgroundColor="#19af81"
                 />

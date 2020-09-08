@@ -69,7 +69,6 @@ export default class SubCategoryList extends Component {
     }
 
     getProductGridOrNot = (data) => {
-        console.log("data----", data);
         if (data.subcategory.length === 0) {
             this.props.navigation.navigate("ProductGrid", { gridData: data })
         } else if (data.subcategory.length > 0) {
@@ -84,13 +83,14 @@ export default class SubCategoryList extends Component {
                 <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                     <_CustomHeader
                         Title={'Sub Category'}
-                        RightBtnIcon1={require('../../../assets/image/BlueIcons/Search.png')}
-                        RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification.png')}
+                      //  RightBtnIcon1={require('../../../assets/image/BlueIcons/Search.png')}
+                        RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}
                         LeftBtnPress={() => this.props.navigation.goBack()}
-                        RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
+                        //RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
                         RightBtnPressTwo={()=> this.props.navigation.navigate('Notification')}
                         rightIconHeight2={hp(3.5)}
                         LeftBtnPress={() => this.props.navigation.goBack()}
+                        backgroundColor={color.green}
                     />
                    
                         <View style={{ justifyContent: 'center', width: wp(100), paddingVertical:  hp(1) }}>

@@ -174,7 +174,7 @@ class SignIn extends React.Component {
                 android: 500,
               })}
               style={{flex: 1}}>
-              <ScrollView>
+              <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={'always'}>
                 <Content
                   contentContainerStyle={{
                     flex: 1,

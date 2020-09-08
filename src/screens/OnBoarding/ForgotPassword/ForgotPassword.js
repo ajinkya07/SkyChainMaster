@@ -183,7 +183,7 @@ class ForgotPassword extends React.Component {
                 <Body />
                 <Right />
               </Header>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={'always'}>
                 <View style={styles.viewContainer}>
                   <View
                     style={{

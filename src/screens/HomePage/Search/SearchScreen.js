@@ -36,6 +36,9 @@ const { width } = Dimensions.get('window');
 
 var categoryIds=[]
 
+var karatIds=[]
+
+
 class SearchScreen extends Component {
     constructor(props) {
         super(props);
@@ -66,8 +69,9 @@ class SearchScreen extends Component {
             toggleCheckBox:true,
 
             successAllParameterVersion: 0,
-      errorAllParamaterVersion: 0,
-      karatData:[]
+            errorAllParamaterVersion: 0,
+            karatData: [],
+            isOkKaratClicked:false
 
         };
 
@@ -178,8 +182,11 @@ class SearchScreen extends Component {
     toggleModal = () => {
         this.setState({ isModalVisible: true, isContinueClicked: false });
     };
+
+
     closeModal = () => {
-        this.setState({ isModalVisible: false, isContinueClicked: false });
+        this.setState({ isModalVisible: false, isContinueClicked: false,selectedCategories:[] });
+        categoryIds=[]
     };
 
     checkBox_Test = (id, name) => {
@@ -216,7 +223,6 @@ class SearchScreen extends Component {
     }
 
     setFromDate =(newDate) =>{
-        console.warn("fromDate",newDate);
         this.setState({ fromDate: newDate });
         
     }
@@ -345,7 +351,7 @@ class SearchScreen extends Component {
 
 
     selectKarat = () => {
-        const { selectedKarat } = this.state
+        const { selectedKarat,isOkKaratClicked } = this.state
 
         return (
             <View style={{ marginHorizontal: wp(3) }}>
@@ -353,12 +359,12 @@ class SearchScreen extends Component {
                 <TouchableOpacity onPress={() => this.karatModal()}>
                     <View style={{
                         marginTop: hp(1), flexDirection: 'row',
-                        justifyContent: 'space-between', width: wp(90),
+                        justifyContent: 'space-between', width: wp(92),
                     }}>
-                        {selectedKarat.length == 0 &&
+                        {!isOkKaratClicked &&
                             <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Karat:</_Text>
                         }
-                        {selectedKarat.length > 0 &&
+                        {selectedKarat.length > 0 && isOkKaratClicked &&
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap',  }}>
                                 {selectedKarat.map(s => {
                                 return <_Text fsHeading style={{ marginLeft: wp(3) }}> {s.value},</_Text>
@@ -367,7 +373,7 @@ class SearchScreen extends Component {
                         }
 
                         <Image
-                            style={{ height: hp(2.5), width: hp(2.5), marginTop: hp(0.5) }}
+                            style={{ height: hp(2.5), width: hp(2.5), marginTop: hp(1) }}
                             source={require('../../../assets/image/DownArrow.png')}
                         />
                     </View>
@@ -430,10 +436,32 @@ class SearchScreen extends Component {
         })
     }
 
+    onOKkaratSelected = () => {
+        const{selectedKarat} = this.state
+
+         karatIds = selectedKarat.map(x => { return x.id})
+       
+        if(selectedKarat.length == 0) {
+            this.setState({
+                isKaratModalVisible:false
+            })
+        }else if(selectedKarat.length>0){
+            this.setState({
+                isKaratModalVisible: false,
+                isOkKaratClicked: true
+            })
+        }
+        
+    }
+
+
     searchProducts = () => {
-        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories, } = this.state
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories,selectedKarat } = this.state
 
         // collction id & melting id required
+        console.warn("selectedKarat",selectedKarat);
+        console.warn("selectedCategories",categoryIds.toString());
+        console.warn("karatIds",karatIds.toString());
 
         if(selectedCategories.length>0){
 
@@ -444,14 +472,14 @@ class SearchScreen extends Component {
         s.append('user_id', userId)
         s.append('record', 10)
         s.append('page_no', 0)
-        s.append('collection_ids', '26,28')
+        s.append('collection_ids', categoryIds.toString())
         s.append('sort_by', 2)
         s.append('min_gross_weight', gwFrom ? gwFrom : '')
         s.append('max_gross_weight', gwTo ? gwTo : '')
         s.append('min_net_weight', nwFrom ? nwFrom : '')
         s.append('max_net_weight', nwTo ? nwTo : '')
         s.append('product_status', '')
-        s.append('melting_id  ', '')
+        s.append('melting_id  ', karatIds.toString())
         s.append('created_date_from', fromDate ? fromDate : '')
         s.append('created_date_to', toDate ? toDate : '')
 
@@ -494,12 +522,10 @@ class SearchScreen extends Component {
                 isSearchCodeVisible: false
             })  
         }
-
-        console.warn("searchText",searchText);
     }
 
     karatModal = () => {
-        this.setState({isKaratModalVisible: !this.state.isKaratModalVisible});
+        this.setState({isKaratModalVisible: !this.state.isKaratModalVisible, isOkKaratClicked:false});
       };
 
       filterList(list) {
@@ -514,7 +540,6 @@ class SearchScreen extends Component {
 
           const val = { ...this.state.karat };
           if (val[id]) {
-              console.warn("here",val[id]);
               val[id] = false;
   
               var index = selectedKarat.map(x => {
@@ -525,7 +550,6 @@ class SearchScreen extends Component {
           }
           else {
               val[id] = true;
-              console.warn("here else",val[id]);
 
               let array = [];
               let array2 = []
@@ -545,9 +569,13 @@ class SearchScreen extends Component {
 
     closeKaratModal = () => {
         this.setState({
-            isKaratModalVisible: false
+            isKaratModalVisible: false,
+            isOkKaratClicked:false,
+            selectedKarat:[],
         })
+        karatIds=[]
     }
+
 
 
     render() {
@@ -555,13 +583,13 @@ class SearchScreen extends Component {
         const { collection, selectedCategories,selectedKarat,karatData } = this.state
         const{allParameterData} = this.props
 
-        const list = allParameterData.melting
+        const list = allParameterData && allParameterData.melting
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                 <_CustomHeader
                     Title={'Search'}
-                    RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification.png')}
+                    RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}
                     LeftBtnPress={() => this.props.navigation.goBack()}
                     RightBtnPressTwo={() => this.props.navigation.navigate('Notification')}
                     rightIconHeight2={hp(3.5)}
@@ -619,10 +647,7 @@ class SearchScreen extends Component {
                     style={{ margin: 28 }}>
                     <TouchableWithoutFeedback
                         style={{ flex: 1 }}
-                        onPress={() =>
-                            this.setState({
-                                isModalVisible: false,
-                            })
+                        onPress={() =>this.setState({isModalVisible: false,})
                         }>
                         <>
                             <View style={styles.flex}>
@@ -632,8 +657,7 @@ class SearchScreen extends Component {
                                   </Text>
                                     <View style={styles.closeIconView}>
                                         <TouchableOpacity
-                                            onPress={() => this.setState({ isModalVisible: false })
-                                            }>
+                                            onPress={() => this.closeModal() }>
                                             <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                                         </TouchableOpacity>
                                     </View>
@@ -739,8 +763,7 @@ class SearchScreen extends Component {
                                 <Text style={styles.titleText}>Select Karat</Text>
                                 <View style={styles.closeIconView}>
                                     <TouchableOpacity
-                                        onPress={() => this.setState({ isKaratModalVisible: false })
-                                        }>
+                                        onPress={() => this.closeKaratModal()}>
                                         <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                                     </TouchableOpacity>
                                 </View>
@@ -780,7 +803,7 @@ class SearchScreen extends Component {
                 <TouchableOpacity onPress={() => alert('SelectAll')}>
                   <Text style={styles.bottomTxt}>SELECT ALL</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.closeKaratModal()}>
+                <TouchableOpacity onPress={() => this.onOKkaratSelected()}>
                   <Text style={styles.bottomTxt} >
                     OK
                   </Text>

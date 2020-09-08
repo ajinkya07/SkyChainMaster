@@ -210,7 +210,9 @@ class Register extends React.Component {
   };
 
   render() {
+
     const {fullName, emailId, organisation, mobileNo, password} = this.state;
+
     return (
       <Container>
         <ImageBackground source={IconPack.LOGIN_BG} style={styles.bgImage}>
@@ -235,7 +237,7 @@ class Register extends React.Component {
                 <Body />
                 <Right />
               </Header>
-              <ScrollView showsVerticalScrollIndicator={false}>
+              <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={'always'}>
                 <View style={styles.viewContainer}>
                   <View
                     style={{
