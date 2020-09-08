@@ -12,6 +12,7 @@ import orderHistoryReducer from '@orderHistory/OrderHistoryReducer'
 import customOrderReducer from '@customOrder/CustomOrderReducer'
 import editProfileReducer from '@editProfile/EditProfileReducer'
 import searchReducer from '@search/SearchReducer'
+import notificationReducer from '@notification/NotificationReducer'
 
 
 
@@ -26,7 +27,8 @@ const appReducer = combineReducers({
     orderHistoryReducer,
     customOrderReducer,
     editProfileReducer,
-    searchReducer
+    searchReducer,
+    notificationReducer
 });
 
 const rootReducer = (state, action) => {

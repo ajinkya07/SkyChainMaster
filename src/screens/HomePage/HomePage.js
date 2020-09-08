@@ -936,7 +936,7 @@ class HomePage extends Component {
                       resizeMode='contain'
                     />
 
-                    <_Text fsHeading style={{textAlign:'center',marginBottom:hp(2)}}>{userStatus.description}</_Text>
+                    <_Text fsHeading fwPrimary style={{textAlign:'center',marginBottom:hp(2)}}>{userStatus.description}</_Text>
 
                     <_CustomButton
                       onPress={() => this.onOkPressed()}

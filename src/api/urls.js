@@ -108,6 +108,10 @@ export const urls = {
     },  
     SearchByCodeGrid:{
         url:  url + 'products_Grid/advanced_search_grid_by_search'
-    },  
+    },
+    Notification:{
+        url:  url + 'Notification_List'
+    },
+    
    
 }

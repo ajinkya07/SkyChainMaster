@@ -78,8 +78,6 @@ export function signInRequest(data) {
         }
       })
       .catch(function (error) {
-        console.log("error login normal", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, LOGIN_DATA_ERROR)
         );

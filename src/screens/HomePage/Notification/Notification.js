@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 import { color } from '@values/colors';
 import IconPack from '../../OnBoarding/Login/IconPack';
 
+import { getNotificationList } from '@notification/NotificationAction'
+
 
 const data = [
     { id: '1', title: "Your first notification", msg: 'Diwali', orderID: 50, date: '2020-07-08', image: require('../../../assets/image/insta.png') },
@@ -23,11 +25,55 @@ const data = [
 
 ]
 
-export default class Notification extends Component {
+class Notification extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            successNotificationVersion: 0,
+            errorNotificationVersion: 0,
         };
+        userId = global.userId;
+
+    }
+
+
+    componentDidMount = async () => {
+
+        const n = new FormData()
+
+        n.append('user_id', userId)
+        n.append('type', 'client')
+
+        this.props.getNotificationList(n)
+    };
+
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const { successNotificationVersion, errorNotificationVersion } = nextProps;
+
+        let newState = null;
+
+        if (successNotificationVersion > prevState.successNotificationVersion) {
+            newState = {
+                ...newState,
+                successNotificationVersion: nextProps.successNotificationVersion,
+            };
+        }
+        if (errorNotificationVersion > prevState.errorNotificationVersion) {
+            newState = {
+                ...newState,
+                errorNotificationVersion: nextProps.errorNotificationVersion,
+            };
+        }
+
+        return newState
+    }
+
+    async componentDidUpdate(prevProps, prevState) {
+        const { } = this.props;
+        if (this.state.successNotificationVersion > prevState.successNotificationVersion) {
+
+        }
     }
 
 
@@ -44,7 +90,7 @@ export default class Notification extends Component {
                                     borderWidth: 0.4, borderColor: color.gray
                                 }}
                                 source={item.image}
-//                                defaultSource={require('../../../assets/image/default.png')}
+                                //                                defaultSource={require('../../../assets/image/default.png')}
                                 defaultSource={IconPack.APP_LOGO}
 
                             />
@@ -85,22 +131,31 @@ export default class Notification extends Component {
         )
     }
 
+    onRefresh = () => {
+        const data = new FormData()
+
+        data.append('user_id', userId)
+        data.append('type', 'client')
+
+        this.props.getNotificationList(data)
+    }
+
 
     render() {
+        const { notificationData, isFetching } = this.props
+
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                 <_CustomHeader
                     Title={'Notifications'}
-                   // RightBtnIcon2={require('../../../assets/image/BlueIcons/Search.png')}
                     LeftBtnPress={() => this.props.navigation.goBack()}
-                    //RightBtnPressTwo={() => this.props.navigation.navigate('SearchScreen')}
                     rightIconHeight2={hp(3.5)}
                     backgroundColor="#19af81"
                 />
                 <View style={{ justifyContent: 'center', width: wp(100), paddingVertical: hp(1) }}>
                     <FlatList
-                        onRefresh={() => alert('inProgress')}
-                        refreshing={false}
+                        onRefresh={() => this.onRefresh()}
+                        refreshing={isFetching}
                         data={data}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={item => item.id}
@@ -113,3 +168,17 @@ export default class Notification extends Component {
         );
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        isFetching: state.notificationReducer.isFetching,
+        error: state.notificationReducer.error,
+        errorMsg: state.notificationReducer.errorMsg,
+        successNotificationVersion: state.notificationReducer.successNotificationVersion,
+        errorNotificationVersion: state.notificationReducer.errorNotificationVersion,
+        notificationData: state.notificationReducer.notificationData,
+
+    };
+}
+
+export default connect(mapStateToProps, { getNotificationList })(Notification);

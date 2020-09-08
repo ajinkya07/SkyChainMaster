@@ -1093,6 +1093,7 @@ console.warn("categoryData",categoryData);
       let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     return (
+
       <SafeAreaView style={{flex: 1, backgroundColor: '#f3fcf9'}}>
         <_CustomHeader
           Title={
