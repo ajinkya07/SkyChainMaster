@@ -426,6 +426,7 @@ class CartContainer extends Component {
 
 
     if (prevProps.isFocused !== this.props.isFocused) {
+      console.warn("here in focused");
       const data3 = new FormData();
       data3.append('user_id', userId);
       data3.append('table', 'cart');
@@ -437,6 +438,13 @@ class CartContainer extends Component {
       data4.append('table', 'wishlist');
 
       await this.props.getWishlistData(data4);
+
+      await this.props.getCartSummary(data3)
+
+      const ss = new FormData()
+      ss.append('user_id', userId)
+
+      await this.props.getCartWeight(ss)
 
     }
 
@@ -1309,9 +1317,7 @@ class CartContainer extends Component {
     const cartSummary = cartSummaryData && cartSummaryData.cart_summary && cartSummaryData.cart_summary.product_master
     const cartWeight= cartWeightData && cartWeightData.data && cartWeightData.data.cart_data
 
-    const weightData = cartWeight && cartWeight[0].cat_data
-    console.warn("cartWeightData",cartWeight && cartWeight[0].cat_data);
-   
+
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
 
     return (
@@ -1493,7 +1499,6 @@ class CartContainer extends Component {
           onRequestClose={() => this.setState({ isModalVisible: false })}
           onBackdropPress={() => this.setState({ isModalVisible: false })}
           onBackButtonPress={() => this.setState({ isModalVisible: false })}>
-          {/* <View style={styles.mainContainer}> */}
           <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
             <View
               style={[
@@ -1770,8 +1775,6 @@ class CartContainer extends Component {
               </ScrollView>
             </View>
           </TouchableWithoutFeedback>
-          {/* </View> */}
-          {/* </TouchableWithoutFeedback> */}
         </Modal>
 
         {/* CONTINUE PLACE ORDER */}
@@ -1878,7 +1881,7 @@ class CartContainer extends Component {
           </TouchableWithoutFeedback>
         </Modal>
 
-        {/* CART SUMMERY */}
+        {/* CART weight */}
         <Modal
           isVisible={this.state.isCartWeightSummeryVisible}
           transparent={true}
@@ -1914,52 +1917,29 @@ class CartContainer extends Component {
               <FlatList
                 style={{ backgroundColor: '#ffffff' }}
                 showsVerticalScrollIndicator={false}
-                data={[
-                  {
-                    id: 1,
-                    category: 'IMP ASSEMBLE',
-                    Description:
-                      ' - Design No: IMP ASS 001(Grows Wt : 0.000, Net Wt: 0.000, Quantity: 1)',
-                    TotalQuantity: 2,
-                    TotalWT: 2,
-                  },
-
-                  {
-                    id: 2,
-                    category: 'Choco Chains',
-                    Description:
-                      ' - Design No: IMP ASS 001(Grows Wt : 0.000, Net Wt: 0.000,Quantity: 1)',
-                    TotalQuantity: 2,
-                    TotalWT: 2,
-                  },
-                ]}
+                data={cartWeight && cartWeight}
                 renderItem={({ item }) => (
-                  <View
-                    style={{
-                      marginHorizontal: 16,
-                      marginTop: 20,
-                    }}>
+                  <View style={{ marginHorizontal: 16, marginTop: 20}}>
                     <View style={{ marginBottom: 20 }}>
-                      <Text>{`category: ${item.category}`}</Text>
+                      <Text>{`category: ${item.key}`}</Text>
                     </View>
-                    <View style={{ marginBottom: 30 }}>
-                      <Text>{`Description: \n${item.Description}`}</Text>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 10,
-                      }}>
-                      <Text>{`Total Quantity: ${item.TotalQuantity}`}</Text>
-                      <Text>{`Total WT: ${item.TotalWT}`}</Text>
-                    </View>
-                    <View
-                      style={{
-                        borderBottomWidth: 1,
-                        borderColor: '#ddd',
-                        borderBottomWidth: 0.8,
-                      }}></View>
+
+                    {/* <View style={{ marginBottom: 30 }}>
+                      <Text>{`Description:`}</Text>
+                      {item.cat_data.map(m => {
+                        <View>
+                          <Text>{`Design No:`}{m.product_id}</Text>
+                          <Text>{`Description:`}</Text>
+                        </View>
+                      })}
+                    </View> */}
+{/* 
+                    <View style={{ flexDirection: 'row',justifyContent: 'space-between',marginBottom: 10}}>
+                      <Text>{`Total Quantity: ${item[0].total_quantity}`}</Text>
+                      <Text>{`Total WT: ${item[0].total_weight}`}</Text>
+                    </View> */}
+
+                    <View style={{borderBottomWidth: 1,borderColor: '#ddd',borderBottomWidth: 0.8}}/>
                   </View>
                 )}
               />
@@ -1971,12 +1951,13 @@ class CartContainer extends Component {
                     marginTop: 30,
                   }}>
                   <View>
-                    <Text style={{ fontSize: 16 }}>Total WT: 276.000</Text>
+                <Text style={{ fontSize: 16 }}>Total WT: {cartWeight && cartWeight.total_weight}</Text>
                   </View>
                   <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 16 }}>Total Quantity: 6</Text>
+                    <Text style={{ fontSize: 16 }}>Total Quantity: {cartWeight && cartWeight.total_quantity}</Text>
                   </View>
                 </View>
+
                 <View style={[styles.btnView, { bottom: 10 }]}>
                   <ActionButtonRounded
                     title="OK"
@@ -1987,7 +1968,7 @@ class CartContainer extends Component {
               </View>
             </View>
           </>
-          {/* </TouchableWithoutFeedback> */}
+
         </Modal>
       </Container>
     );

@@ -13,6 +13,8 @@ import customOrderReducer from '@customOrder/CustomOrderReducer'
 import editProfileReducer from '@editProfile/EditProfileReducer'
 import searchReducer from '@search/SearchReducer'
 import notificationReducer from '@notification/NotificationReducer'
+import exclusiveReducer from '@exclusive/ExclusiveReducer'
+
 
 
 
@@ -28,7 +30,8 @@ const appReducer = combineReducers({
     customOrderReducer,
     editProfileReducer,
     searchReducer,
-    notificationReducer
+    notificationReducer,
+    exclusiveReducer
 });
 
 const rootReducer = (state, action) => {

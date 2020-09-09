@@ -235,3 +235,10 @@ export const CART_WEIGHT_DATA_SUCCESS = "cartWeightDataSuccess";
 export const CART_WEIGHT_DATA_ERROR = "cartWeightDataError";
 export const CART_WEIGHT_DATA_RESET_REDUCER = "cartWeightDataResetReducer";
 
+
+export const EXCLUSIVE_DATA = "exclusiveData";
+export const EXCLUSIVE_DATA_SUCCESS = "exclusiveDataSuccess";
+export const EXCLUSIVE_DATA_ERROR = "exclusiveDataError";
+export const EXCLUSIVE_DATA_RESET_REDUCER = "exclusiveDataResetReducer";
+
+

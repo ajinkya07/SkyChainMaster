@@ -68,11 +68,9 @@ const AccountRow = ({icon, title, onPress}) => {
 
   async getItem() {
     let value = await AsyncStorage.getItem('fullName');
-    console.warn(value, '00000');
 
     if (value) {
       let parsed = JSON.parse(value);
-      console.warn('parsed', parsed);
       if (parsed) {
         return parsed;
       }
@@ -209,6 +207,27 @@ const AccountRow = ({icon, title, onPress}) => {
     })
   }
 
+   openFacebookWebView = () => {
+    const { allParameterData } = this.props
+
+    let facebook = allParameterData.facebook
+
+     this.props.navigation.navigate('CustomWebview', { title: 'Facebook', link: facebook })
+
+     this.closeSocialMediaModal()
+   }
+
+
+   openInstaWebView = () => {
+     const { allParameterData } = this.props
+
+    let instagram = allParameterData.instagram
+
+     this.props.navigation.navigate('CustomWebview', { title: 'Instagram', link: instagram })
+
+     this.closeSocialMediaModal()
+
+   }
 
 
   render() {
@@ -224,8 +243,7 @@ const AccountRow = ({icon, title, onPress}) => {
     const instagram = allParameterData.instagram
     const facebook = allParameterData.facebook
 
-    
-    
+
     return (
       
       <View style={{flex: 1, width: wp(100)}}>
@@ -256,26 +274,26 @@ const AccountRow = ({icon, title, onPress}) => {
             <AccountRow
               title="Exclusive"
               icon={IconPack.EXCLUSIVE}
-              onPress={() => alert('Todo')}
+              onPress={() => this.props.navigation.navigate('Exclusive')}
             />
             <AccountRow
               title="About Us"
               icon={IconPack.ABOUT}
-              onPress={() => Linking.openURL(aboutUS)}
-             // onPress={() => this.props.navigation.navigate('AboutUs')}
+             // onPress={() => Linking.openURL(aboutUS)}
+              onPress={() => this.props.navigation.navigate('CustomWebview',{link:aboutUS, title:'AboutUs'})}
             />
             <AccountRow
               title="Privacy Policy"
               icon={IconPack.ABOUT}
-              onPress={() => Linking.openURL(privacyPolicy)}
-             // onPress={() => this.props.navigation.navigate('PrivacyPolicy')}
+             // onPress={() => Linking.openURL(privacyPolicy)}
+             onPress={() => this.props.navigation.navigate('CustomWebview',{link:privacyPolicy,title:'PrivacyPolicy'})}
             />
             
             <AccountRow
               title="Terms & Conditions"
               icon={IconPack.ABOUT}
-              onPress={() => Linking.openURL(terms)}
-            //onPress={() => this.props.navigation.navigate('TermsConditions')}
+             // onPress={() => Linking.openURL(terms)}
+              onPress={() => this.props.navigation.navigate('CustomWebview',{link:terms,title:'Terms & Conditions'})}
             />
 
             <AccountRow
@@ -482,8 +500,8 @@ const AccountRow = ({icon, title, onPress}) => {
               </View>
 
               <View style={styles.spaceHorizontal}>
-                <RowData title="Facebook" onPress={() => Linking.openURL(facebook)} />
-                <RowData title="Instagram" onPress={() => Linking.openURL(instagram)} />
+                <RowData title="Facebook" onPress={() => this.openFacebookWebView()}/>
+                <RowData title="Instagram" onPress={() => this.openInstaWebView()} />
               </View>
               <View style={styles.buttonContainer}>
                 <ActionButtonRounded
@@ -533,8 +551,8 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   bgImage: {
-    height: hp(100),
-    width: wp(100),
+    height:'100%',
+    width: '100%',
   },
   imageStyle: {
     width: hp(3),

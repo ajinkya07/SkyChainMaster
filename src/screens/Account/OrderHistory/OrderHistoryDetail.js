@@ -593,16 +593,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 10,
   },
-  contentView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
   bottomLine: {
     borderBottomColor: 'gray',
     borderBottomWidth: 0.6,
     marginVertical: 5,
-    // marginTop: 10,
+    marginTop: 5,
   },
   imageStyle: {
     width: hp(9),
@@ -626,12 +621,12 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 16,
     marginTop: 6,
-    marginBottom: Platform.OS === 'ios' ? 20 : 30,
+    marginBottom: Platform.OS === 'ios' ? 10 : 15,
     backgroundColor: '#f3fcf9',
   },
   productIdText: {
     textAlign: 'center',
-    marginBottom: 6,
+    marginBottom: 20,
     ...Theme.ffLatoBold13,
     color: '#000',
   },
@@ -646,7 +641,6 @@ const styles = StyleSheet.create({
   },
   contentView: {
     flex: 3,
-    height: 140,
   },
   rowTextStyle: {
     flexDirection: 'row',

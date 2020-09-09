@@ -8,9 +8,8 @@ import Register from '@register/Register';
 import ForgotPassword from '@forgotPassword/ForgotPassword';
 import VerifyOtp from '@forgotPassword/VerifyOtp';
 import VerifyOtpForRegister from '@register/VerifyOtpForRegister';
-import AboutUs from '@aboutUs/AboutUs';
-import TermsConditions from '@aboutUs/TermsConditions';
-import PrivacyPolicy from '@aboutUs/PrivacyPolicy';
+import CustomWebview from '@aboutUs/CustomWebview';
+
 
 import OrderHistory from '@orderHistory/OrderHistory';
 import OrderHistoryDetail from '@orderHistory/OrderHistoryDetail';
@@ -29,6 +28,7 @@ import CartContainer from '@cartContainer/CartContainer'
 import EditProfile from '@editProfile/EditProfile'
 
 import SearchProductGrid from '@search/SearchProductGrid'
+import Exclusive from '@exclusive/Exclusive'
 
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -96,15 +96,9 @@ class Scene extends React.Component {
         <Stack.Screen name="CustomOrder"
           component={CustomOrder} options={{ headerShown: false }}
         />
-        <Stack.Screen name="AboutUs"
-          component={AboutUs} options={{ headerShown: false }}
-        />
-        <Stack.Screen name="PrivacyPolicy"
-          component={PrivacyPolicy} options={{ headerShown: false }}
-        />
 
-        <Stack.Screen name="TermsConditions"
-          component={TermsConditions} options={{ headerShown: false }}
+        <Stack.Screen name="CustomWebview"
+          component={CustomWebview} options={{ headerShown: false }}
         />
 
         <Stack.Screen name="ProductGrid"
@@ -132,17 +126,17 @@ class Scene extends React.Component {
         <Stack.Screen name="BannerImage"
           component={BannerImage} options={{ headerShown: false }}
         />
-
         <Stack.Screen name="CartContainer"
           component={CartContainer} options={{ headerShown: false }}
         />
-
         <Stack.Screen name="EditProfile"
           component={EditProfile} options={{ headerShown: false }}
         />
-
         <Stack.Screen name="SearchProductGrid"
           component={SearchProductGrid} options={{ headerShown: false }}
+        />
+        <Stack.Screen name="Exclusive"
+          component={Exclusive} options={{ headerShown: false }}
         />
 
 
@@ -183,16 +177,8 @@ class Scene extends React.Component {
         <Stack.Screen name="CustomOrder"
           component={CustomOrder} options={{ headerShown: false }}
         />
-        <Stack.Screen name="AboutUs"
-          component={AboutUs} options={{ headerShown: false }}
-        />
-
-        <Stack.Screen name="PrivacyPolicy"
-          component={PrivacyPolicy} options={{ headerShown: false }}
-        />
-
-        <Stack.Screen name="TermsConditions"
-          component={TermsConditions} options={{ headerShown: false }}
+        <Stack.Screen name="CustomWebview"
+          component={CustomWebview} options={{ headerShown: false }}
         />
 
         <Stack.Screen name="ProductGrid"
@@ -231,7 +217,9 @@ class Scene extends React.Component {
         <Stack.Screen name="SearchProductGrid"
           component={SearchProductGrid} options={{ headerShown: false }}
         />
-
+        <Stack.Screen name="Exclusive"
+          component={Exclusive} options={{ headerShown: false }}
+        />
 
       </Stack.Navigator>
 
