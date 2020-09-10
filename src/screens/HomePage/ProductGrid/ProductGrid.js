@@ -53,6 +53,7 @@ class ProductGrid extends Component {
     const categoryData = this.props.route.params.gridData;
     const from = this.props.route.params.fromExclusive;
     const name = this.props.route.params.collectionName;
+    
 
     
         this.state = {

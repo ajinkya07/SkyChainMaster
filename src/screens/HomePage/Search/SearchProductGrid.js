@@ -25,6 +25,12 @@ import { urls } from '@api/urls'
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
 // import {} from '@search/SearchAction';
+import {
+  getProductSubCategoryData,
+  addProductToWishlist,
+  addProductToCart,
+  addRemoveProductFromCartByOne,
+} from '@productGrid/ProductGridAction';
 
 import {getTotalCartCount} from '@homepage/HomePageAction';
 
@@ -50,8 +56,22 @@ class SearchProductGrid extends Component {
         productImageToBeDisplayed: '',
         clickedLoadMore: false,
         selectedSortById: '2',
-        fromCodeSearch:from
+        fromCodeSearch:from,
 
+      successProductGridVersion: 0,
+      errorProductGridVersion: 0,
+      successAddProductToWishlistVersion: 0,
+      errorAddProductToWishlistVersion: 0,
+
+
+      successAddProductToCartVersion: 0,
+      errorAddProductToCartVersion: 0,
+
+      successProductAddToCartPlusOneVersion: 0,
+      errorProductAddToCartPlusOneVersion: 0,
+      productInventoryId: '',
+      successTotalCartCountVersion: 0,
+      errorTotalCartCountVersion: 0,
 
     };
     userId = global.userId;
@@ -71,16 +91,229 @@ class SearchProductGrid extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
-    } = nextProps;
+      successProductGridVersion,
+      errorProductGridVersion,
+      
+      successAddProductToWishlistVersion,
+      errorAddProductToWishlistVersion,
+      successAddProductToCartVersion,
+      errorAddProductToCartVersion,
+      successProductAddToCartPlusOneVersion,
+      errorProductAddToCartPlusOneVersion,
+      successTotalCartCountVersion,
+      errorTotalCartCountVersion,
+     } = nextProps;
     let newState = null;
 
+    
+    if (successProductGridVersion > prevState.successProductGridVersion) {
+      newState = {
+        ...newState, successProductGridVersion: nextProps.successProductGridVersion,
+      };
+    }
+    if (errorProductGridVersion > prevState.errorProductGridVersion) {
+      newState = {
+        ...newState, errorProductGridVersion: nextProps.errorProductGridVersion,
+      };
+    }
+    
+    if ( successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion ) {
+      newState = {
+        ...newState,
+        successAddProductToWishlistVersion: nextProps.successAddProductToWishlistVersion,
+      };
+    }
+    if ( errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion) {
+      newState = {
+        ...newState,
+        errorAddProductToWishlistVersion: nextProps.errorAddProductToWishlistVersion,
+      };
+    }
+
+    if (successAddProductToCartVersion > prevState.successAddProductToCartVersion) {
+      newState = {
+        ...newState,
+        successAddProductToCartVersion: nextProps.successAddProductToCartVersion,
+      };
+    }
+    if (errorAddProductToCartVersion > prevState.errorAddProductToCartVersion) {
+      newState = {
+        ...newState,
+        errorAddProductToCartVersion: nextProps.errorAddProductToCartVersion,
+      };
+    }
+
+    if ( successProductAddToCartPlusOneVersion > prevState.successProductAddToCartPlusOneVersion) {
+      newState = {
+        ...newState,
+        successProductAddToCartPlusOneVersion:
+          nextProps.successProductAddToCartPlusOneVersion,
+      };
+    }
+    if ( errorProductAddToCartPlusOneVersion > prevState.errorProductAddToCartPlusOneVersion) {
+      newState = {
+        ...newState,
+        errorProductAddToCartPlusOneVersion:
+          nextProps.errorProductAddToCartPlusOneVersion,
+      };
+    }
+
+    if (successTotalCartCountVersion > prevState.successTotalCartCountVersion) {
+      newState = {
+        ...newState,
+        successTotalCartCountVersion: nextProps.successTotalCartCountVersion,
+      };
+    }
+    if (errorTotalCartCountVersion > prevState.errorTotalCartCountVersion) {
+      newState = {
+        ...newState,
+        errorTotalCartCountVersion: nextProps.errorTotalCartCountVersion,
+      };
+    }
+ 
     return newState;
   }
 
+
+
+
   async componentDidUpdate(prevProps, prevState) {
     const {
+      productGridData,
+      addProductToWishlistData,
+      addProductToCartData,
+      productAddToCartPlusOneData,
+      totalCartCountData,
     } = this.props;
 
+
+    const { categoryData, page, selectedSortById, gridData } = this.state;
+
+    if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
+      if (productGridData.products && productGridData.products.length > 0) {
+        this.setState({
+          gridData:
+            this.state.page === 0
+              ? productGridData.products
+              : [...this.state.gridData, ...productGridData.products],
+        });
+      } else {
+        this.showToast('Please contact admin', 'danger');
+      }
+    }
+
+    if (this.state.errorProductGridVersion > prevState.errorProductGridVersion) {
+      Toast.show({
+        text: this.props.errorMsg
+          ? this.props.errorMsg
+          : strings.serverFailedMsg,
+        color: 'warning',
+        duration: 2500,
+      });
+      this.setState({ page: 0 });
+    }
+
+    
+    if (this.state.successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion ) {
+      if (addProductToWishlistData.ack === '1') {
+        Toast.show({
+          text: addProductToWishlistData && addProductToWishlistData.msg,
+          duration: 2500,
+        });
+      }
+    }
+
+    if (this.state.errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion ) {
+      Toast.show({
+        text: addProductToWishlistData && addProductToWishlistData.msg,
+        type: 'danger',
+        duration: 2500,
+      });
+    }
+
+    if (this.state.successAddProductToCartVersion > prevState.successAddProductToCartVersion ) {
+      if (addProductToCartData.ack === '1') {
+
+        let id = gridData && gridData[0].collection_id
+        //if(this.state.page==0){
+    
+        const data2 = new FormData();
+        data2.append('table', 'product_master');
+        data2.append('mode_type', 'normal');
+        data2.append('collection_id', id);
+        data2.append('user_id', userId);
+        data2.append('record', 10);
+        data2.append('page_no', page);
+        data2.append('sort_by', selectedSortById);
+
+        await this.props.getProductSubCategoryData(data2);
+        //}
+
+        Toast.show({
+          text: addProductToCartData && addProductToCartData.msg,
+          duration: 2500,
+        });
+      }
+    }
+    if ( this.state.errorAddProductToCartVersion > prevState.errorAddProductToCartVersion) {
+      Toast.show({
+        text: addProductToCartData && addProductToCartData.msg,
+        type: 'danger',
+        duration: 2500,
+      });
+    }
+
+    if (this.state.successProductAddToCartPlusOneVersion > prevState.successProductAddToCartPlusOneVersion) {
+      if (productAddToCartPlusOneData.ack === '1') {
+       
+        var Index = this.state.gridData.findIndex(
+          item => item.product_inventory_id == this.state.productInventoryId,
+        );
+
+        if (Index !== -1) {
+          if (productAddToCartPlusOneData.data && productAddToCartPlusOneData.data.quantity !== null) {
+            this.state.gridData[Index].quantity = parseInt(
+              productAddToCartPlusOneData.data.quantity,
+            );
+
+            this.setState(
+              {
+                quantity: productAddToCartPlusOneData.data.quantity,
+              },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          } else if (productAddToCartPlusOneData.data == null) {
+            this.state.gridData[Index].quantity = parseInt(0);
+            this.setState(
+              {
+                quantity: '0',
+              },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          }
+        }
+
+        Toast.show({
+          text: productAddToCartPlusOneData && productAddToCartPlusOneData.msg,
+          duration: 2500,
+        });
+      }
+    }
+    if (this.state.errorProductAddToCartPlusOneVersion > prevState.errorProductAddToCartPlusOneVersion) {
+      Toast.show({
+        text: productAddToCartPlusOneData && productAddToCartPlusOneData.msg,
+        type: 'danger',
+        duration: 2500,
+      });
+    }
+
+    if (this.state.successTotalCartCountVersion > prevState.successTotalCartCountVersion) {
+      global.totalCartCount = totalCartCountData.count;
+    }
 
   }
 
@@ -301,7 +534,6 @@ class SearchProductGrid extends Component {
   addProductToWishlist = async item => {
     const {gridData, page, selectedSortById} = this.state;
 
-    console.warn("gridData", gridData[0].collection_id);
     let id = gridData && gridData[0].collection_id
 
     let wishlistData = new FormData();
@@ -448,7 +680,6 @@ class SearchProductGrid extends Component {
   LoadRandomData = () => {
     const {gridData, page} = this.state;
 
-      console.warn("gridData", gridData[0].collection_id);
       let id = gridData && gridData[0].collection_id
 
       const data = new FormData();
@@ -460,7 +691,7 @@ class SearchProductGrid extends Component {
       data.append('page_no', page);
       data.append('sort_by', '2');
 
-//    this.props.getProductSubCategoryData(data);
+    this.props.getProductSubCategoryData(data);
  };
 
   footer = () => {
@@ -549,10 +780,7 @@ class SearchProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{marginTop: hp(1)}}
-            //onEndReachedThreshold={0.3}
-            //onEndReached={()=> this.LoadMoreData()}
             ListFooterComponent={this.footer()}
-            // ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
           />
         )}
 
@@ -596,15 +824,7 @@ class SearchProductGrid extends Component {
                       width: wp(90),
                     }}
                   />
-                  {/* <Image
-                                    source={{ uri: imageUrl + productImageToBeDisplayed.image_name }}
-                                    defaultSource={require('../../../assets/image/default.png')}
-                                    style={{
-                                        height: hp(30), width: wp(90), marginTop: hp(1),
-                                    }}
-                                    resizeMode='cover'
-                                /> */}
-                  <FastImage
+                   <FastImage
                     style={{
                       height: hp(34),
                       width: wp(90),
@@ -716,9 +936,39 @@ function mapStateToProps(state) {
     successSearchbyCategoryVersion: state.searchReducer.successSearchbyCategoryVersion,
     errorSearchbyCategoryVersion: state.searchReducer.errorSearchbyCategoryVersion,
     searchByCategoryData: state.searchReducer.searchByCategoryData,
+
+    isFetching: state.productGridReducer.isFetching,
+    error: state.productGridReducer.error,
+    errorMsg: state.productGridReducer.errorMsg,
+    successProductGridVersion: state.productGridReducer.successProductGridVersion,
+    errorProductGridVersion: state.productGridReducer.errorProductGridVersion,
+    productGridData: state.productGridReducer.productGridData,
+    
+    successAddProductToWishlistVersion:state.productGridReducer.successAddProductToWishlistVersion,
+    errorAddProductToWishlistVersion: state.productGridReducer.errorAddProductToWishlistVersion,
+    addProductToWishlistData: state.productGridReducer.addProductToWishlistData,
+
+    successAddProductToCartVersion: state.productGridReducer.successAddProductToCartVersion,
+    errorAddProductToCartVersion: state.productGridReducer.errorAddProductToCartVersion,
+    addProductToCartData: state.productGridReducer.addProductToCartData,
+
+    successProductAddToCartPlusOneVersion: state.productGridReducer.successProductAddToCartPlusOneVersion,
+    errorProductAddToCartPlusOneVersion: state.productGridReducer.errorProductAddToCartPlusOneVersion,
+    productAddToCartPlusOneData: state.productGridReducer.productAddToCartPlusOneData,
+
+    successTotalCartCountVersion: state.homePageReducer.successTotalCartCountVersion,
+    errorTotalCartCountVersion: state.homePageReducer.errorTotalCartCountVersion,
+    totalCartCountData: state.homePageReducer.totalCartCountData,
+
   }
 }
 
 export default connect(
-  mapStateToProps , {getTotalCartCount}
+  mapStateToProps , {
+      getProductSubCategoryData,
+      addProductToWishlist,
+      addProductToCart,
+      addRemoveProductFromCartByOne,
+      getTotalCartCount,
+    }
 )(SearchProductGrid);

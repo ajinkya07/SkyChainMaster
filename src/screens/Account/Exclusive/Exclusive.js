@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     },
     borderStyle: {
         borderColor: '#d2d2d2',
-        borderWidth: 0.8,
+        borderWidth: 0.7,
         marginTop: hp(2),
     },
 });

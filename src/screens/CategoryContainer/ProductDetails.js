@@ -800,7 +800,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerStyle: {
-    backgroundColor: 'transparent',
+    backgroundColor="#19af81",
     elevation: 0,
     borderBottomWidth: 0,
     alignItems: 'center',

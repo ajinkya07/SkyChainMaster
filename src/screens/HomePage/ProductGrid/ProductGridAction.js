@@ -186,12 +186,10 @@ console.log("applyFilterProducts formdata",data);
 
 
 export function addProductToWishlist(data) {
-  console.log("addProductToWishlist formdata", data);
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_PRODUCT_TO_WISHLIST_DATA));
 
     axios.post(urls.addToCartWishlist.url, data, header).then(response => {
-      console.log("addProductToWishlist success", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, ADD_PRODUCT_TO_WISHLIST_DATA_SUCCESS)
