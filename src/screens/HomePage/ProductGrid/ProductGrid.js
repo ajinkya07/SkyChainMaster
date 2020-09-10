@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -19,8 +19,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
-import {connect} from 'react-redux';
-import {color} from '@values/colors';
+import { connect } from 'react-redux';
+import { color } from '@values/colors';
 import { urls } from '@api/urls'
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
@@ -34,14 +34,14 @@ import {
   addRemoveProductFromCartByOne,
 } from '@productGrid/ProductGridAction';
 
-import {getTotalCartCount} from '@homepage/HomePageAction';
+import { getTotalCartCount } from '@homepage/HomePageAction';
 
-import {Toast, CheckBox} from 'native-base';
+import { Toast, CheckBox } from 'native-base';
 import Modal from 'react-native-modal';
-import {strings} from '@values/strings';
+import { strings } from '@values/strings';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import FastImage from 'react-native-fast-image';
-import _ from 'lodash';
+import _, { fromPairs } from 'lodash';
 import Theme from '../../../values/Theme';
 
 var userId = '';
@@ -51,9 +51,15 @@ class ProductGrid extends Component {
     super(props);
 
     const categoryData = this.props.route.params.gridData;
+    const from = this.props.route.params.fromExclusive;
+    const name = this.props.route.params.collectionName;
 
-    this.state = {
+    
+        this.state = {
       categoryData: categoryData,
+      fromExclusive: from,
+      collectionName:name,
+
       successProductGridVersion: 0,
       errorProductGridVersion: 0,
       isSortByModal: false,
@@ -98,9 +104,9 @@ class ProductGrid extends Component {
   }
 
   componentDidMount = () => {
-    const {categoryData, page} = this.state;
-console.warn("categoryData",categoryData);
-    if (categoryData.subcategory.length === 0) {
+    const { categoryData, page, fromExclusive } = this.state;
+
+    if (categoryData && !fromExclusive && categoryData.subcategory.length === 0) {
       const data = new FormData();
       data.append('table', 'product_master');
       data.append('mode_type', 'normal');
@@ -120,6 +126,20 @@ console.warn("categoryData",categoryData);
 
     this.props.getSortByParameters();
     this.props.getfilterParameters(data2);
+
+
+    if (categoryData && fromExclusive) {
+      const excl = new FormData();
+      excl.append('table', 'product_master');
+      excl.append('mode_type', 'normal');
+      excl.append('collection_id', categoryData.id);
+      excl.append('user_id', userId);
+      excl.append('record', 10);
+      excl.append('page_no', page);
+      excl.append('sort_by', '2');
+
+      this.props.getProductSubCategoryData(excl);
+    }
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -280,14 +300,11 @@ console.warn("categoryData",categoryData);
       totalCartCountData,
     } = this.props;
 
-    const {categoryData, page, selectedSortById, gridData} = this.state;
+    const { categoryData, page, selectedSortById, gridData } = this.state;
 
-    if (
-      this.state.successProductGridVersion > prevState.successProductGridVersion
-    ) {
+    if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
       if (productGridData.products && productGridData.products.length > 0) {
         this.setState({
-          //gridData: productGridData,
           gridData:
             this.state.page === 0
               ? productGridData.products
@@ -297,9 +314,7 @@ console.warn("categoryData",categoryData);
         this.showToast('Please contact admin', 'danger');
       }
     }
-    if (
-      this.state.errorProductGridVersion > prevState.errorProductGridVersion
-    ) {
+    if (this.state.errorProductGridVersion > prevState.errorProductGridVersion) {
       Toast.show({
         text: this.props.errorMsg
           ? this.props.errorMsg
@@ -307,17 +322,11 @@ console.warn("categoryData",categoryData);
         color: 'warning',
         duration: 2500,
       });
-      this.setState({page: 0});
+      this.setState({ page: 0 });
     }
 
-    if (
-      this.state.successFilteredProductVersion >
-      prevState.successFilteredProductVersion
-    ) {
-      if (
-        filteredProductData.products &&
-        filteredProductData.products.length > 0
-      ) {
+    if (this.state.successFilteredProductVersion > prevState.successFilteredProductVersion) {
+      if (filteredProductData.products && filteredProductData.products.length > 0) {
         let array = [];
         let array2 = [];
         array =
@@ -519,7 +528,7 @@ console.warn("categoryData",categoryData);
       iconView,
     } = ProductGridStyle;
 
-      let url = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+    let url = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     return (
       <TouchableOpacity
@@ -573,12 +582,12 @@ console.warn("categoryData",categoryData);
               />
             </TouchableOpacity>
             <View style={latestTextView}>
-              <View style={{width: wp(15), marginLeft: 5}}>
+              <View style={{ width: wp(15), marginLeft: 5 }}>
                 <_Text
                   numberOfLines={1}
                   fsSmall
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular13}}>
+                  style={{ ...Theme.ffLatoRegular13 }}>
                   Code :
                 </_Text>
               </View>
@@ -594,7 +603,7 @@ console.warn("categoryData",categoryData);
                   fsPrimary
                   //textColor={color.brandColor}
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular12}}>
+                  style={{ ...Theme.ffLatoRegular12 }}>
                   {item.value[0]}
                 </_Text>
               </View>
@@ -602,12 +611,12 @@ console.warn("categoryData",categoryData);
             {/* <View style={border}></View> */}
 
             <View style={latestTextView2}>
-              <View style={{marginLeft: 5}}>
+              <View style={{ marginLeft: 5 }}>
                 <_Text
                   numberOfLines={1}
                   fsSmall
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular13}}>
+                  style={{ ...Theme.ffLatoRegular13 }}>
                   Gross Wt :
                 </_Text>
               </View>
@@ -623,7 +632,7 @@ console.warn("categoryData",categoryData);
                   fsPrimary
                   //textColor={color.brandColor}
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular12}}>
+                  style={{ ...Theme.ffLatoRegular12 }}>
                   {parseInt(item.value[1]).toFixed(2)}
                 </_Text>
               </View>
@@ -631,12 +640,12 @@ console.warn("categoryData",categoryData);
             {/* <View style={border}></View> */}
 
             <View style={latestTextView2}>
-              <View style={{marginLeft: 5}}>
+              <View style={{ marginLeft: 5 }}>
                 <_Text
                   numberOfLines={1}
                   fsSmall
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular13}}>
+                  style={{ ...Theme.ffLatoRegular13 }}>
                   Name :{' '}
                 </_Text>
               </View>
@@ -652,7 +661,7 @@ console.warn("categoryData",categoryData);
                   fsPrimary
                   textColor={color.brandColor}
                   textColor={'#000000'}
-                  style={{...Theme.ffLatoRegular12}}>
+                  style={{ ...Theme.ffLatoRegular12 }}>
                   {item.value[2]}
                 </_Text>
               </View>
@@ -665,14 +674,14 @@ console.warn("categoryData",categoryData);
                   onPress={() => this.addProductToWishlist(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
-                    style={{height: hp(3.1), width: hp(3), marginTop: 2}}
+                    style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.addProductToCart(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Cart.png')}
-                    style={{height: hp(3.1), width: hp(3), marginTop: 2}}
+                    style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -685,7 +694,7 @@ console.warn("categoryData",categoryData);
                   onPress={() => this.removeProductFromCartByOne(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Minus.png')}
-                    style={{height: hp(3), width: hp(3)}}
+                    style={{ height: hp(3), width: hp(3) }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -701,7 +710,7 @@ console.warn("categoryData",categoryData);
                   onPress={() => this.addProductToCartPlusOne(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Plus.png')}
-                    style={{height: hp(3), width: hp(3)}}
+                    style={{ height: hp(3), width: hp(3) }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
@@ -714,7 +723,7 @@ console.warn("categoryData",categoryData);
   };
 
   addProductToWishlist = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { categoryData, page, selectedSortById } = this.state;
     let wishlistData = new FormData();
 
     wishlistData.append('product_id', item.product_inventory_id);
@@ -738,7 +747,7 @@ console.warn("categoryData",categoryData);
   };
 
   addProductToCart = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { categoryData, page, selectedSortById } = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -760,7 +769,7 @@ console.warn("categoryData",categoryData);
   };
 
   addProductToCartPlusOne = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { categoryData, page, selectedSortById } = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -792,7 +801,7 @@ console.warn("categoryData",categoryData);
   };
 
   removeProductFromCartByOne = async item => {
-    const {categoryData, page, selectedSortById} = this.state;
+    const { categoryData, page, selectedSortById } = this.state;
 
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -848,10 +857,10 @@ console.warn("categoryData",categoryData);
         }}>
         <Image
           source={require('../../../assets/gif/noData.gif')}
-          style={{height: hp(20), width: hp(20)}}
+          style={{ height: hp(20), width: hp(20) }}
           resizeMode="cover"
         />
-        <_Text style={{paddingTop: 5}}>{message}</_Text>
+        <_Text style={{ paddingTop: 5 }}>{message}</_Text>
       </View>
     );
   };
@@ -869,7 +878,7 @@ console.warn("categoryData",categoryData);
   };
 
   setSortBy = item => {
-    const {categoryData, page} = this.state;
+    const { categoryData, page } = this.state;
 
     // this.closeSortByModal()
 
@@ -914,7 +923,7 @@ console.warn("categoryData",categoryData);
   };
 
   LoadRandomData = () => {
-    const {categoryData, page} = this.state;
+    const { categoryData, page } = this.state;
 
     const data = new FormData();
     data.append('table', 'product_master');
@@ -943,36 +952,36 @@ console.warn("categoryData",categoryData);
                 alignItems: 'center',
               }}>
               <Text
-                style={{color: '#0d185c', fontSize: 18, fontWeight: 'bold'}}>
+                style={{ color: '#0d185c', fontSize: 18, fontWeight: 'bold' }}>
                 Load More
               </Text>
             </View>
           </TouchableOpacity>
         ) : null}
         {this.state.clickedLoadMore &&
-        this.props.isFetching &&
-        this.state.gridData.length >= 10 ? (
-          <View
-            style={{
-              flex: 1,
-              height: 40,
-              width: wp(100),
-              backgroundColor: '#EEF8F7',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <ActivityIndicator size="small" color={color.brandColor} />
-          </View>
-        ) : null}
+          this.props.isFetching &&
+          this.state.gridData.length >= 10 ? (
+            <View
+              style={{
+                flex: 1,
+                height: 40,
+                width: wp(100),
+                backgroundColor: '#EEF8F7',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <ActivityIndicator size="small" color={color.brandColor} />
+            </View>
+          ) : null}
       </View>
     );
   };
 
   toggleFilterModal = () => {
-    const {filterParamsData} = this.props;
+    const { filterParamsData } = this.props;
 
     if (filterParamsData && filterParamsData.length === undefined) {
-      this.setState({isFilterModalVisible: !this.state.isFilterModalVisible});
+      this.setState({ isFilterModalVisible: !this.state.isFilterModalVisible });
     } else if (filterParamsData.length === 0) {
       Toast.show({
         text: 'No data found',
@@ -1016,7 +1025,7 @@ console.warn("categoryData",categoryData);
       isGrossWtSelected,
     } = this.state;
 
-    const {filterParamsData} = this.props;
+    const { filterParamsData } = this.props;
 
 
     const filterData = new FormData();
@@ -1038,7 +1047,7 @@ console.warn("categoryData",categoryData);
 
     this.props.applyFilterProducts(filterData);
 
-    this.setState({isFilterModalVisible: false, page: 0});
+    this.setState({ isFilterModalVisible: false, page: 0 });
 
     if (filterParamsData && filterParamsData.length === undefined) {
       if (filterParamsData.gross_weight) {
@@ -1057,10 +1066,10 @@ console.warn("categoryData",categoryData);
   };
 
   showNetWeightOrNot = () => {
-    const {sortByParamsData, filterParamsData} = this.props;
+    const { sortByParamsData, filterParamsData } = this.props;
     if (filterParamsData && filterParamsData.length === undefined) {
       if (filterParamsData.net_weight) {
-        this.setState({isGrossWtSelected: false});
+        this.setState({ isGrossWtSelected: false });
       } else {
         Toast.show({
           text: 'No Data found to show',
@@ -1085,20 +1094,22 @@ console.warn("categoryData",categoryData);
       sortList,
       isGrossWtSelected,
       isProductImageModalVisibel,
+      collectionName
     } = this.state;
 
-    const {sortByParamsData, filterParamsData} = this.props;
+    const { sortByParamsData, filterParamsData } = this.props;
 
 
-      let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+    let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     return (
 
-      <SafeAreaView style={{flex: 1, backgroundColor: '#f3fcf9'}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
         <_CustomHeader
           Title={
-            `(${gridData.length.toString()})` + ' ' + categoryData.col_name
+            `(${gridData.length.toString()})` + ' ' + `${categoryData.col_name !=undefined ? categoryData.col_name : collectionName}`
           }
+          
           // Subtitle={ `(${(gridData.length).toString()})`}
           RightBtnIcon1={require('../../../assets/image/BlueIcons/Search-White.png')}
           RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}
@@ -1134,14 +1145,14 @@ console.warn("categoryData",categoryData);
                 alignItems: 'center',
               }}>
               <Image
-                style={{height: hp(2.8), width: hp(2.8), marginRight: hp(1.5)}}
+                style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
                 source={require('../../../assets/image/BlueIcons/Sort-Green.png')}
               />
               <_Text
                 fsHeading
                 bold
                 textColor={'#19af81'}
-                style={{...Theme.ffLatoRegular14}}>
+                style={{ ...Theme.ffLatoRegular14 }}>
                 SORT
               </_Text>
             </View>
@@ -1159,14 +1170,14 @@ console.warn("categoryData",categoryData);
                 alignItems: 'center',
               }}>
               <Image
-                style={{height: hp(2.8), width: hp(2.8), marginRight: hp(1.5)}}
+                style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
                 source={require('../../../assets/image/BlueIcons/Green-Filter.png')}
               />
               <_Text
                 fsHeading
                 bold
                 textColor={'#19af81'}
-                style={{...Theme.ffLatoRegular14}}>
+                style={{ ...Theme.ffLatoRegular14 }}>
                 FILTER
               </_Text>
             </View>
@@ -1183,14 +1194,14 @@ console.warn("categoryData",categoryData);
                 alignItems: 'center',
               }}>
               <Image
-                style={{height: hp(2.8), width: hp(2.8), marginRight: hp(2)}}
+                style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(2) }}
                 source={require('../../../assets/image/BlueIcons/Green-Select.png')}
               />
               <_Text
                 fsHeading
                 bold
                 textColor={'#19af81'}
-                style={{...Theme.ffLatoRegular14}}>
+                style={{ ...Theme.ffLatoRegular14 }}>
                 SELECT
               </_Text>
             </View>
@@ -1202,18 +1213,18 @@ console.warn("categoryData",categoryData);
             data={gridData}
             showsHorizontalScrollIndicator={true}
             showsVerticalScrollIndicator={false}
-            renderItem={({item}) => (
-              <View style={{marginBottom: hp(1), marginTop: hp(1)}}>
+            renderItem={({ item }) => (
+              <View style={{ marginBottom: hp(1), marginTop: hp(1) }}>
                 {this.gridView(item)}
               </View>
             )}
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
-            style={{marginTop: hp(1)}}
+            style={{ marginTop: hp(1) }}
             //onEndReachedThreshold={0.3}
             //onEndReached={()=> this.LoadMoreData()}
             ListFooterComponent={this.footer()}
-            // ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
+          // ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
           />
         )}
 
@@ -1248,10 +1259,10 @@ console.warn("categoryData",categoryData);
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                  <Text style={{fontSize: 20, fontWeight: '400'}}>Sort By</Text>
+                  <Text style={{ fontSize: 20, fontWeight: '400' }}>Sort By</Text>
 
                   <TouchableOpacity
-                    hitSlop={{top: 5, left: 5, bottom: 5, right: 5}}
+                    hitSlop={{ top: 5, left: 5, bottom: 5, right: 5 }}
                     onPress={() => this.closeSortByModal()}>
                     <Image
                       style={{
@@ -1279,11 +1290,11 @@ console.warn("categoryData",categoryData);
                   showsHorizontalScrollIndicator={false}
                   showsVerticalScrollIndicator={false}
                   ItemSeparatorComponent={this.seperator}
-                  renderItem={({item}) => (
+                  renderItem={({ item }) => (
                     <TouchableOpacity
-                      hitSlop={{top: 20, left: 20, bottom: 20, right: 20}}
+                      hitSlop={{ top: 20, left: 20, bottom: 20, right: 20 }}
                       onPress={() => this.setSortBy(item)}>
-                      <View style={{width: wp(100), flexDirection: 'row'}}>
+                      <View style={{ width: wp(100), flexDirection: 'row' }}>
                         <View
                           style={{
                             paddingVertical: 12,
@@ -1332,9 +1343,9 @@ console.warn("categoryData",categoryData);
                               }}
                             />
                           )
-                          // <CheckBox
-                          //     color={color.brandColor}
-                          //     checked={item.value === selectedSortById ? true : false} />
+                            // <CheckBox
+                            //     color={color.brandColor}
+                            //     checked={item.value === selectedSortById ? true : false} />
                           }
                         </View>
                       </View>
@@ -1352,19 +1363,19 @@ console.warn("categoryData",categoryData);
           <Modal
             isVisible={this.state.isFilterModalVisible}
             transparent={true}
-            onRequestClose={() => this.setState({isFilterModalVisible: false})}
-            onBackdropPress={() => this.setState({isFilterModalVisible: false})}
-            style={{margin: 0}}>
+            onRequestClose={() => this.setState({ isFilterModalVisible: false })}
+            onBackdropPress={() => this.setState({ isFilterModalVisible: false })}
+            style={{ margin: 0 }}>
             <TouchableWithoutFeedback
-              style={{flex: 1}}
-              onPress={() => this.setState({isFilterModalVisible: false})}>
+              style={{ flex: 1 }}
+              onPress={() => this.setState({ isFilterModalVisible: false })}>
               <KeyboardAvoidingView
                 keyboardVerticalOffset={Platform.OS == 'android' ? 0 : 100}
                 behavior="height"
-                style={{flex: 1}}>
+                style={{ flex: 1 }}>
                 <View style={styles.mainContainer}>
                   <TouchableWithoutFeedback
-                    style={{flex: 1}}
+                    style={{ flex: 1 }}
                     onPress={() => null}>
                     <View style={styles.content}>
                       <View style={styles.filterContainer}>
@@ -1373,11 +1384,11 @@ console.warn("categoryData",categoryData);
                             style={styles.filterImg}
                             source={require('../../../assets/image/BlueIcons/Filter.png')}
                           />
-                          <Text style={{fontSize: 20}}>Filter</Text>
+                          <Text style={{ fontSize: 20 }}>Filter</Text>
                         </View>
                         <View>
                           <TouchableOpacity onPress={() => this.applyFilter()}>
-                            <Text style={{fontSize: 20}}>Apply</Text>
+                            <Text style={{ fontSize: 20 }}>Apply</Text>
                           </TouchableOpacity>
                         </View>
                       </View>
@@ -1428,7 +1439,7 @@ console.warn("categoryData",categoryData);
                             }}>
                             <TouchableOpacity
                               onPress={() =>
-                                this.setState({isGrossWtSelected: true})
+                                this.setState({ isGrossWtSelected: true })
                               }>
                               <Text style={styles.toText}>Gross weight</Text>
                             </TouchableOpacity>
@@ -1492,8 +1503,8 @@ console.warn("categoryData",categoryData);
                                                     </View> */}
 
                           <View style={styles.sliderContainer}>
-                            <View style={{flex: 1}}></View>
-                            <View style={{flex: 2}}>
+                            <View style={{ flex: 1 }}></View>
+                            <View style={{ flex: 2 }}>
                               {filterParamsData && (
                                 <View>
                                   <RangeSlider
@@ -1503,7 +1514,7 @@ console.warn("categoryData",categoryData);
                                 </View>
                               )}
 
-                              <View style={{marginTop: 25}}>
+                              <View style={{ marginTop: 25 }}>
                                 <Text style={styles.toText}>From</Text>
                                 <TextInput
                                   editable={false}
@@ -1513,7 +1524,7 @@ console.warn("categoryData",categoryData);
                                   placeholderTextColor="#000"
                                 />
                               </View>
-                              <View style={{marginTop: 25, marginBottom: 15}}>
+                              <View style={{ marginTop: 25, marginBottom: 15 }}>
                                 <Text style={styles.toText}>To</Text>
                                 <TextInput
                                   editable={false}
@@ -1527,8 +1538,8 @@ console.warn("categoryData",categoryData);
                           </View>
                         </>
                       ) : (
-                        <>
-                          {/* <View style={styles.grossWeightContainer}>
+                          <>
+                            {/* <View style={styles.grossWeightContainer}>
                                                             <View style={styles.leftGrossWeight}>
                                                                 <TouchableOpacity>
                                                                     <Text style={styles.toText}>Net weight</Text>
@@ -1540,45 +1551,45 @@ console.warn("categoryData",categoryData);
                                                                 </View>
                                                             </View>
                                                         </View> */}
-                          <View style={styles.sliderContainer}>
-                            <View style={{flex: 1}}></View>
-                            <View style={{flex: 2}}>
-                              {filterParamsData && (
-                                <View>
-                                  <NetWeightRangeSlider
-                                    data={filterParamsData}
-                                    setsliderValuesNet={
-                                      this.setFromToSliderValuesNet
-                                    }
+                            <View style={styles.sliderContainer}>
+                              <View style={{ flex: 1 }}></View>
+                              <View style={{ flex: 2 }}>
+                                {filterParamsData && (
+                                  <View>
+                                    <NetWeightRangeSlider
+                                      data={filterParamsData}
+                                      setsliderValuesNet={
+                                        this.setFromToSliderValuesNet
+                                      }
+                                    />
+                                  </View>
+                                )}
+                                <View style={{ marginTop: 25 }}>
+                                  <Text style={styles.toText}>From</Text>
+                                  <TextInput
+                                    editable={false}
+                                    style={styles.textInputStyle}
+                                    //value={fromValue1}
+                                    value={String(fromValue1)}
+                                    placeholder="0.000"
+                                    placeholderTextColor="#000"
                                   />
                                 </View>
-                              )}
-                              <View style={{marginTop: 25}}>
-                                <Text style={styles.toText}>From</Text>
-                                <TextInput
-                                  editable={false}
-                                  style={styles.textInputStyle}
-                                  //value={fromValue1}
-                                  value={String(fromValue1)}
-                                  placeholder="0.000"
-                                  placeholderTextColor="#000"
-                                />
-                              </View>
-                              <View style={{marginTop: 25, marginBottom: 15}}>
-                                <Text style={styles.toText}>To</Text>
-                                <TextInput
-                                  editable={false}
-                                  style={styles.textInputStyle}
-                                  // value={toValue1}
-                                  value={String(toValue1)}
-                                  placeholder="0.000"
-                                  placeholderTextColor="#000"
-                                />
+                                <View style={{ marginTop: 25, marginBottom: 15 }}>
+                                  <Text style={styles.toText}>To</Text>
+                                  <TextInput
+                                    editable={false}
+                                    style={styles.textInputStyle}
+                                    // value={toValue1}
+                                    value={String(toValue1)}
+                                    placeholder="0.000"
+                                    placeholderTextColor="#000"
+                                  />
+                                </View>
                               </View>
                             </View>
-                          </View>
-                        </>
-                      )}
+                          </>
+                        )}
 
                       <SafeAreaView />
                     </View>
@@ -1594,16 +1605,16 @@ console.warn("categoryData",categoryData);
         {this.state.isProductImageModalVisibel && (
           <View>
             <Modal
-              style={{justifyContent: 'center'}}
+              style={{ justifyContent: 'center' }}
               isVisible={this.state.isProductImageModalVisibel}
               onRequestClose={() =>
-                this.setState({isProductImageModalVisibel: false})
+                this.setState({ isProductImageModalVisibel: false })
               }
               onBackdropPress={() =>
-                this.setState({isProductImageModalVisibel: false})
+                this.setState({ isProductImageModalVisibel: false })
               }
               onBackButtonPress={() =>
-                this.setState({isProductImageModalVisibel: false})
+                this.setState({ isProductImageModalVisibel: false })
               }>
               <SafeAreaView>
                 <View
@@ -1614,7 +1625,7 @@ console.warn("categoryData",categoryData);
                     justifyContent: 'center',
                     borderRadius: 10,
                   }}>
-                  <_Text fsMedium style={{marginTop: hp(0.5)}}>
+                  <_Text fsMedium style={{ marginTop: hp(0.5) }}>
                     Code: {productImageToBeDisplayed.collection_sku_code}
                   </_Text>
                   <View
@@ -1824,8 +1835,8 @@ class RangeSlider extends React.Component {
   };
 
   render() {
-    const {data} = this.props;
-    const {values} = this.state;
+    const { data } = this.props;
+    const { values } = this.state;
     if (data) {
       var min = data.gross_weight[0].min_gross_weight;
       var max = data.gross_weight[0].max_gross_weight;
@@ -1834,7 +1845,7 @@ class RangeSlider extends React.Component {
     return (
       <View>
         {data ? (
-          <View style={{marginLeft: 10}}>
+          <View style={{ marginLeft: 10 }}>
             <MultiSlider
               values={[values[0], values[1]]}
               sliderLength={wp(60)}
@@ -1865,10 +1876,10 @@ class RangeSlider extends React.Component {
                 marginHorizontal: 10,
               }}>
               {values && (
-                <Text style={{fontSize: 16}}>{this.state.values[0]}</Text>
+                <Text style={{ fontSize: 16 }}>{this.state.values[0]}</Text>
               )}
               {values && (
-                <Text style={{fontSize: 16}}>{this.state.values[1]}</Text>
+                <Text style={{ fontSize: 16 }}>{this.state.values[1]}</Text>
               )}
             </View>
           </View>
@@ -1898,8 +1909,8 @@ class NetWeightRangeSlider extends React.Component {
   };
 
   render() {
-    const {data} = this.props;
-    const {values} = this.state;
+    const { data } = this.props;
+    const { values } = this.state;
     if (data) {
       var min = data.net_weight[0].min_net_weight;
       var max = data.net_weight[0].max_net_weight;
@@ -1908,7 +1919,7 @@ class NetWeightRangeSlider extends React.Component {
     return (
       <View>
         {data ? (
-          <View style={{marginLeft: 10}}>
+          <View style={{ marginLeft: 10 }}>
             <MultiSlider
               values={[values[0], values[1]]}
               sliderLength={wp(60)}
@@ -1939,12 +1950,12 @@ class NetWeightRangeSlider extends React.Component {
                 marginHorizontal: 10,
               }}>
               {values && (
-                <Text style={{fontSize: 16}}>
+                <Text style={{ fontSize: 16 }}>
                   {parseFloat(this.state.values[0])}
                 </Text>
               )}
               {values && (
-                <Text style={{fontSize: 16}}>
+                <Text style={{ fontSize: 16 }}>
                   {parseFloat(this.state.values[1])}
                 </Text>
               )}

@@ -45,7 +45,6 @@ import {
       dispatch(showLoadingIndicator(EXCLUSIVE_DATA));
   
       axios.post(urls.Exclusive.url, data, header).then(response => {
-          console.warn("getExclusiveList response", response.data);
           if (response.data.ack ==='1') {
             dispatch(
               onSuccess(response.data, EXCLUSIVE_DATA_SUCCESS)

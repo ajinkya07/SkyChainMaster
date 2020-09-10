@@ -19,7 +19,7 @@ import {
 } from 'react-native-responsive-screen';
 import { connect } from 'react-redux';
 import { Toast } from 'native-base';
-import {getExclusiveList } from '@exclusive/ExclusiveAction';
+import { getExclusiveList } from '@exclusive/ExclusiveAction';
 
 
 
@@ -87,7 +87,7 @@ class Exclusive extends Component {
                     source={require('../../../assets/gif/noData.gif')}
                     style={{ height: hp(20), width: hp(20) }}
                 />
-                <Text style={{ fontSize: 18, fontWeight: '400', textAlign: 'center',marginTop:20 }}>
+                <Text style={{ fontSize: 18, fontWeight: '400', textAlign: 'center', marginTop: 20 }}>
                     {msg}
                 </Text>
             </View>
@@ -95,9 +95,8 @@ class Exclusive extends Component {
     };
 
     render() {
-        const{exclusiveData} = this.props
+        const { exclusiveData } = this.props
 
-        console.warn("exclusiveData",exclusiveData);
 
         return (
             <SafeAreaView style={styles.flex}>
@@ -111,19 +110,32 @@ class Exclusive extends Component {
                     rightIconHeight2={hp(3.5)}
                     backgroundColor="#19af81"
                 />
-                {/* <TouchableOpacity onPress={() => null}>
-                    <View style={styles.row}>
-                        <View style={styles.countContainer}>
-                            <Text style={styles.collectionCount}>6</Text>
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.title}>new Collection</Text>
-                            <View style={styles.borderStyle} />
-                        </View>
+
+                {exclusiveData && exclusiveData.final_collection && (
+                    <View>
+                        <FlatList
+                            data={exclusiveData.final_collection}
+                            refreshing={this.props.isFetching}
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    onPress={() => this.props.navigation.navigate('ProductGrid',
+                                     { gridData: item,fromExclusive:true, collectionName:item.collection_name })}>
+                                    <View style={styles.row}>
+                                        <View style={styles.countContainer}>
+                                            <Text style={styles.collectionCount}>{item.product_count}</Text>
+                                        </View>
+                                        <View style={styles.textContainer}>
+                                            <Text style={styles.title}>{item.collection_name}</Text>
+                                            <View style={styles.borderStyle} />
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            )}
+                            keyExtractor={(item, index) => index.toString()}
+                        />
                     </View>
-                </TouchableOpacity> */}
-
-
+                )}
 
                 {exclusiveData.final_collection == null ? this.noDataFound(this.props.errorMsg) : null}
 
@@ -144,12 +156,17 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps, {getExclusiveList})(Exclusive);
+export default connect(mapStateToProps, { getExclusiveList })(Exclusive);
 
 
 
 
 const styles = StyleSheet.create({
+    viewContainer: {
+        marginTop: Platform.OS === 'ios' ? 12 : 10,
+        backgroundColor: '#f7f7f7',
+        flex: 1,
+    },
     flex: {
         flex: 1,
         backgroundColor: '#f3fcf9',
@@ -183,7 +200,7 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
         marginHorizontal: wp(3.5),
-        marginTop: hp(1),
+        marginTop: hp(2),
     },
     borderStyle: {
         borderColor: '#d2d2d2',
