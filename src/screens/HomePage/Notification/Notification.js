@@ -12,6 +12,7 @@ import _Text from '@text/_Text';
 import { connect } from 'react-redux';
 import { color } from '@values/colors';
 import IconPack from '../../OnBoarding/Login/IconPack';
+import {urls} from '@api/urls';
 
 import { getNotificationList } from '@notification/NotificationAction'
 
@@ -79,8 +80,13 @@ class Notification extends Component {
 
     showNotifications = (item, index) => {
 
+        let url2 = urls.imageUrl
+
         return (
-            <TouchableOpacity onPress={() => alert("okok")}>
+            <TouchableOpacity onPress={() =>  this.props.navigation.navigate('BannerImage', {
+                bannerDataImagePath: item.image_name,
+                baseUrl: url2,
+              })}>
                 <View style={{ paddingTop: hp(0.5), paddingBottom: hp(0.5) }}>
                     <View style={{ flexDirection: 'row', flex: 1, marginLeft: hp(1.5), marginRight: hp(0.5) }}>
                         <View style={{ flex: 0.25, justifyContent: 'flex-start', }}>
@@ -89,8 +95,7 @@ class Notification extends Component {
                                     height: hp(10), width: hp(10), borderRadius: 10,
                                     borderWidth: 0.4, borderColor: color.gray
                                 }}
-                                source={item.image}
-                                //                                defaultSource={require('../../../assets/image/default.png')}
+                                source={item.image_name}
                                 defaultSource={IconPack.APP_LOGO}
 
                             />
@@ -103,16 +108,16 @@ class Notification extends Component {
                             </_Text>
                             <_Text numberOfLines={2} fsPrimary
                                 style={{ marginRight: hp(3) }}>
-                                Message: {item.msg}
+                                Message: {item.sub_title}
                             </_Text>
                             <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                 <_Text numberOfLines={2} note
                                     style={{ marginRight: hp(3) }}>
-                                    Order id: {item.orderID}
+                                    Order id: {item.order_id}
                                 </_Text>
                                 <_Text numberOfLines={2} note
                                     style={{ marginRight: hp(3) }}>
-                                    Date:{item.date}
+                                    Date:{item.created}
                                 </_Text>
 
                             </View>
@@ -145,7 +150,7 @@ class Notification extends Component {
           <View
             style={{
               position: 'absolute',
-              height: hp(80),
+              height: hp(100),
               width: wp(100),
               alignItems: 'center',
               justifyContent: 'center',
@@ -180,9 +185,6 @@ class Notification extends Component {
     render() {
         const { notificationData, isFetching } = this.props
 
-        console.warn("notificationData",notificationData);
-
-
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
                 <_CustomHeader
@@ -195,7 +197,7 @@ class Notification extends Component {
                     <FlatList
                         onRefresh={() => this.onRefresh()}
                         refreshing={isFetching}
-                        data={notificationData && notificationData}
+                        data={notificationData.data}
                         showsVerticalScrollIndicator={false}
                         keyExtractor={item => item.id}
                         renderItem={({ item, index }) => (

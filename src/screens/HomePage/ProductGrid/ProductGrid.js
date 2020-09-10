@@ -53,7 +53,7 @@ class ProductGrid extends Component {
     const categoryData = this.props.route.params.gridData;
     const from = this.props.route.params.fromExclusive;
     const name = this.props.route.params.collectionName;
-    
+  
 
     
         this.state = {
@@ -132,15 +132,17 @@ class ProductGrid extends Component {
     if (categoryData && fromExclusive) {
       const excl = new FormData();
       excl.append('table', 'product_master');
-      excl.append('mode_type', 'normal');
-      excl.append('collection_id', categoryData.id);
+      excl.append('mode_type', 'my_collection');
+      excl.append('collection_id', 0);
       excl.append('user_id', userId);
       excl.append('record', 10);
       excl.append('page_no', page);
       excl.append('sort_by', '2');
+      excl.append('my_collection_id', categoryData.id);
 
       this.props.getProductSubCategoryData(excl);
     }
+
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -301,7 +303,7 @@ class ProductGrid extends Component {
       totalCartCountData,
     } = this.props;
 
-    const { categoryData, page, selectedSortById, gridData } = this.state;
+    const { categoryData, page, selectedSortById, gridData ,fromExclusive} = this.state;
 
     if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
       if (productGridData.products && productGridData.products.length > 0) {
@@ -357,10 +359,7 @@ class ProductGrid extends Component {
       });
     }
 
-    if (
-      this.state.successFilterParamsVersion >
-      prevState.successFilterParamsVersion
-    ) {
+    if (this.state.successFilterParamsVersion > prevState.successFilterParamsVersion) {
       if (filterParamsData && filterParamsData.length === undefined) {
         if (filterParamsData.gross_weight) {
           this.setState({
@@ -377,10 +376,7 @@ class ProductGrid extends Component {
       }
     }
 
-    if (
-      this.state.successAddProductToWishlistVersion >
-      prevState.successAddProductToWishlistVersion
-    ) {
+    if (this.state.successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion ) {
       if (addProductToWishlistData.ack === '1') {
         Toast.show({
           text: addProductToWishlistData && addProductToWishlistData.msg,
@@ -388,10 +384,7 @@ class ProductGrid extends Component {
         });
       }
     }
-    if (
-      this.state.errorAddProductToWishlistVersion >
-      prevState.errorAddProductToWishlistVersion
-    ) {
+    if (this.state.errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion ) {
       Toast.show({
         text: addProductToWishlistData && addProductToWishlistData.msg,
         type: 'danger',
@@ -399,11 +392,10 @@ class ProductGrid extends Component {
       });
     }
 
-    if (
-      this.state.successAddProductToCartVersion >
-      prevState.successAddProductToCartVersion
-    ) {
+    if ( this.state.successAddProductToCartVersion > prevState.successAddProductToCartVersion ) {
       if (addProductToCartData.ack === '1') {
+
+        if (categoryData && !fromExclusive) {
         const data2 = new FormData();
         data2.append('table', 'product_master');
         data2.append('mode_type', 'normal');
@@ -414,17 +406,29 @@ class ProductGrid extends Component {
         data2.append('sort_by', selectedSortById);
 
         await this.props.getProductSubCategoryData(data2);
+        }
 
+        if (categoryData && fromExclusive) {
+          const excl2 = new FormData();
+          excl2.append('table', 'product_master');
+          excl2.append('mode_type', 'my_collection');
+          excl2.append('collection_id', 0);
+          excl2.append('user_id', userId);
+          excl2.append('record', 10);
+          excl2.append('page_no', page);
+          excl2.append('sort_by', '2');
+          excl2.append('my_collection_id', categoryData.id);
+    
+          this.props.getProductSubCategoryData(excl2);
+        }
+        
         Toast.show({
           text: addProductToCartData && addProductToCartData.msg,
           duration: 2500,
         });
       }
     }
-    if (
-      this.state.errorAddProductToCartVersion >
-      prevState.errorAddProductToCartVersion
-    ) {
+    if (this.state.errorAddProductToCartVersion > prevState.errorAddProductToCartVersion ) {
       Toast.show({
         text: addProductToCartData && addProductToCartData.msg,
         type: 'danger',
@@ -432,10 +436,7 @@ class ProductGrid extends Component {
       });
     }
 
-    if (
-      this.state.successProductAddToCartPlusOneVersion >
-      prevState.successProductAddToCartPlusOneVersion
-    ) {
+    if ( this.state.successProductAddToCartPlusOneVersion > prevState.successProductAddToCartPlusOneVersion ) {
       if (productAddToCartPlusOneData.ack === '1') {
         // var Index = _.findIndex(this.state.gridData, {
         //     product_inventory_id: parseInt(this.state.productInventoryId),
@@ -481,10 +482,7 @@ class ProductGrid extends Component {
         });
       }
     }
-    if (
-      this.state.errorProductAddToCartPlusOneVersion >
-      prevState.errorProductAddToCartPlusOneVersion
-    ) {
+    if ( this.state.errorProductAddToCartPlusOneVersion > prevState.errorProductAddToCartPlusOneVersion  ) {
       Toast.show({
         text: productAddToCartPlusOneData && productAddToCartPlusOneData.msg,
         type: 'danger',

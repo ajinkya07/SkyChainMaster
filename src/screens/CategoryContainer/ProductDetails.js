@@ -140,7 +140,7 @@ class ProductDetails extends React.Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const {productDetailsData, addCartDetailsData} = this.props;
-    console.log('productDetailsData =>', productDetailsData);
+
     if (
       this.state.successProductDetailsVersion >
       prevState.successProductDetailsVersion
@@ -293,7 +293,7 @@ class ProductDetails extends React.Component {
             activeDot={
               <View
                 style={{
-                  backgroundColor: color.brandColor,
+                  backgroundColor: '#19af81',
                   width: 10,
                   height: 10,
                   borderRadius: 5,
@@ -455,7 +455,7 @@ class ProductDetails extends React.Component {
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
                   <Image
-                    source={require('../../assets/image/back.png')}
+                    source={require('../../assets/image/Account/back_button.png')}
                     style={{
                       marginLeft: 10,
                       height: hp(2.2),
@@ -800,7 +800,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerStyle: {
-    backgroundColor="#19af81",
+    backgroundColor:'#FFFFFF',
     elevation: 0,
     borderBottomWidth: 0,
     alignItems: 'center',
