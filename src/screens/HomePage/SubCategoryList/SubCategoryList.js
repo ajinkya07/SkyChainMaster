@@ -80,7 +80,7 @@ export default class SubCategoryList extends Component {
     render() {
         const { subcategoryData } = this.state
         return (
-                <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
+                <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
                     <_CustomHeader
                         Title={'Sub Category'}
                       //  RightBtnIcon1={require('../../../assets/image/BlueIcons/Search.png')}

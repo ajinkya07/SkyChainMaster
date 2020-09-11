@@ -15,6 +15,7 @@ import searchReducer from '@search/SearchReducer'
 import notificationReducer from '@notification/NotificationReducer'
 import exclusiveReducer from '@exclusive/ExclusiveReducer'
 
+import accountReducer from '@accountContainer/AccountReducer'
 
 
 
@@ -31,7 +32,8 @@ const appReducer = combineReducers({
     editProfileReducer,
     searchReducer,
     notificationReducer,
-    exclusiveReducer
+    exclusiveReducer,
+    accountReducer
 });
 
 const rootReducer = (state, action) => {

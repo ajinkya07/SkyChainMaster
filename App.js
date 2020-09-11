@@ -9,7 +9,7 @@ const store = configureStore();
 
 class App extends React.Component {
   componentDidMount = () => {
-    //  console.disableYellowBox = true;
+     console.disableYellowBox = true;
   };
 
   render() {

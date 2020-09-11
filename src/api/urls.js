@@ -122,7 +122,10 @@ export const urls = {
     Exclusive: {
         url: url + 'my_Collection'
     },
+    CallEmail:{
+        url: url + 'Call_Email_Us'
 
+    }
 
 
 }

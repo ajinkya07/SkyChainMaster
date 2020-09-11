@@ -426,7 +426,6 @@ class CartContainer extends Component {
 
 
     if (prevProps.isFocused !== this.props.isFocused) {
-      console.warn("here in focused");
       const data3 = new FormData();
       data3.append('user_id', userId);
       data3.append('table', 'cart');
@@ -1172,7 +1171,7 @@ class CartContainer extends Component {
         onRefresh={() => this.scrollDownToRefreshCart()}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={{ marginBottom: hp(1), marginTop: hp(1) }}>
+          <View style={{ marginBottom: hp(1), marginTop: hp(1), }}>
             {this.cartView(item)}
           </View>
         )}
@@ -1327,7 +1326,7 @@ class CartContainer extends Component {
           onChangeTab={({ i }) => this.setState({ currentPage: i })}>
           <Tab
             heading={
-              <TabHeading style={{ backgroundColor: '#ffffff' }}>
+              <TabHeading style={{ backgroundColor: '#f3fcf9' }}>
                 <Image
                   resizeMode="contain"
                   style={{ width: 22, height: 22 }}
@@ -1344,7 +1343,7 @@ class CartContainer extends Component {
 
           <Tab
             heading={
-              <TabHeading style={{ backgroundColor: '#ffffff' }}>
+              <TabHeading style={{ backgroundColor: '#f3fcf9' }}>
                 <Image
                   resizeMode="contain"
                   style={{ width: 22, height: 22 }}

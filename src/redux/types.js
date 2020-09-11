@@ -242,3 +242,10 @@ export const EXCLUSIVE_DATA_ERROR = "exclusiveDataError";
 export const EXCLUSIVE_DATA_RESET_REDUCER = "exclusiveDataResetReducer";
 
 
+export const CALL_EMAIL_DATA = "callEmailData";
+export const CALL_EMAIL_DATA_SUCCESS = "callEmailDataSuccess";
+export const CALL_EMAIL_DATA_ERROR = "callEmailDataError";
+export const CALL_EMAIL_DATA_RESET_REDUCER = "callEmailDataResetReducer";
+
+
+

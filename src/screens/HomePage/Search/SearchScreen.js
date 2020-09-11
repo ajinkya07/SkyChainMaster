@@ -94,8 +94,8 @@ class SearchScreen extends Component {
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const { successSearchbyCategoryVersion, errorSearchbyCategoryVersion,
-            successSearchbyCodeVersion, errorSearchbyCodeVersion,
-      errorAllParamaterVersion, successAllParameterVersion,
+                successSearchbyCodeVersion, errorSearchbyCodeVersion,
+                 errorAllParamaterVersion, successAllParameterVersion,
             } = nextProps;
 
         let newState = null;
@@ -355,14 +355,14 @@ class SearchScreen extends Component {
 
         return (
             <View style={{ marginHorizontal: wp(3) }}>
-                <_Text fsHeading>Karat:</_Text>
+                <_Text fsHeading>Melting:</_Text>
                 <TouchableOpacity onPress={() => this.karatModal()}>
                     <View style={{
                         marginTop: hp(1), flexDirection: 'row',
                         justifyContent: 'space-between', width: wp(92),
                     }}>
                         {!isOkKaratClicked &&
-                            <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Karat:</_Text>
+                            <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Melting:</_Text>
                         }
                         {selectedKarat.length > 0 && isOkKaratClicked &&
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap',  }}>
@@ -457,11 +457,6 @@ class SearchScreen extends Component {
 
     searchProducts = () => {
         const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories,selectedKarat } = this.state
-
-        // collction id & melting id required
-        console.warn("selectedKarat",selectedKarat);
-        console.warn("selectedCategories",categoryIds.toString());
-        console.warn("karatIds",karatIds.toString());
 
         if(selectedCategories.length>0){
 
@@ -586,7 +581,7 @@ class SearchScreen extends Component {
         const list = allParameterData && allParameterData.melting
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
                 <_CustomHeader
                     Title={'Search'}
                     RightBtnIcon2={require('../../../assets/image/BlueIcons/Notification-White.png')}
@@ -760,7 +755,7 @@ class SearchScreen extends Component {
           <TouchableWithoutFeedback >
             <View style={styles.container1}>
                             <View style={styles.titleContainer}>
-                                <Text style={styles.titleText}>Select Karat</Text>
+                                <Text style={styles.titleText}>Select Melting</Text>
                                 <View style={styles.closeIconView}>
                                     <TouchableOpacity
                                         onPress={() => this.closeKaratModal()}>
@@ -771,7 +766,7 @@ class SearchScreen extends Component {
               <TextInput
                 onChangeText={search => this.setState({search})}
                 style={styles.searchBar}
-                placeholder="Find Karat"
+                placeholder="Find Melting"
                 placeholderTextColor="#757575"
               />
               { list && list.length>0 && this.filterList(list).length !== 0 ? (

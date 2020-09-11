@@ -38,6 +38,8 @@ var DESTRUCTIVE_INDEX = 2;
 var CANCEL_INDEX = 2;
 
 var userId = '';
+var karatIds=[]
+
 
 const {width, height} = Dimensions.get('window');
 
@@ -45,7 +47,7 @@ class Customizable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      karatValue: '18',
+      karatValue: '',
       grossWeight: '',
       netWeight: '',
       length: '',
@@ -62,6 +64,11 @@ class Customizable extends Component {
 
       successCustomOrderVersion: 0,
       errorCustomOrderVersion: 0,
+
+      karat:{},
+      successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+      
     };
 
     userId = global.userId;
@@ -77,7 +84,9 @@ class Customizable extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {successCustomOrderVersion, errorCustomOrderVersion} = nextProps;
+    const {successCustomOrderVersion, errorCustomOrderVersion, 
+      successAllParameterVersion,errorAllParamaterVersion
+    } = nextProps;
     let newState = null;
 
     if (successCustomOrderVersion > prevState.successCustomOrderVersion) {
@@ -92,14 +101,29 @@ class Customizable extends Component {
         errorCustomOrderVersion: nextProps.errorCustomOrderVersion,
       };
     }
+
+    if (successAllParameterVersion > prevState.successAllParameterVersion) {
+      newState = {
+        ...newState,
+        successAllParameterVersion: nextProps.successAllParameterVersion,
+      };
+    }
+
+    if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+      newState = {
+        ...newState,
+        errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
+      };
+    }
+
     return newState;
   }
 
   async componentDidUpdate(prevProps, prevState) {
+    
     const {customOrderData} = this.props;
-    if (
-      this.state.successCustomOrderVersion > prevState.successCustomOrderVersion
-    ) {
+
+    if (this.state.successCustomOrderVersion > prevState.successCustomOrderVersion ) {
       if (customOrderData.ack == '1') {
         Toast.show({
           text: this.props.errorMsg
@@ -124,9 +148,7 @@ class Customizable extends Component {
         });
       }
     }
-    if (
-      this.state.errorCustomOrderVersion > prevState.errorCustomOrderVersion
-    ) {
+    if (this.state.errorCustomOrderVersion > prevState.errorCustomOrderVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
   }
@@ -221,6 +243,7 @@ class Customizable extends Component {
     );
   };
 
+
   openCamera = () => {
     ImagePicker.openCamera({
       width: wp(95),
@@ -229,11 +252,11 @@ class Customizable extends Component {
       includeBase64: true,
       hideBottomControls: true,
     }).then(image => {
-      console.warn('image', image);
       //     var  url = image &&  image.path.replace(/ /g, "%20");
       this.setState({imageUrl: image.path, imageData: image});
     });
   };
+
 
   openImagePicker = () => {
     ImagePicker.openPicker({
@@ -324,6 +347,8 @@ class Customizable extends Component {
     }
   };
 
+
+
   showToast = (msg, type, duration) => {
     Toast.show({
       text: msg ? msg : strings.serverFailedMsg,
@@ -333,13 +358,19 @@ class Customizable extends Component {
   };
 
   setSelectedValue = karat => {
+    console.warn("karat",karat);
     this.setState({
       karatValue: karat,
     });
   };
 
+
+
   PickerDropDown = () => {
     const {karatValue} = this.state;
+    const{allParameterData} = this.props
+
+    let list = allParameterData && allParameterData.melting
 
     return (
       <View>
@@ -351,17 +382,22 @@ class Customizable extends Component {
             />
           }
           mode="dropdown"
-          style={{height: 50, width: wp(55)}}
+          style={{height: 40, width: wp(55)}}
           selectedValue={karatValue}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setSelectedValue(itemValue)
+          onValueChange={(itemValue, itemIndex) =>this.setSelectedValue(itemValue)
           }>
-          <Picker.Item label="18k" value="18" />
-          <Picker.Item label="22k" value="22" />
+          {list && list.length > 0 ? (
+            list.map((listItem, index) => (
+              <Picker.Item label={(listItem.melting_name).toString()} value={parseInt(`${listItem.id}`)} />
+              )))
+
+            : null
+          }
         </Picker>
       </View>
     );
   };
+
 
   renderLoader = () => {
     return (
@@ -518,23 +554,15 @@ class Customizable extends Component {
                     width="100%"
                     textInputRef={this.remarkRef}
                   />
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                    }}>
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}>
+                  <View style={{flexDirection: 'row',justifyContent: 'space-between',marginTop:10}}>
+                    <View style={{ alignItems: 'center',justifyContent: 'center'}}>
                       <Text
                         style={{
                           ...Theme.ffLatoRegular16,
                           color: '#000000',
                           marginLeft: 10,
                         }}>
-                        Select Karat
+                        Melting
                       </Text>
                     </View>
                     {this.PickerDropDown()}
@@ -542,7 +570,7 @@ class Customizable extends Component {
                   </View>
                   <View
                     style={{
-                      marginTop: 26,
+                      marginTop: 20,
                       marginBottom: 20,
                     }}>
                     <View
@@ -556,7 +584,7 @@ class Customizable extends Component {
                         onPress={() => this.showDateTimePicker()}>
                         <Text
                           style={{
-                            color: '#a3a3a3',
+                            color: !this.state.date ? '#a3a3a3' : 'black',
                             marginTop: 5,
                             fontSize: 16,
                             marginLeft: 10,
@@ -646,14 +674,15 @@ function mapStateToProps(state) {
     isFetching: state.customOrderReducer.isFetching,
     error: state.customOrderReducer.error,
     errorMsg: state.customOrderReducer.errorMsg,
-    successCustomOrderVersion:
-      state.customOrderReducer.successCustomOrderVersion,
+    successCustomOrderVersion:state.customOrderReducer.successCustomOrderVersion,
     errorCustomOrderVersion: state.customOrderReducer.errorCustomOrderVersion,
     customOrderData: state.customOrderReducer.customOrderData,
+
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {submitCustomOrder},
-)(Customizable);
+export default connect(mapStateToProps, {submitCustomOrder})(Customizable);

@@ -213,13 +213,13 @@ class HomePage extends Component {
 
     const { finalCollection, productId } = this.state;
 
-    if (prevProps.isFocused !== this.props.isFocused) {
-      const data4 = new FormData();
-      data4.append('user_id', userId);
-      data4.append('table', 'cart');
+    // if (prevProps.isFocused !== this.props.isFocused) {
+    //   const data4 = new FormData();
+    //   data4.append('user_id', userId);
+    //   data4.append('table', 'cart');
 
-      await this.props.getTotalCartCount(data4);
-    }
+    //   await this.props.getTotalCartCount(data4);
+    // }
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
       if (homePageData && homePageData.final_collection) {
@@ -252,23 +252,14 @@ class HomePage extends Component {
       });
     }
 
-    if (
-      this.state.successTotalCartCountVersion >
-      prevState.successTotalCartCountVersion
-    ) {
+    if ( this.state.successTotalCartCountVersion > prevState.successTotalCartCountVersion ) {
       global.totalCartCount = totalCartCountData.count;
     }
-    if (
-      this.state.errorTotalCartCountVersion >
-      prevState.errorTotalCartCountVersion
-    ) {
+    if ( this.state.errorTotalCartCountVersion >  prevState.errorTotalCartCountVersion) {
       global.totalCartCount = totalCartCountData.count;
     }
 
-    if (
-      this.state.successAddToWishlistVersion >
-      prevState.successAddToWishlistVersion
-    ) {
+    if ( this.state.successAddToWishlistVersion > prevState.successAddToWishlistVersion ) {
       if (addToWishlistData.ack === '1') {
         Toast.show({
           text: addToWishlistData && addToWishlistData.msg,
@@ -277,18 +268,14 @@ class HomePage extends Component {
         });
       }
     }
-    if (
-      this.state.errorAddToWishlistVersion > prevState.errorAddToWishlistVersion
-    ) {
+    if ( this.state.errorAddToWishlistVersion > prevState.errorAddToWishlistVersion ) {
       Toast.show({
         text: addToWishlistData && addToWishlistData.msg,
         type: 'danger',
         duration: 2500,
       });
     }
-    if (
-      this.state.successAddToCartVersion > prevState.successAddToCartVersion
-    ) {
+    if ( this.state.successAddToCartVersion > prevState.successAddToCartVersion ) {
       if (addToCartData.ack === '1') {
         Toast.show({
           text: addToCartData ? addToCartData.msg : strings.serverFailedMsg,
@@ -304,10 +291,7 @@ class HomePage extends Component {
       });
     }
 
-    if (
-      this.state.successAddToCartPlusOneVersion >
-      prevState.successAddToCartPlusOneVersion
-    ) {
+    if ( this.state.successAddToCartPlusOneVersion > prevState.successAddToCartPlusOneVersion ) {
       if (addToCartPlusOneData.ack === '1') {
         var Index;
         var i;
@@ -485,6 +469,7 @@ class HomePage extends Component {
     );
   };
 
+
   getProductGridOrNot = data => {
     if (data.subcategory.length === 0) {
       this.props.navigation.navigate('ProductGrid', { gridData: data });
@@ -556,7 +541,6 @@ class HomePage extends Component {
                 onLongPress={() => this.showImageModal(item)}>
                 <Image
                   style={latestImage}
-                  //defaultSource={require('../../assets/image/default.png')}
                   defaultSource={IconPack.APP_LOGO}
                   source={{ uri: url + item.images[0].image_name }}
                 />

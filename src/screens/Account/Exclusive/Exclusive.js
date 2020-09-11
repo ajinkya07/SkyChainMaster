@@ -20,6 +20,7 @@ import {
 import { connect } from 'react-redux';
 import { Toast } from 'native-base';
 import { getExclusiveList } from '@exclusive/ExclusiveAction';
+import {color} from '@values/colors';
 
 
 
@@ -75,6 +76,7 @@ class Exclusive extends Component {
         }
     }
 
+    
     noDataFound = msg => {
         return (
             <View
@@ -94,8 +96,26 @@ class Exclusive extends Component {
         );
     };
 
+
+    renderLoader = () => {
+        return (
+          <View
+            style={{
+              position: 'absolute',
+              height: hp(100),
+              width: wp(100),
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+            <ActivityIndicator size="large" color={color.brandColor} />
+          </View>
+        );
+      };
+
+      
+
     render() {
-        const { exclusiveData } = this.props
+        const { exclusiveData,isFetching } = this.props
 
 
         return (
@@ -137,7 +157,9 @@ class Exclusive extends Component {
                     </View>
                 )}
 
-                {exclusiveData.final_collection == null ? this.noDataFound(this.props.errorMsg) : null}
+                {!isFetching && exclusiveData.final_collection == null ? this.noDataFound(this.props.errorMsg) : null}
+
+                {this.props.isFetching ? this.renderLoader() : null}
 
             </SafeAreaView>
         );

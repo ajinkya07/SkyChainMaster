@@ -32,6 +32,9 @@ import {version} from '../../../../package.json';
 import Theme from '../../../values/Theme';
 const {width} = Dimensions.get('window');
 import Share from 'react-native-share';
+import {getCallEmailData} from '@accountContainer/AccountAction'
+import { FlatList } from 'react-native-gesture-handler';
+
 
 
 const AccountRow = ({icon, title, onPress}) => {
@@ -57,14 +60,55 @@ const AccountRow = ({icon, title, onPress}) => {
     this.state = {
       accountEmailModal: false,
       isCallModalVisible: false,
-      isSocialMediaModal:false
+      isSocialMediaModal:false,
+      successCallEmailVersion: 0,
+      errorCallEmailVersion: 0,
+      selectedPhoneNo:''
+  
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const {allParameterData} = this.props
-    
+    this.props.getCallEmailData()
   }
+
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { successCallEmailVersion, errorCallEmailVersion } = nextProps;
+
+    let newState = null;
+
+    if (successCallEmailVersion > prevState.successCallEmailVersion) {
+        newState = {
+            ...newState,
+            successCallEmailVersion: nextProps.successCallEmailVersion,
+        };
+    }
+    if (errorCallEmailVersion > prevState.errorCallEmailVersion) {
+        newState = {
+            ...newState,
+            errorCallEmailVersion: nextProps.errorCallEmailVersion,
+        };
+    }
+
+    return newState;
+}
+
+async componentDidUpdate(prevProps, prevState) {
+    const { callEmailData } = this.props;
+
+    if (this.state.successCallEmailVersion > prevState.successCallEmailVersion) {
+
+    }
+    if (this.state.errorCallEmailVersion > prevState.errorCallEmailVersion) {
+        Toast.show({
+            text: this.props.errorMsg,
+            duration: 2500,
+        });
+    }
+}
+
 
   async getItem() {
     let value = await AsyncStorage.getItem('fullName');
@@ -121,18 +165,20 @@ const AccountRow = ({icon, title, onPress}) => {
   };
 
   showCallEmailModal = () => {
+
     this.setState({accountEmailModal: true});
   };
 
   hideCallEmailModal = () => {
     this.setState({accountEmailModal: false});
   };
-  showCallPopup = () => {
-    this.setState({isCallModalVisible: true});
+
+  showCallPopup = (phone) => {
+    this.setState({isCallModalVisible: true, selectedPhoneNo:phone});
   };
 
   hideCallPopup = () => {
-    this.setState({isCallModalVisible: false});
+    this.setState({isCallModalVisible: false,selectedPhoneNo:''});
   };
 
     myCustomShare  = async ()=> {
@@ -182,14 +228,12 @@ const AccountRow = ({icon, title, onPress}) => {
   };
 
 
-  sentEmail = () =>{
-    const { allParameterData} = this.props
-
-    const email = allParameterData.email
+  sentEmail = (email) =>{
 
     Linking.openURL(
       `mailto:${email}?subject=write a subject`,
     );
+
     // this.setState({
     //   accountEmailModal:false
     // })
@@ -231,7 +275,8 @@ const AccountRow = ({icon, title, onPress}) => {
 
 
   render() {
-    const {allParameterData} = this.props
+    const {allParameterData, callEmailData} = this.props
+    const{selectedPhoneNo} = this.state
 
     const aboutUS = allParameterData.about_us
     const privacyPolicy = allParameterData.privacy_policy
@@ -344,27 +389,22 @@ const AccountRow = ({icon, title, onPress}) => {
             onRequestClose={() => this.hideCallEmailModal()}
             onBackdropPress={() => this.hideCallEmailModal()}
             onBackButtonPress={() => this.hideCallEmailModal()}
-            style={{margin: 0}}>
+            style={{margin: 0, }}>
             <TouchableWithoutFeedback style={{flex: 1}} onPress={() => null}>
               <>
                 <View style={styles.mainContainer}>
                   <View style={styles.content}>
                     <View style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        backgroundColor:color.green
-                      }}>
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      backgroundColor: color.green
+                    }}>
                       <Text style={{
                         color: '#FFFFFF',
                         fontSize: 18,
-                        margin: Platform.OS === 'android' ? 16 : 20,
+                        margin: Platform.OS === 'android' ? 12 : 15,
                       }}>Call / Email Us</Text>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.setState({
-                            accountEmailModal: false,
-                          })
-                        }>
+                      <TouchableOpacity onPress={() => this.setState({ accountEmailModal: false })}>
                         <Image
                           style={styles.closeIcon}
                           source={IconPack.WHITE_CLOSE}
@@ -373,38 +413,55 @@ const AccountRow = ({icon, title, onPress}) => {
                     </View>
 
                     <View style={styles.border}></View>
-                    <View style={styles.cityContainer}>
-                      <View style={styles.circleContainer}>
-                        <Text style={styles.circleText}>M</Text>
-                      </View>
-                      <View style={styles.location}>
-                        <Text style={styles.locationText}>Mumbai</Text>
-                      </View>
-                    </View>
 
-                    <View style={styles.addressContainer}>
-                      <Text style={styles.addressText}>
-                        Address : Zaveri Bazar
+                    <FlatList
+                      data={callEmailData.data}
+                      refreshing={this.props.isFetching}
+                      showsVerticalScrollIndicator={false}
+                      renderItem={({ item }) => (
+                        <View >
+
+                          <View style={styles.cityContainer}>
+                            <View style={styles.circleContainer}>
+                              <Text style={styles.circleText}>{(item.location).charAt(0).toUpperCase()}</Text>
+                            </View>
+                           
+                            <View style={styles.location}>
+                      <Text style={styles.locationText}>{item.location}</Text>
+                            </View>
+
+                          </View>
+
+                          <View style={styles.addressContainer}>
+                            <Text style={styles.addressText}>
+                              Address : {item.address}
                       </Text>
-                      <Text style={styles.emailText}>
-                        Email : {emailID}
-                      </Text>
-                    </View>
-                    <View style={styles.bottomContainer}>
-                      <TouchableOpacity onPress={() => this.showCallPopup()}>
-                        <Text style={styles.bottomText}>CALL</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                       onPress={() => this.sentEmail()}
-                       >
-                        <Text style={styles.bottomText}>EMAIL</Text>
-                      </TouchableOpacity>
-                    </View>
+                            <Text style={styles.emailText}>
+                              Email : {item.email}
+                            </Text>
+                          </View>
+          
+                          <View style={styles.bottomContainer}>
+                            <TouchableOpacity onPress={() => this.showCallPopup(item.contact_number[0].phone)}>
+                              <Text style={styles.bottomText}>CALL</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                              onPress={() => this.sentEmail(item.email)}
+                            >
+                              <Text style={styles.bottomText}>EMAIL</Text>
+                            </TouchableOpacity>
+                          </View>
+                       
+                        </View>
+                      )}
+                    />
                     <SafeAreaView />
                   </View>
+                      
                 </View>
               </>
             </TouchableWithoutFeedback>
+            
 
             <Modal
               isVisible={this.state.isCallModalVisible}
@@ -454,7 +511,7 @@ const AccountRow = ({icon, title, onPress}) => {
                     }}>
                     <Text
                       style={{fontSize: 15, color: '#A9A9A9', marginBottom: 7}}>
-                      Contact : {call}
+                      Contact : {selectedPhoneNo && selectedPhoneNo}
                     </Text>
                     <Text
                       style={{fontSize: 15, color: '#A9A9A9', marginBottom: 7}}>
@@ -752,11 +809,15 @@ function mapStateToProps(state) {
       allParameterData: state.homePageReducer.allParameterData,
       successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
       errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
-  
+     
+      callEmailData: state.accountReducer.callEmailData,
+      successCallEmailVersion: state.accountReducer.successCallEmailVersion,
+      errorCallEmailVersion: state.accountReducer.errorCallEmailVersion,
+     
   };
 }
 
-export default connect(mapStateToProps,null)(AccountContainer);
+export default connect(mapStateToProps,{getCallEmailData})(AccountContainer);
 
 
 const actionButtonRoundedStyle = StyleSheet.create({

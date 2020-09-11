@@ -159,7 +159,7 @@ class CategoryContainer extends Component {
 
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
 
         {fromSeeMore &&
           <_CustomHeader

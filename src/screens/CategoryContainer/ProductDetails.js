@@ -42,24 +42,6 @@ var userId = '';
 
 const AnimatedContent = Animated.createAnimatedComponent(ScrollView);
 
-const PickerDropDown = () => {
-  const [selectedValue, setSelectedValue] = useState('18k');
-  return (
-    <View>
-      <Picker
-        iosIcon={
-          <Icon name="arrow-down" style={{marginRight: hp(4), fontSize: 22}} />
-        }
-        mode="dropdown"
-        style={{height: 50, width: wp(55)}}
-        selectedValue={selectedValue}
-        onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}>
-        <Picker.Item label="18k" value={parseInt('18k')} />
-        <Picker.Item label="22k" value={parseInt('22k')} />
-      </Picker>
-    </View>
-  );
-};
 
 class ProductDetails extends React.Component {
   fullHeight = EStyleSheet.value('375rem');
@@ -84,6 +66,12 @@ class ProductDetails extends React.Component {
 
       successAddCartDetailsVersion: 0,
       errorAddCartDetailsVersion: 0,
+      karatValue:'',
+
+      successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+      karatData: [],
+
     };
     userId = global.userId;
   }
@@ -101,12 +89,15 @@ class ProductDetails extends React.Component {
     this.props.getProductDetails(data);
   };
 
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
       successProductDetailsVersion,
       errorProductDetailsVersion,
       successAddCartDetailsVersion,
       errorAddCartDetailsVersion,
+      successAllParameterVersion,errorAllParamaterVersion
+
     } = nextProps;
     let newState = null;
 
@@ -135,18 +126,31 @@ class ProductDetails extends React.Component {
         errorAddCartDetailsVersion: nextProps.errorAddCartDetailsVersion,
       };
     }
+
+    if (successAllParameterVersion > prevState.successAllParameterVersion) {
+      newState = {
+        ...newState,
+        successAllParameterVersion: nextProps.successAllParameterVersion,
+      };
+    }
+
+    if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+      newState = {
+        ...newState,
+        errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
+      };
+    }
+
     return newState;
   }
 
   async componentDidUpdate(prevProps, prevState) {
     const {productDetailsData, addCartDetailsData} = this.props;
 
-    if (
-      this.state.successProductDetailsVersion >
-      prevState.successProductDetailsVersion
-    ) {
+    if ( this.state.successProductDetailsVersion > prevState.successProductDetailsVersion ) {
       if (productDetailsData.ack == '1') {
         this.setState({
+          karatValue: productDetailsData.data[0].default_melting_id,
           productDetailsStateData: productDetailsData.data[0],
           length:
             productDetailsData !== undefined
@@ -164,10 +168,7 @@ class ProductDetails extends React.Component {
         this.showToast(strings.serverFailedMsg, 'danger');
       }
     }
-    if (
-      this.state.errorProductDetailsVersion >
-      prevState.errorProductDetailsVersion
-    ) {
+    if (this.state.errorProductDetailsVersion > prevState.errorProductDetailsVersion ) {
       this.showToast(this.props.errorMsg, 'danger');
 
       const countData = new FormData();
@@ -177,10 +178,7 @@ class ProductDetails extends React.Component {
       await this.props.getTotalCartCount(countData);
     }
 
-    if (
-      this.state.successAddCartDetailsVersion >
-      prevState.successAddCartDetailsVersion
-    ) {
+    if ( this.state.successAddCartDetailsVersion >  prevState.successAddCartDetailsVersion ) {
       if (addCartDetailsData.ack == '1') {
         Toast.show({
           text: this.props.errorMsg,
@@ -188,10 +186,7 @@ class ProductDetails extends React.Component {
         });
       }
     }
-    if (
-      this.state.errorAddCartDetailsVersion >
-      prevState.errorAddCartDetailsVersion
-    ) {
+    if ( this.state.errorAddCartDetailsVersion > prevState.errorAddCartDetailsVersion ) {
       this.showToast(this.props.errorMsg, 'danger');
     }
   }
@@ -355,6 +350,48 @@ class ProductDetails extends React.Component {
     });
   };
 
+  PickerDropDown = () => {
+    const {karatValue} = this.state;
+    const{allParameterData} = this.props
+
+    let list = allParameterData && allParameterData.melting
+
+    console.warn("karatValue",karatValue);
+    
+    return (
+      <View>
+        <Picker
+          iosIcon={
+            <Image
+              source={IconPack.DOWN_ARROW}
+              style={{width: 12, height: 12, resizeMode: 'cover'}}
+            />
+          }
+          mode="dropdown"
+          style={{height: 40, width: wp(55)}}
+          selectedValue={karatValue}
+          onValueChange={(itemValue, itemIndex) =>this.setSelectedValueKarat(itemValue)
+          }>
+          {list && list.length > 0 ? (
+            list.map((listItem, index) => (
+              <Picker.Item label={(listItem.melting_name).toString()} value={parseInt(`${listItem.id}`)} />
+              )))
+
+            : null
+          }
+        </Picker>
+      </View>
+    );
+  };
+
+
+setSelectedValueKarat = karat => {
+    this.setState({
+      karatValue: karat,
+    });
+  };
+
+
   PickerWeightDropDown = weight => {
     return (
       <View>
@@ -378,7 +415,7 @@ class ProductDetails extends React.Component {
   };
 
   addtoCart = d => {
-    const {length, count, remark, weight} = this.state;
+    const {length, count, remark, weight,karatValue} = this.state;
 
     let addCartData = new FormData();
 
@@ -390,7 +427,7 @@ class ProductDetails extends React.Component {
         product_inventory_table: 'product_master',
         gross_wt: d.key_value[0],
         net_wt: d.key_value[1],
-        melting_id: d.default_melting_id ? d.default_melting_id : '',
+        melting_id: karatValue,
         no_quantity: count,
         device_type: Platform.OS === 'ios' ? 'ios' : 'android',
         remarks: remark,
@@ -405,7 +442,8 @@ class ProductDetails extends React.Component {
   };
 
   addToWishList = d => {
-    const {length, count, remark, weight} = this.state;
+    const {length, count, remark, weight, karatValue} = this.state;
+
     const addWishData = new FormData();
 
     let wshData = JSON.stringify([
@@ -416,7 +454,7 @@ class ProductDetails extends React.Component {
         product_inventory_table: 'product_master',
         gross_wt: d.key_value[0],
         net_wt: d.key_value[1],
-        melting_id: d.default_melting_id,
+        melting_id: karatValue,
         no_quantity: count,
         device_type: Platform.OS === 'ios' ? 'ios' : 'android',
         remarks: remark,
@@ -428,6 +466,7 @@ class ProductDetails extends React.Component {
     addWishData.append('Add_To_Cart', wshData);
     this.props.addToCartFromDetails(addWishData);
   };
+
 
   render() {
     const headerOpacity = this.scrollY.interpolate({
@@ -443,7 +482,8 @@ class ProductDetails extends React.Component {
       (productDetailsStateData !== undefined &&
         productDetailsStateData.zoom_image);
 
-    return (
+
+        return (
       <SafeAreaView style={styles.flex}>
         {productDetailsStateData ? (
           <Container style={styles.flex}>
@@ -656,7 +696,9 @@ class ProductDetails extends React.Component {
                             Melting
                           </Text>
                         </View>
-                        <PickerDropDown />
+                        {this.PickerDropDown()}
+
+                        {/* <PickerDropDown /> */}
                       </View>
 
                       {/* WEIGHT */}
@@ -960,17 +1002,18 @@ function mapStateToProps(state) {
     isFetching: state.productDetailsReducer.isFetching,
     error: state.productDetailsReducer.error,
     errorMsg: state.productDetailsReducer.errorMsg,
-    successProductDetailsVersion:
-      state.productDetailsReducer.successProductDetailsVersion,
-    errorProductDetailsVersion:
-      state.productDetailsReducer.errorProductDetailsVersion,
+    successProductDetailsVersion: state.productDetailsReducer.successProductDetailsVersion,
+    errorProductDetailsVersion: state.productDetailsReducer.errorProductDetailsVersion,
     productDetailsData: state.productDetailsReducer.productDetailsData,
 
-    successAddCartDetailsVersion:
-      state.productDetailsReducer.successAddCartDetailsVersion,
-    errorAddCartDetailsVersion:
-      state.productDetailsReducer.errorAddCartDetailsVersion,
+    successAddCartDetailsVersion: state.productDetailsReducer.successAddCartDetailsVersion,
+    errorAddCartDetailsVersion: state.productDetailsReducer.errorAddCartDetailsVersion,
     addCartDetailsData: state.productDetailsReducer.addCartDetailsData,
+
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+
   };
 }
 

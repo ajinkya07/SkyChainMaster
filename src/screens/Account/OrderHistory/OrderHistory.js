@@ -170,7 +170,6 @@ class OrderHistory extends Component {
   render() {
     const {orderHistoryData} = this.props;
 
-    console.warn('orderHistoryData', orderHistoryData);
 
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: '#f3fcf9'}}>

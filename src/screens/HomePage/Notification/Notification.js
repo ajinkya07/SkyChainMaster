@@ -186,7 +186,7 @@ class Notification extends Component {
         const { notificationData, isFetching } = this.props
 
         return (
-            <SafeAreaView style={{ flex: 1, backgroundColor: color.white }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
                 <_CustomHeader
                     Title={'Notifications'}
                     LeftBtnPress={() => this.props.navigation.goBack()}
