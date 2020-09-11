@@ -63,7 +63,8 @@ const AccountRow = ({icon, title, onPress}) => {
       isSocialMediaModal:false,
       successCallEmailVersion: 0,
       errorCallEmailVersion: 0,
-      selectedPhoneNo:''
+      selectedPhoneNo:'',
+      fullName:''
   
     };
   }
@@ -71,6 +72,7 @@ const AccountRow = ({icon, title, onPress}) => {
   componentDidMount = () => {
     const {allParameterData} = this.props
     this.props.getCallEmailData()
+    this.getItem()
   }
 
 
@@ -99,7 +101,6 @@ async componentDidUpdate(prevProps, prevState) {
     const { callEmailData } = this.props;
 
     if (this.state.successCallEmailVersion > prevState.successCallEmailVersion) {
-
     }
     if (this.state.errorCallEmailVersion > prevState.errorCallEmailVersion) {
         Toast.show({
@@ -114,10 +115,9 @@ async componentDidUpdate(prevProps, prevState) {
     let value = await AsyncStorage.getItem('fullName');
 
     if (value) {
-      let parsed = JSON.parse(value);
-      if (parsed) {
-        return parsed;
-      }
+        this.setState({
+          fullName:value
+        })
     }
   }
 
@@ -276,7 +276,7 @@ async componentDidUpdate(prevProps, prevState) {
 
   render() {
     const {allParameterData, callEmailData} = this.props
-    const{selectedPhoneNo} = this.state
+    const{selectedPhoneNo,fullName} = this.state
 
     const aboutUS = allParameterData.about_us
     const privacyPolicy = allParameterData.privacy_policy
@@ -300,7 +300,7 @@ async componentDidUpdate(prevProps, prevState) {
                 style={styles.profileImageStyle}
                 source={IconPack.PROFILE}
               />
-              <Text style={styles.profileName}>Aziz Khan</Text>
+              <Text style={styles.profileName}>{fullName ? fullName : ''}</Text>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfile')}>
                 <Text style={styles.editProfileText}>EDIT PROFILE</Text>
               </TouchableOpacity>
@@ -325,13 +325,13 @@ async componentDidUpdate(prevProps, prevState) {
               title="About Us"
               icon={IconPack.ABOUT}
              // onPress={() => Linking.openURL(aboutUS)}
-              onPress={() => this.props.navigation.navigate('CustomWebview',{link:aboutUS, title:'AboutUs'})}
+              onPress={() => this.props.navigation.navigate('CustomWebview',{link:aboutUS, title:'About Us'})}
             />
             <AccountRow
               title="Privacy Policy"
               icon={IconPack.ABOUT}
              // onPress={() => Linking.openURL(privacyPolicy)}
-             onPress={() => this.props.navigation.navigate('CustomWebview',{link:privacyPolicy,title:'PrivacyPolicy'})}
+             onPress={() => this.props.navigation.navigate('CustomWebview',{link:privacyPolicy,title:'Privacy Policy'})}
             />
             
             <AccountRow
@@ -451,6 +451,8 @@ async componentDidUpdate(prevProps, prevState) {
                               <Text style={styles.bottomText}>EMAIL</Text>
                             </TouchableOpacity>
                           </View>
+
+                          {/* <View style={{borderWidth:0.5,borderColor:'#DDDDDD'}}/> */}
                        
                         </View>
                       )}
@@ -757,6 +759,7 @@ const styles = StyleSheet.create({
   bottomText: {
     fontSize: 16,
     color: color.brandColor,
+    ...Theme.ffLatoBold14
   },
   buttonContainer: {
     justifyContent: 'flex-end',

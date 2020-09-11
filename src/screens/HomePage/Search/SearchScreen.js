@@ -769,6 +769,7 @@ class SearchScreen extends Component {
                 placeholder="Find Melting"
                 placeholderTextColor="#757575"
               />
+              
               { list && list.length>0 && this.filterList(list).length !== 0 ? (
                 this.filterList(list).map((listItem, index) => (
                   <View style={styles.dataContainer}>
@@ -1000,12 +1001,11 @@ const styles = StyleSheet.create({
       titleContainer: {
         //marginLeft: 10,
         backgroundColor:"#19af81",
-        alignItems:'center'
       },
       titleText: {
         ...Theme.ffLatoBold20,
         color: '#FFFFFF',
-        marginLeft: 10,
+        marginLeft: 15,
         marginTop: Platform.OS === 'android' ? 8 : 12,
         marginBottom: Platform.OS === 'android' ? 8 : 12,
 

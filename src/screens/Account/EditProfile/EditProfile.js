@@ -74,7 +74,11 @@ class EditProfile extends Component {
 
       selectedCountry: 'Select country',
       selectedState: 'Select state',
-      selectedCity: 'Select city'
+      selectedCity: 'Select city',
+
+      enteredCountry:'',
+      enteredState:'',
+      enteredCity:''
 
     };
     userId = global.userId;
@@ -413,10 +417,42 @@ class EditProfile extends Component {
 
   }
 
+
+  searchCountry = (s)=>{
+    const{countryData} = this.state
+
+   // let searchedCountry = countryData.filter(item => item.name.includes(s))
+    this.setState({
+      enteredCountry:s
+    })
+  }
+
+  
+  searchCity = (c)=>{
+    const{countryData} = this.state
+
+   // let searchedCountry = countryData.filter(item => item.name.includes(c))
+    this.setState({
+      enteredCity:c
+    })
+  }
+
+  
+  searchState = (s)=>{
+    const{countryData} = this.state
+
+   // let searchedCountry = countryData.filter(item => item.name.includes(s))
+    this.setState({
+      enteredState:s
+    })
+  }
+
   render() {
 
     const{allParameterData} = this.props
-    const{countryData, selectedCountry, selectedState, selectedCity} = this.state
+    const{countryData, selectedCountry, selectedState, selectedCity,
+    enteredCity,enteredCountry,enteredState
+    } = this.state
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -683,21 +719,14 @@ class EditProfile extends Component {
 
                       <TextInput
                         style={{ height: 45 }}
-                        onChangeText={() => null}
+                        value={enteredCountry}
+                        onChangeText={(s) => this.searchCountry(s)}
                         placeholder="search country"
-
-                        style={{
-                          borderBottomWidth: 1.0,
-                          borderColor: '#d7d7d7',
-                          color: 'gray',
-                          width: '95%',
-                        }}
+                        style={{ borderBottomWidth: 1.0,borderColor: '#d7d7d7',color: 'gray',width: '95%'}}
                       />
 
-                      <View
-                        style={{
-                          alignItems: 'center', justifyContent: 'center',
-                        }}>
+                      {enteredCountry!= '' && <View style={{alignItems: 'center', justifyContent: 'center',}}>
+                      <TouchableOpacity onPress={()=> this.setState({enteredCountry:''})}>
                         <Image
                           source={require('../../../assets/image/Cross.png')}
                           style={{
@@ -705,7 +734,9 @@ class EditProfile extends Component {
                             height: 20, resizeMode: 'cover', marginRight: 15,
                           }}
                         />
+                        </TouchableOpacity>
                       </View>
+                      }
                     </View>
                   </View>
 
@@ -778,7 +809,8 @@ class EditProfile extends Component {
 
                       <TextInput
                         style={{ height: 45 }}
-                        onChangeText={() => null}
+                        value={enteredState}
+                        onChangeText={(c) => this.searchState(c)}
                         placeholder="search state"
                         style={{
                           borderBottomWidth: 1.0,
@@ -788,18 +820,22 @@ class EditProfile extends Component {
                         }}
                       />
 
-                      <View
-                        style={{
-                          alignItems: 'center', justifyContent: 'center',
-                        }}>
-                        <Image
-                          source={require('../../../assets/image/Cross.png')}
+                      {enteredState != '' &&
+                        <View
                           style={{
-                            width: 20,
-                            height: 20, resizeMode: 'cover', marginRight: 15,
-                          }}
-                        />
-                      </View>
+                            alignItems: 'center', justifyContent: 'center',
+                          }}>
+                          <TouchableOpacity onPress={() => this.setState({ enteredState: '' })}>
+                            <Image
+                              source={require('../../../assets/image/Cross.png')}
+                              style={{
+                                width: 20,
+                                height: 20, resizeMode: 'cover', marginRight: 15,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      }
                     </View>
                   </View>
 
@@ -872,7 +908,8 @@ class EditProfile extends Component {
 
                       <TextInput
                         style={{ height: 45 }}
-                        onChangeText={() => null}
+                        value={enteredCity}
+                        onChangeText={(c) => this.searchCity(c)}
                         placeholder="search city"
 
                         style={{
@@ -883,18 +920,23 @@ class EditProfile extends Component {
                         }}
                       />
 
-                      <View
-                        style={{
-                          alignItems: 'center', justifyContent: 'center',
-                        }}>
-                        <Image
-                          source={require('../../../assets/image/Cross.png')}
+                      {enteredCity != '' &&
+                        <View
                           style={{
-                            width: 20,
-                            height: 20, resizeMode: 'cover', marginRight: 15,
-                          }}
-                        />
-                      </View>
+                            alignItems: 'center', justifyContent: 'center',
+                          }}>
+                          <TouchableOpacity onPress={() => this.setState({ enteredCity: '' })}>
+                            <Image
+                              source={require('../../../assets/image/Cross.png')}
+                              style={{
+                                width: 20,
+                                height: 20, resizeMode: 'cover', marginRight: 15,
+                              }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      }
+                      
                     </View>
                   </View>
                   

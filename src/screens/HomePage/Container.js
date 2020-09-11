@@ -40,6 +40,7 @@ const CallComponent = ({title, onPress}) => {
           borderBottomWidth: 0.8,
           borderColor: '#D3D3D3',
           marginBottom: 10,
+          top:10
         }}>
         <Text
           style={{
@@ -53,22 +54,20 @@ const CallComponent = ({title, onPress}) => {
     </TouchableOpacity>
   );
 };
+
+
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
       isCallModalVisible: false,
+      successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+
     };
     userId = global.userId;
   }
 
-  componentDidMount = async () => {
-    const data2 = new FormData();
-    data2.append('user_id', userId);
-    data2.append('table', 'cart');
-
-    await this.props.getTotalCartCount(data2);
-  };
   showCallPopup = () => {
     this.setState({isCallModalVisible: true});
   };
@@ -79,37 +78,27 @@ class Container extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
-      successTotalCartCountVersion,
-      errorTotalCartCountVersion,
+      successAllParameterVersion,
+      errorAllParamaterVersion,
     } = nextProps;
     let newState = null;
-    if (successTotalCartCountVersion > prevState.successTotalCartCountVersion) {
+
+    if (successAllParameterVersion > prevState.successAllParameterVersion) {
       newState = {
         ...newState,
-        successTotalCartCountVersion: nextProps.successTotalCartCountVersion,
+        successAllParameterVersion: nextProps.successAllParameterVersion,
       };
     }
-    if (errorTotalCartCountVersion > prevState.errorTotalCartCountVersion) {
+    if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
       newState = {
         ...newState,
-        errorTotalCartCountVersion: nextProps.errorTotalCartCountVersion,
+        errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
       };
     }
 
     return newState;
   }
 
-  async componentDidUpdate(prevProps, prevState) {
-    const {totalCartCountData} = this.props;
-
-    if (
-      this.state.successTotalCartCountVersion >
-      prevState.successTotalCartCountVersion
-    ) {
-      //AsyncStorage.setItem("totalCartCount", totalCartCountData.count)
-      global.totalCartCount = totalCartCountData.count;
-    }
-  }
 
   onNotificationPress() {
     this.props.navigation.navigate('Notification');
@@ -125,8 +114,9 @@ class Container extends Component {
   };
 
 
-  _pressCall = () => {
-    const url = 'tel:+123456789';
+  _pressCall = (phone) => {
+    const url = Platform.OS == 'ios' ? `tel://${phone}` : `tel:${phone}`;
+
     //TODO ios
     //const url = 'tel://+123456789';
     Linking.openURL(url);
@@ -134,6 +124,12 @@ class Container extends Component {
 
   render() {
     const {safeAreaView} = HomePageStyle;
+
+    const {allParameterData} = this.props
+
+    const whatsApp = allParameterData.whatsapp
+    const emailID = allParameterData.email
+    const call = allParameterData.call
 
     return (
       <SafeAreaView style={safeAreaView}>
@@ -158,26 +154,28 @@ class Container extends Component {
           onBackdropPress={() => this.hideCallPopup()}
           onBackButtonPress={() => this.hideCallPopup()}
           style={{margin: 0}}>
-          <TouchableWithoutFeedback style={{flex: 1}} onPress={this._pressCall}>
+          <TouchableWithoutFeedback style={{flex: 1}}>
             <View
               style={{
-                backgroundColor: '#ffffff',
                 marginHorizontal: 16,
                 borderRadius: 14,
+                backgroundColor:'#FFFFFF'
               }}>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
+                  backgroundColor: color.green,
+                  borderTopLeftRadius:10,borderTopRightRadius:10
+
                 }}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    marginLeft: 10,
-                    marginVertical: Platform.OS === 'android' ? 8 : 12,
-                  }}>
-                  Contact
+                <Text style={{ fontSize: 20, marginLeft: 20,
+                    color: '#FFFFFF',
+                    ...Theme.ffLatoMedium18,               
+                    marginVertical: Platform.OS === 'android' ? 10 : 12,}}>
+                  Get In Touch
                 </Text>
+
                 <TouchableOpacity
                   onPress={() =>
                     this.setState({
@@ -185,50 +183,36 @@ class Container extends Component {
                     })
                   }>
                   <Image
-                    style={{width: hp(2.5), height: hp(2.5), margin: 16}}
-                    source={IconPack.CLOSE}
+                    style={{width: hp(2.5), height: hp(2.5), margin: 15}}
+                    source={IconPack.WHITE_CLOSE}
                   />
                 </TouchableOpacity>
               </View>
 
-              <CallComponent title="Phone Call" onPress={this._pressCall} />
+              <CallComponent title="Phone Call" onPress={()=>this._pressCall(call)} />
 
               <CallComponent
                 title="WhatsApp"
-                onPress={() => {
-                  Linking.openURL(
-                    `whatsapp://send?phone=${917506604368}&text=${''}`,
-                  );
+                onPress={() => { Linking.openURL(`whatsapp://send?phone=91${whatsApp}&text=${''}`);
                 }}
               />
               <CallComponent
                 title="Email"
-                onPress={() => {
-                  Linking.openURL(
-                    'mailto:somethingemail@gmail.com?subject=abcdefg?body=body',
-                  );
-                }}
+                onPress={() => { Linking.openURL(`mailto:${emailID}?subject=write a subject`)}}
               />
 
-              <View
-                style={{
-                  //marginVertical: 12,
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
+              <View style={{flexDirection: 'row',justifyContent: 'space-around', }}>
                 <ActionButtonRounded
                   title="CANCEL"
-                  onButonPress={() =>
-                    this.setState({
-                      isCallModalVisible: false,
-                    })
-                  }
-                  containerStyle={{marginBottom: 10}}
+                  onButonPress={() => this.setState({isCallModalVisible: false})}
+                  containerStyle={{marginBottom: 10,marginTop:10}}
                 />
               </View>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
+   
+   
       </SafeAreaView>
     );
   }
@@ -255,7 +239,7 @@ const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
 
 const actionButtonRoundedStyle = StyleSheet.create({
   mainContainerStyle: {
-    backgroundColor: '#11255a',
+    backgroundColor: color.green,
     height: hp(6),
     width: wp(40),
     justifyContent: 'center',
@@ -269,7 +253,7 @@ const actionButtonRoundedStyle = StyleSheet.create({
   },
   titleStyle: {
     color: '#ffffff',
-    ...Theme.ffLatoBold13,
+    ...Theme.ffLatoBold16,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
@@ -283,11 +267,10 @@ function mapStateToProps(state) {
     error: state.homePageReducer.error,
     errorMsg: state.homePageReducer.errorMsg,
 
-    successTotalCartCountVersion:
-      state.homePageReducer.successTotalCartCountVersion,
-    errorTotalCartCountVersion:
-      state.homePageReducer.errorTotalCartCountVersion,
-    totalCartCountData: state.homePageReducer.totalCartCountData,
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+
   };
 }
 
