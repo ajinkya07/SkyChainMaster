@@ -166,9 +166,7 @@ class Customizable extends Component {
   };
 
   handleDatePicked(date) {
-    let d = moment(new Date(date).toISOString().slice(0, 10)).format(
-      'DD-MM-YYYY',
-    );
+    let d = moment(new Date(date).toISOString().slice(0, 10)).format('DD-MM-YYYY',);
 
     this.setState({
       date: d,
@@ -252,7 +250,6 @@ class Customizable extends Component {
       includeBase64: true,
       hideBottomControls: true,
     }).then(image => {
-      //     var  url = image &&  image.path.replace(/ /g, "%20");
       this.setState({imageUrl: image.path, imageData: image});
     });
   };

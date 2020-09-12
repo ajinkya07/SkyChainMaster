@@ -11,6 +11,7 @@ import {
 import {
     DatePicker, Footer
 } from "native-base";
+import moment from 'moment';
 
 import _CustomHeader from '@customHeader/_CustomHeader'
 import {
@@ -219,14 +220,26 @@ class SearchScreen extends Component {
 
 
     setToDate =(newDate)=> {
-        this.setState({ toDate: newDate });
+        const { fromDate} = this.state
+
+        // var timeStamp = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
+        // var timeStampDate = moment(new Date(timeStamp).toISOString().slice(0, 10)).format('DD-MM-YYYY');
+
+        // if (fromDate != '' && newDate != '' && timeStampDate > newDate) {
+        //     alert('Date must be greater than from date');
+        //   }
+        //   else if (!fromDate && newDate!=''){
+        //     this.setState({ toDate: newDate });   
+        //   }    
+
+        this.setState({ toDate: newDate });   
+
     }
 
     setFromDate =(newDate) =>{
         this.setState({ fromDate: newDate });
         
     }
-
 
     onTextChanged = (inputKey, value) => {
         this.setState({
@@ -456,34 +469,42 @@ class SearchScreen extends Component {
 
 
     searchProducts = () => {
-        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate,selectedCategories,selectedKarat } = this.state
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate, selectedCategories, selectedKarat } = this.state
 
-        if(selectedCategories.length>0){
+        if (selectedCategories.length > 0) {
 
-        const s = new FormData()
+            // var timeStamp = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
+            // var timeStampDate = moment(new Date(timeStamp).toISOString().slice(0, 10),).format('DD-MM-YYYY');
 
-        s.append('table', 'product_master')
-        s.append('mode_type', 'filter_data')
-        s.append('user_id', userId)
-        s.append('record', 10)
-        s.append('page_no', 0)
-        s.append('collection_ids', categoryIds.toString())
-        s.append('sort_by', 2)
-        s.append('min_gross_weight', gwFrom ? gwFrom : '')
-        s.append('max_gross_weight', gwTo ? gwTo : '')
-        s.append('min_net_weight', nwFrom ? nwFrom : '')
-        s.append('max_net_weight', nwTo ? nwTo : '')
-        s.append('product_status', '')
-        s.append('melting_id  ', karatIds.toString())
-        s.append('created_date_from', fromDate ? fromDate : '')
-        s.append('created_date_to', toDate ? toDate : '')
+            // if (toDate != '' && timeStampDate > toDate) {
+            //     alert('Date must be greater than from date');
+            // }
 
-        this.props.searchProducts(s)
+            const s = new FormData()
+
+            s.append('table', 'product_master')
+            s.append('mode_type', 'filter_data')
+            s.append('user_id', userId)
+            s.append('record', 10)
+            s.append('page_no', 0)
+            s.append('collection_ids', categoryIds.toString())
+            s.append('sort_by', 2)
+            s.append('min_gross_weight', gwFrom ? gwFrom : '')
+            s.append('max_gross_weight', gwTo ? gwTo : '')
+            s.append('min_net_weight', nwFrom ? nwFrom : '')
+            s.append('max_net_weight', nwTo ? nwTo : '')
+            s.append('product_status', '')
+            s.append('melting_id  ', karatIds.toString())
+            s.append('created_date_from', fromDate ? fromDate : '')
+            s.append('created_date_to', toDate ? toDate : '')
+
+            this.props.searchProducts(s)
         }
-        else{
+        else {
             this.showToast('Please select category')
         }
     }
+
 
     searchModal = () => {
         this.setState({ isSearchCodeVisible: !this.state.isSearchCodeVisible });
@@ -520,55 +541,55 @@ class SearchScreen extends Component {
     }
 
     karatModal = () => {
-        this.setState({isKaratModalVisible: !this.state.isKaratModalVisible, isOkKaratClicked:false});
-      };
+        this.setState({ isKaratModalVisible: !this.state.isKaratModalVisible, isOkKaratClicked: false });
+    };
 
-      filterList(list) {
+    filterList(list) {
         return list.filter(listItem =>
-          (listItem.melting_name).toLowerCase().includes(this.state.search.toLowerCase()),
+            (listItem.melting_name).toLowerCase().includes(this.state.search.toLowerCase()),
         );
-      }
+    }
 
-      setToggleCheckBox = (id,value )=> {
-         
-          const { selectedKarat,toggleCheckBox } = this.state
+    setToggleCheckBox = (id, value) => {
 
-          const val = { ...this.state.karat };
-          if (val[id]) {
-              val[id] = false;
-  
-              var index = selectedKarat.map(x => {
-                  return x.id;
-              }).indexOf(id);
-  
-              selectedKarat.splice(index, 1);
-          }
-          else {
-              val[id] = true;
+        const { selectedKarat, toggleCheckBox } = this.state
 
-              let array = [];
-              let array2 = []
-              array = [{ id ,value}]
-              array2.push(...selectedKarat, ...array);
-              this.setState({ selectedKarat: array2 });
-  
-          }
-  
-          this.setState({ karat: val });
+        const val = { ...this.state.karat };
+        if (val[id]) {
+            val[id] = false;
+
+            var index = selectedKarat.map(x => {
+                return x.id;
+            }).indexOf(id);
+
+            selectedKarat.splice(index, 1);
+        }
+        else {
+            val[id] = true;
+
+            let array = [];
+            let array2 = []
+            array = [{ id, value }]
+            array2.push(...selectedKarat, ...array);
+            this.setState({ selectedKarat: array2 });
+
+        }
+
+        this.setState({ karat: val });
 
         // this.setState({
         //   toggleCheckBox: val,
         // });
-      };
-     
+    };
+
 
     closeKaratModal = () => {
         this.setState({
             isKaratModalVisible: false,
-            isOkKaratClicked:false,
-            selectedKarat:[],
+            isOkKaratClicked: false,
+            selectedKarat: [],
         })
-        karatIds=[]
+        karatIds = []
     }
 
 

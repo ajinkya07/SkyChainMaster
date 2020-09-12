@@ -22,6 +22,7 @@ import _Text from '@text/_Text';
 import { connect } from 'react-redux';
 import { color } from '@values/colors';
 import { urls } from '@api/urls'
+import { withNavigationFocus } from '@react-navigation/compat';
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
 import {
@@ -402,10 +403,13 @@ class ProductGrid extends Component {
         data2.append('collection_id', categoryData.id);
         data2.append('user_id', userId);
         data2.append('record', 10);
-        data2.append('page_no', page);
+        // data2.append('page_no', page);
+        data2.append('page_no', 0);
         data2.append('sort_by', selectedSortById);
 
         await this.props.getProductSubCategoryData(data2);
+
+        this.setState({page:0})
         }
 
         if (categoryData && fromExclusive) {
@@ -415,11 +419,14 @@ class ProductGrid extends Component {
           excl2.append('collection_id', 0);
           excl2.append('user_id', userId);
           excl2.append('record', 10);
-          excl2.append('page_no', page);
+        //  excl2.append('page_no', page);
+        data2.append('page_no', 0);
           excl2.append('sort_by', '2');
           excl2.append('my_collection_id', categoryData.id);
     
           this.props.getProductSubCategoryData(excl2);
+          this.setState({page:0})
+
         }
         
         Toast.show({
@@ -912,8 +919,7 @@ class ProductGrid extends Component {
   };
 
   LoadMoreData = () => {
-    this.setState(
-      {
+    this.setState({
         page: this.state.page + 1,
         clickedLoadMore: true,
       },
@@ -923,17 +929,27 @@ class ProductGrid extends Component {
 
   LoadRandomData = () => {
     const { categoryData, page } = this.state;
+    const { allParameterData } = this.props;
 
-    const data = new FormData();
-    data.append('table', 'product_master');
-    data.append('mode_type', 'normal');
-    data.append('collection_id', categoryData.id);
-    data.append('user_id', userId);
-    data.append('record', 10);
-    data.append('page_no', page);
-    data.append('sort_by', '2');
 
-    this.props.getProductSubCategoryData(data);
+    let accessCheck = allParameterData && allParameterData.access_check
+    
+    if (accessCheck == '1') {
+      const data = new FormData();
+      data.append('table', 'product_master');
+      data.append('mode_type', 'normal');
+      data.append('collection_id', categoryData.id);
+      data.append('user_id', userId);
+      data.append('record', 10);
+      data.append('page_no', page);
+      data.append('sort_by', '2');
+
+      this.props.getProductSubCategoryData(data);
+    }
+    else{
+      alert('Your access to full category has been expired. Please contact administrator to get access.')
+    }
+
   };
 
   footer = () => {
@@ -1096,11 +1112,12 @@ class ProductGrid extends Component {
       collectionName
     } = this.state;
 
-    const { sortByParamsData, filterParamsData } = this.props;
+    const { sortByParamsData, filterParamsData , allParameterData} = this.props;
 
 
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
+  
     return (
 
       <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -1757,46 +1774,38 @@ function mapStateToProps(state) {
     errorProductGridVersion: state.productGridReducer.errorProductGridVersion,
     productGridData: state.productGridReducer.productGridData,
 
-    successSortByParamsVersion:
-      state.productGridReducer.successSortByParamsVersion,
+    successSortByParamsVersion: state.productGridReducer.successSortByParamsVersion,
     errorSortByParamsVersion: state.productGridReducer.errorSortByParamsVersion,
     sortByParamsData: state.productGridReducer.sortByParamsData,
 
-    successFilterParamsVersion:
-      state.productGridReducer.successFilterParamsVersion,
+    successFilterParamsVersion: state.productGridReducer.successFilterParamsVersion,
     errorFilterParamsVersion: state.productGridReducer.errorFilterParamsVersion,
     filterParamsData: state.productGridReducer.filterParamsData,
 
-    successFilteredProductVersion:
-      state.productGridReducer.successFilteredProductVersion,
-    errorFilteredProductVersion:
-      state.productGridReducer.errorFilteredProductVersion,
+    successFilteredProductVersion: state.productGridReducer.successFilteredProductVersion,
+    errorFilteredProductVersion: state.productGridReducer.errorFilteredProductVersion,
     filteredProductData: state.productGridReducer.filteredProductData,
 
-    successAddProductToWishlistVersion:
-      state.productGridReducer.successAddProductToWishlistVersion,
-    errorAddProductToWishlistVersion:
-      state.productGridReducer.errorAddProductToWishlistVersion,
+    successAddProductToWishlistVersion: state.productGridReducer.successAddProductToWishlistVersion,
+    errorAddProductToWishlistVersion: state.productGridReducer.errorAddProductToWishlistVersion,
     addProductToWishlistData: state.productGridReducer.addProductToWishlistData,
 
-    successAddProductToCartVersion:
-      state.productGridReducer.successAddProductToCartVersion,
-    errorAddProductToCartVersion:
-      state.productGridReducer.errorAddProductToCartVersion,
+    successAddProductToCartVersion: state.productGridReducer.successAddProductToCartVersion,
+    errorAddProductToCartVersion: state.productGridReducer.errorAddProductToCartVersion,
     addProductToCartData: state.productGridReducer.addProductToCartData,
 
-    successProductAddToCartPlusOneVersion:
-      state.productGridReducer.successProductAddToCartPlusOneVersion,
-    errorProductAddToCartPlusOneVersion:
-      state.productGridReducer.errorProductAddToCartPlusOneVersion,
-    productAddToCartPlusOneData:
-      state.productGridReducer.productAddToCartPlusOneData,
+    successProductAddToCartPlusOneVersion: state.productGridReducer.successProductAddToCartPlusOneVersion,
+    errorProductAddToCartPlusOneVersion: state.productGridReducer.errorProductAddToCartPlusOneVersion,
+    productAddToCartPlusOneData: state.productGridReducer.productAddToCartPlusOneData,
 
-    successTotalCartCountVersion:
-      state.homePageReducer.successTotalCartCountVersion,
-    errorTotalCartCountVersion:
-      state.homePageReducer.errorTotalCartCountVersion,
+    successTotalCartCountVersion: state.homePageReducer.successTotalCartCountVersion,
+    errorTotalCartCountVersion: state.homePageReducer.errorTotalCartCountVersion,
     totalCartCountData: state.homePageReducer.totalCartCountData,
+
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
+
   };
 }
 
@@ -1812,7 +1821,7 @@ export default connect(
     addRemoveProductFromCartByOne,
     getTotalCartCount,
   },
-)(ProductGrid);
+)(withNavigationFocus(ProductGrid));
 
 class RangeSlider extends React.Component {
   constructor(props) {

@@ -235,7 +235,6 @@ class SearchProductGrid extends Component {
       if (addProductToCartData.ack === '1') {
 
         let id = gridData && gridData[0].collection_id
-        //if(this.state.page==0){
     
         const data2 = new FormData();
         data2.append('table', 'product_master');
@@ -243,11 +242,14 @@ class SearchProductGrid extends Component {
         data2.append('collection_id', id);
         data2.append('user_id', userId);
         data2.append('record', 10);
-        data2.append('page_no', page);
+        // data2.append('page_no', page);
+         data2.append('page_no', 0);
+
         data2.append('sort_by', selectedSortById);
 
         await this.props.getProductSubCategoryData(data2);
-        //}
+        this.setState({page:0})
+
 
         Toast.show({
           text: addProductToCartData && addProductToCartData.msg,
@@ -680,8 +682,15 @@ class SearchProductGrid extends Component {
   LoadRandomData = () => {
     const {gridData, page} = this.state;
 
-      let id = gridData && gridData[0].collection_id
+    const { allParameterData } = this.props;
 
+
+    let accessCheck = allParameterData && allParameterData.access_check
+
+    let id = gridData && gridData[0].collection_id
+
+
+    if (accessCheck == '1') {
       const data = new FormData();
       data.append('table', 'product_master');
       data.append('mode_type', 'normal');
@@ -691,7 +700,11 @@ class SearchProductGrid extends Component {
       data.append('page_no', page);
       data.append('sort_by', '2');
 
-    this.props.getProductSubCategoryData(data);
+      this.props.getProductSubCategoryData(data);
+    }
+    else {
+      alert('Your access to full category has been expired. Please contact administrator to get access.')
+    }
  };
 
   footer = () => {
@@ -959,6 +972,10 @@ function mapStateToProps(state) {
     successTotalCartCountVersion: state.homePageReducer.successTotalCartCountVersion,
     errorTotalCartCountVersion: state.homePageReducer.errorTotalCartCountVersion,
     totalCartCountData: state.homePageReducer.totalCartCountData,
+
+    allParameterData: state.homePageReducer.allParameterData,
+    successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
+    errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
 
   }
 }
