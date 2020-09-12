@@ -1316,6 +1316,9 @@ class CartContainer extends Component {
     const cartSummary = cartSummaryData && cartSummaryData.cart_summary && cartSummaryData.cart_summary.product_master
     const cartWeight= cartWeightData && cartWeightData.data && cartWeightData.data.cart_data
 
+    const totalWT = cartWeightData && cartWeightData.data && cartWeightData.data.total_weight;
+
+    const totalQuantity = cartWeightData && cartWeightData.data && cartWeightData.data.total_quantity;
 
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
 
@@ -1809,7 +1812,7 @@ class CartContainer extends Component {
                     <View style={styles.middleViewContainer}>
                       <Text style={styles.middleText}>Product Master :</Text>
                       <Text style={styles.middleText}>
-                        Gross Weight : {cartSummary && cartSummary.gross_wt ? cartSummary.gross_wt : ''}
+                        Gross Weight : {cartSummary && cartSummary.gross_wt ? parseInt(cartSummary.gross_wt).toFixed(2) : ''}
                       </Text>
                       <Text style={styles.middleText}>Quantity : {cartSummary && cartSummary.quantity ? cartSummary.quantity : ''}</Text>
                     </View>
@@ -1919,24 +1922,34 @@ class CartContainer extends Component {
                 data={cartWeight && cartWeight}
                 renderItem={({ item }) => (
                   <View style={{ marginHorizontal: 16, marginTop: 20}}>
-                    <View style={{ marginBottom: 20 }}>
-                      <Text>{`category: ${item.key}`}</Text>
+                    <View style={{marginBottom: 20}}>
+                      <Text>{`Category: ${item.key}`}</Text>
                     </View>
 
-                    {/* <View style={{ marginBottom: 30 }}>
-                      <Text>{`Description:`}</Text>
+                    <View style={{marginBottom: 30}}>
+                      <Text>{'Description:'}</Text>
                       {item.cat_data.map(m => {
-                        <View>
-                          <Text>{`Design No:`}{m.product_id}</Text>
-                          <Text>{`Description:`}</Text>
-                        </View>
+                        return (
+                          <View>
+                            <Text>
+                              Design No: {m.product_id} (Gross Wt:
+                              {parseInt(m.gross_wt).toFixed(2)}, Net Wt:{parseInt(m.net_wt).toFixed(2)}, Quantity:
+                              {m.quantity} )
+                            </Text>
+                          </View>
+                        );
                       })}
-                    </View> */}
-{/* 
-                    <View style={{ flexDirection: 'row',justifyContent: 'space-between',marginBottom: 10}}>
-                      <Text>{`Total Quantity: ${item[0].total_quantity}`}</Text>
-                      <Text>{`Total WT: ${item[0].total_weight}`}</Text>
-                    </View> */}
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        marginBottom: 10,
+                      }}>
+                      <Text>{`Total Quantity: ${item.total_quantity}`}</Text>
+                      <Text>{`Total WT: ${item.total_weight}`}</Text>
+                    </View>
 
                     <View style={{borderBottomWidth: 1,borderColor: '#ddd',borderBottomWidth: 0.8}}/>
                   </View>
@@ -1947,17 +1960,17 @@ class CartContainer extends Component {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 30,
+                    marginTop: 25,marginBottom:5
                   }}>
                   <View>
-                <Text style={{ fontSize: 16 }}>Total WT: {cartWeight && cartWeight.total_weight}</Text>
+                <Text style={{ fontSize: 16 }}>Total WT: { totalWT && parseInt(totalWT).toFixed(2)}</Text>
                   </View>
                   <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 16 }}>Total Quantity: {cartWeight && cartWeight.total_quantity}</Text>
+                    <Text style={{ fontSize: 16 }}>Total Quantity: {totalQuantity}</Text>
                   </View>
                 </View>
 
-                <View style={[styles.btnView, { bottom: 10 }]}>
+                <View style={[styles.btnView, { bottom: 10, }]}>
                   <ActionButtonRounded
                     title="OK"
                     onButonPress={() => this.closeSummeryModal()}
@@ -2002,9 +2015,9 @@ const styles = StyleSheet.create({
   cartSummaryText: {
     fontSize: 21,
     fontFamily: 'Helvetica',
-    color: '#fbcb84',
-    marginLeft: 10,
+    color: 'gray',
     textAlign: 'center',
+    marginTop:5
   },
   mainContainer: {
     flex: 1,
@@ -2049,11 +2062,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
   },
-  cartSummaryText: {
-    textAlign: 'center',
-    fontSize: 16,
-    marginTop: 20,
-  },
+  
   middleViewContainer: {
     marginVertical: 20,
   },

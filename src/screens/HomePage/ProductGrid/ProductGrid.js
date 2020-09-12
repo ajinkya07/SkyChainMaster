@@ -100,6 +100,8 @@ class ProductGrid extends Component {
       successTotalCartCountVersion: 0,
       errorTotalCartCountVersion: 0,
       filterData: [],
+
+      isSelectPressed:false
     };
     userId = global.userId;
   }
@@ -535,6 +537,8 @@ class ProductGrid extends Component {
 
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
+    const { isSelectPressed} = this.state
+
     return (
       <TouchableOpacity
         onPress={() =>
@@ -547,22 +551,17 @@ class ProductGrid extends Component {
             backgroundColor: color.white,
             height: Platform.OS === 'android' ? hp(34) : hp(31),
             width: wp(46),
-            // height:  (item.value[2]).length > 10 ? hp(43) : hp(40), width: wp(46),
-            //borderColor: color.gray,
-            //borderWidth: 0.4, borderRadius: 15,
             marginHorizontal: hp(1),
-            borderRadius: 15,
-            shadowColor: '#000',
+            borderRadius: 15,shadowColor: '#000',
             shadowOffset: {
               width: 0.5,
               height: 0.5,
             },
-            shadowOpacity: 0.25,
-            shadowRadius: 2,
-
-            elevation: 2.2,
+            shadowOpacity: 0.25,shadowRadius: 2, elevation: 2.2,
           }}
           activeOpacity={1}>
+
+         
           <View style={gridItemDesign}>
             <TouchableOpacity
               onPress={() =>
@@ -571,13 +570,14 @@ class ProductGrid extends Component {
                 })
               }
               onLongPress={() => this.showProductImageModal(item)}>
-              {/* <Image
-                            resizeMode={'cover'}
-                            style={gridImage}
-                            defaultSource={require('../../../assets/image/default.png')}
-                            source={{ uri: url + item.image_name }}
-                        /> */}
-              <FastImage
+              <Image
+                resizeMode={'cover'}
+                style={gridImage}
+                defaultSource={require('../../../assets/image/LoginIcons/SkyChainsLogo.png')}
+                source={{ uri: url + item.image_name }}
+              />
+
+              {/* <FastImage
                 style={gridImage}
                 source={{
                   uri: url + item.image_name,
@@ -585,6 +585,7 @@ class ProductGrid extends Component {
                 }}
                 resizeMode={FastImage.resizeMode.cover}
               />
+               */}
             </TouchableOpacity>
             <View style={latestTextView}>
               <View style={{ width: wp(15), marginLeft: 5 }}>
@@ -722,6 +723,21 @@ class ProductGrid extends Component {
               </View>
             )}
           </View>
+
+          {isSelectPressed &&
+            <View style={{
+              height: 30, width: 30, borderRadius: 30 / 2,
+              borderWidth: 2,
+              borderColor: '#19af81',
+              backgroundColor: '#FFFFFF',
+              position: 'absolute'
+            }}>
+              <TouchableOpacity onPress={() => null}>
+              </TouchableOpacity>
+            </View>
+
+          }
+
         </View>
       </TouchableOpacity>
     );
@@ -1094,6 +1110,14 @@ class ProductGrid extends Component {
     }
   };
 
+
+  toggleSelect = () =>{
+    this.setState({
+      isSelectPressed:!this.state.isSelectPressed
+    })
+  }
+
+
   render() {
     const {
       categoryData,
@@ -1109,7 +1133,8 @@ class ProductGrid extends Component {
       sortList,
       isGrossWtSelected,
       isProductImageModalVisibel,
-      collectionName
+      collectionName,
+      isSelectPressed
     } = this.state;
 
     const { sortByParamsData, filterParamsData , allParameterData} = this.props;
@@ -1149,31 +1174,35 @@ class ProductGrid extends Component {
             borderBottomColor: color.primaryGray,
             backgroundColor: color.white,
           }}>
-          <TouchableOpacity
-            disabled={!this.state.gridData || this.state.gridData.length === 0}
-            onPress={() => this.openSortByModal()}>
-            <View
-              style={{
-                width: wp(33),
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
-                source={require('../../../assets/image/BlueIcons/Sort-Green.png')}
-              />
-              <_Text
-                fsHeading
-                bold
-                textColor={'#19af81'}
-                style={{ ...Theme.ffLatoRegular14 }}>
-                SORT
-              </_Text>
-            </View>
-          </TouchableOpacity>
 
+          {!isSelectPressed &&
+            <TouchableOpacity
+              disabled={!this.state.gridData || this.state.gridData.length === 0}
+              onPress={() => this.openSortByModal()}>
+              <View
+                style={{
+                  width: wp(33),
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
+                  source={require('../../../assets/image/BlueIcons/Sort-Green.png')}
+                />
+                <_Text
+                  fsHeading
+                  bold
+                  textColor={'#19af81'}
+                  style={{ ...Theme.ffLatoRegular14 }}>
+                  SORT
+              </_Text>
+              </View>
+            </TouchableOpacity>
+          }
+
+          {!isSelectPressed &&
           <TouchableOpacity
             disabled={!this.state.gridData || this.state.gridData.length === 0}
             onPress={() => this.toggleFilterModal()}>
@@ -1198,8 +1227,65 @@ class ProductGrid extends Component {
               </_Text>
             </View>
           </TouchableOpacity>
+          }
+
+          {isSelectPressed &&
+            <TouchableOpacity
+              disabled={!this.state.gridData || this.state.gridData.length === 0}
+              onPress={() => null}>
+              <View
+                style={{
+                  width: wp(33),
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
+                  source={require('../../../assets/image/BlueIcons/Green-Cart.png')}
+                  />
+                <_Text
+                  fsHeading
+                  bold
+                  textColor={'#19af81'}
+                  style={{ ...Theme.ffLatoRegular14 }}>
+                  CART
+              </_Text>
+              </View>
+            </TouchableOpacity>
+          }
+
+          {isSelectPressed &&
+            <TouchableOpacity
+              disabled={!this.state.gridData || this.state.gridData.length === 0}
+              onPress={() =>null}>
+              <View
+                style={{
+                  width: wp(33),
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(1.5) }}
+                  source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
+                  />
+                <_Text
+                  fsHeading
+                  bold
+                  textColor={'#19af81'}
+                  style={{ ...Theme.ffLatoRegular14 }}>
+                  WISHLIST
+              </_Text>
+              </View>
+            </TouchableOpacity>
+          }
+
 
           <TouchableOpacity
+            onPress={() => this.toggleSelect()}
             disabled={!this.state.gridData || this.state.gridData.length === 0}>
             <View
               style={{
@@ -1208,6 +1294,7 @@ class ProductGrid extends Component {
                 flexDirection: 'row',
                 justifyContent: 'center',
                 alignItems: 'center',
+                backgroundColor:isSelectPressed ? 'gold' : '#FFFFFF'
               }}>
               <Image
                 style={{ height: hp(2.8), width: hp(2.8), marginRight: hp(2) }}
@@ -1222,6 +1309,7 @@ class ProductGrid extends Component {
               </_Text>
             </View>
           </TouchableOpacity>
+    
         </View>
 
         {gridData && (
