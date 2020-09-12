@@ -248,4 +248,8 @@ export const CALL_EMAIL_DATA_ERROR = "callEmailDataError";
 export const CALL_EMAIL_DATA_RESET_REDUCER = "callEmailDataResetReducer";
 
 
+export const ALL_PARAMETER = "allParameter";
+export const ALL_PARAMETER_SUCCESS = "allParameterSuccess";
+export const ALL_PARAMETER_ERROR = "allParameterError";
+export const ALL_PARAMETER_RESET_REDUCER = "allParameterResetReducer";
 

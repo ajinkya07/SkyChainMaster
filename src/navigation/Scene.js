@@ -24,15 +24,17 @@ import Notification from '@notification/Notification';
 import Banner from '@homepage/Banner';
 import BannerImage from '@category/BannerImage'
 import CartContainer from '@cartContainer/CartContainer'
-
 import EditProfile from '@editProfile/EditProfile'
-
 import SearchProductGrid from '@search/SearchProductGrid'
 import Exclusive from '@exclusive/Exclusive'
 
+import { connect } from 'react-redux';
 
 import AsyncStorage from '@react-native-community/async-storage';
 
+import {allParameters} from '@navigation/SceneAction';
+
+import {Toast} from 'native-base'
 
 const Stack = createStackNavigator();
 
@@ -41,6 +43,9 @@ class Scene extends React.Component {
     super(props);
     this.state = {
       isLoginValue: '',
+      successAllParameterVersion: 0,
+      errorAllParamaterVersion: 0,
+
     };
   }
 
@@ -56,6 +61,12 @@ class Scene extends React.Component {
       if (parsed) {
         global.userId = parsed;
         this.setState({ isLoginValue: true });
+
+        const data = new FormData();
+        data.append('user_id', parsed);
+    
+        await this.props.allParameters(data)
+    
       } else {
         this.setState({ isLoginValue: false });
       }
@@ -64,6 +75,43 @@ class Scene extends React.Component {
     }
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { successAllParameterVersion, errorAllParamaterVersion } = nextProps;
+
+    let newState = null;
+
+    if (successAllParameterVersion > prevState.successAllParameterVersion) {
+        newState = {
+            ...newState,
+            successAllParameterVersion: nextProps.successAllParameterVersion,
+        };
+    }
+    if (errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+        newState = {
+            ...newState,
+            errorAllParamaterVersion: nextProps.errorAllParamaterVersion,
+        };
+    }
+
+    return newState;
+}
+
+async componentDidUpdate(prevProps, prevState) {
+    const { allParameterData } = this.props;
+
+    if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+      // if(allParameterData && allParameterData.user_status !== 'active'){
+      //   this.setState({ isLoginValue: '' });
+      // }
+    }
+
+    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+        Toast.show({
+            text: this.props.errorMsg,
+            duration: 2500,
+        });
+    }
+}
 
 
   getLoginScene() {
@@ -228,6 +276,8 @@ class Scene extends React.Component {
 
   render() {
     const { isLoginValue } = this.state;
+    const { allParameterData } = this.props;
+    
     return (
       <NavigationContainer>
         {isLoginValue !== ''
@@ -242,5 +292,16 @@ class Scene extends React.Component {
   }
 }
 
-export default Scene;
 
+function mapStateToProps(state) {
+  return {
+      isFetching: state.sceneReducer.isFetching,
+      error: state.sceneReducer.error,
+      errorMsg: state.sceneReducer.errorMsg,
+      successAllParameterVersion: state.sceneReducer.successAllParameterVersion,
+      errorAllParamaterVersion: state.sceneReducer.errorAllParamaterVersion,
+      allParameterData: state.sceneReducer.allParameterData,
+  };
+}
+
+export default connect(mapStateToProps, { allParameters })(Scene);

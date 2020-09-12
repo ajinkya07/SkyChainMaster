@@ -22,7 +22,6 @@ import _Text from '@text/_Text';
 import { connect } from 'react-redux';
 import { color } from '@values/colors';
 import { urls } from '@api/urls'
-import { withNavigationFocus } from '@react-navigation/compat';
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
 import {
@@ -933,6 +932,7 @@ class ProductGrid extends Component {
 
 
     let accessCheck = allParameterData && allParameterData.access_check
+
     
     if (accessCheck == '1') {
       const data = new FormData();
@@ -1821,7 +1821,7 @@ export default connect(
     addRemoveProductFromCartByOne,
     getTotalCartCount,
   },
-)(withNavigationFocus(ProductGrid));
+)(ProductGrid);
 
 class RangeSlider extends React.Component {
   constructor(props) {

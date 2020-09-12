@@ -186,6 +186,7 @@ class EditProfile extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const { getProfileData, allParameterData, stateList,cityList,updateProfileData } = this.props;
 
+
     if (this.state.successGetProfileVersion > prevState.successGetProfileVersion) {
       this.setState({
         name: getProfileData.data.full_name ? getProfileData.data.full_name : '',
@@ -199,6 +200,22 @@ class EditProfile extends Component {
         dobSelected: getProfileData.data.birthday ? getProfileData.data.birthday : '',
         anniversaryDate: getProfileData.data.anniversary_date ? getProfileData.data.anniversary_date : ''
       });
+
+      let c = allParameterData.country_data.filter(i => i.id == getProfileData.data.country_id  )
+
+      const s2 = new FormData()
+      s2.append('country_id', getProfileData.data.country_id)
+      
+      await this.props.getStateList(s2)
+  
+      this.setState({
+        countryData: allParameterData.country_data,
+        selectedCountryId:getProfileData.data.country_id,
+        selectedCountry:c[0].name,
+
+      })
+
+  
     }
 
 
@@ -208,40 +225,43 @@ class EditProfile extends Component {
     if (this.state.successUpdateProfileVersion > prevState.successUpdateProfileVersion) {
 
       this.showToast(this.props.errorMsg, 'success');
-
-      // this.setState({
-      //   name: '',
-      //   email: '',
-      //   mobileNo: '',
-      //   designation: '',
-      //   companyName: '',
-      //   panNo: '',
-      //   gstNo: '',
-      //   pinCode: '',
-      //   dobSelected: '',
-      //   anniversaryDate: '',
-      // });
     }
     if (this.state.errorUpdateProfileVersion > prevState.errorUpdateProfileVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
 
     if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+
       this.setState({
-        countryData: allParameterData.country_data
+        countryData: allParameterData.country_data,
       })
     }
     if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
 
     }
     if (this.state.successGetStateListVersion > prevState.successGetStateListVersion) {
+
+      let st = stateList.states.filter(i => i.id == getProfileData.data.state_id  )
+     
+      const ct = new FormData()
+     
+      ct.append('state_id', getProfileData.data.state_id)
+      await this.props.getCityList(ct)
+  
       this.setState({
-        stateData: stateList.states
+        stateData: stateList.states,
+        selectedStateId:st[0].id,
+        selectedState:st[0].name,
       })
     }
     if (this.state.successGetCityListVersion > prevState.successGetCityListVersion) {
+      let abc = cityList.cities.filter(i => i.id == getProfileData.data.city_id  )
+
+
       this.setState({
-        cityData: cityList.cities
+        cityData: cityList.cities,
+        selectedCity:abc[0].name,
+        selectedCityId:getProfileData.data.city_id
       })
     }
 
@@ -1064,7 +1084,7 @@ const ActionButtonRounded = ({ title, onButonPress, containerStyle }) => {
 
 const actionButtonRoundedStyle = StyleSheet.create({
   mainContainerStyle: {
-    backgroundColor: '#11255a',
+    backgroundColor:'#19af81',
     height: 44,
     width: width - 170,
     justifyContent: 'center',
@@ -1077,7 +1097,7 @@ const actionButtonRoundedStyle = StyleSheet.create({
     alignItems: 'center',
   },
   titleStyle: {
-    color: '#fbcb84',
+    color: '#FFFFFF',
     fontSize: 14,
     textAlign: 'center',
     alignItems: 'center',
