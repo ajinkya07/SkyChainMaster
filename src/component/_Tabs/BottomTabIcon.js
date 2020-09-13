@@ -20,25 +20,25 @@ class BottomTabIcon extends Component {
             <View style={{ width: 24, height: 24, margin: 5 }}>
                 {focused ?
                     <Image style={{ height: hp(3.5), width: hp(3.5), marginTop: -7 }}
-                        source={require('../../assets/image/BlueIcons/Cart.png')}
+                    source={require('../../assets/image/Tabs/cart_grey.png')}
                     />
 
                     :
                     <Image style={{ height: hp(2.9), width: hp(2.9),marginTop:-1 }}
-                        source={require('../../assets/image/BlueIcons/Cart-White.png')}
+                    source={require('../../assets/image/Tabs/cart_lightgrey.png')}
                     />
                 }
 
                 <View
                     style={{
                         position: 'absolute',
-                        right: -6,
-                        top: -4,
+                        right: -7,
+                        top: -5,
                         backgroundColor: 'red',
                         padding: 3,
-                        borderRadius: 8,
-                        width: 16,
-                        height: 16,
+                        borderRadius: 9,
+                        width: 18,
+                        height: 18,
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}

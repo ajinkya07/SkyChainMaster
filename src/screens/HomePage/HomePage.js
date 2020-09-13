@@ -395,19 +395,18 @@ class HomePage extends Component {
           })
         }>
         <View key={k}>
-          {/* <Image style={{ height: hp(25), width: wp(100) }}
-                        source={{ uri: baseUrl + data.brand_image }}
-                        defaultSource={require('../../assets/image/default.png')}
-                        resizeMode='cover'
-                    /> */}
-          <FastImage
+          <Image style={{ height: hp(26.5), width: wp(100) }}
+            source={{ uri: baseUrl + data.brand_image }}
+            defaultSource={IconPack.APP_LOGO}
+            resizeMode='cover'
+          />
+          {/* <FastImage
             style={{ height: hp(26.5), width: wp(100) }}
             source={{
               uri: baseUrl + data.brand_image,
-              // cache: FastImage.cacheControl.cacheOnly,
             }}
             resizeMode={FastImage.resizeMode.cover}
-          />
+          /> */}
         </View>
       </TouchableOpacity>
     );

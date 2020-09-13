@@ -162,7 +162,7 @@ export default function _Tabs() {
         },
       }}
       //barStyle={{ backgroundColor: '#EEF8F7', }}
-      barStyle={{backgroundColor: '#19af81'}}>
+      barStyle={{backgroundColor: '#FFFFFF'}}>
       <Tab.Screen
         name="Home"
         options={{
@@ -173,14 +173,14 @@ export default function _Tabs() {
               return (
                 <Image
                   style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
-                  source={require('../../assets/image/BlueIcons/Home.png')}
+                  source={require('../../assets/image/Tabs/home_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
                   style={{height: hp(3), width: hp(3), marginTop: 3}}
-                  source={require('../../assets/image/BlueIcons/Home-white.png')}
+                  source={require('../../assets/image/Tabs/home_lightgrey.png')}
                 />
               );
             }
@@ -200,14 +200,14 @@ export default function _Tabs() {
               return (
                 <Image
                   style={{height: hp(3.2), width: hp(3.2), marginTop: -2}}
-                  source={require('../../assets/image/BlueIcons/Category.png')}
+                  source={require('../../assets/image/Tabs/category_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
                   style={{height: hp(2.5), width: hp(2.5), marginTop: 4}}
-                  source={require('../../assets/image/BlueIcons/Category-White.png')}
+                  source={require('../../assets/image/Tabs/category_lightgrey.png')}
                 />
               );
             }
@@ -256,14 +256,14 @@ export default function _Tabs() {
               return (
                 <Image
                   style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
-                  source={require('../../assets/image/CustomOrder.png')}
+                  source={require('../../assets/image/Tabs/customeorder_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
                   style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
-                  source={require('../../assets/image/BlueIcons/Custom-Order-White.png')}
+                  source={require('../../assets/image/Tabs/customorder_lightgrey.png')}
                 />
               );
             }
@@ -282,14 +282,14 @@ export default function _Tabs() {
               return (
                 <Image
                   style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
-                  source={require('../../assets/image/BlueIcons/Account.png')}
+                  source={require('../../assets/image/Tabs/profie_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
                   style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
-                  source={require('../../assets/image/BlueIcons/White-user.png')}
+                  source={require('../../assets/image/Tabs/profile_lightgrey.png')}
                 />
               );
             }

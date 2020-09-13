@@ -9,7 +9,7 @@ const store = configureStore();
 
 class App extends React.Component {
   componentDidMount = () => {
-    //  console.disableYellowBox = true;
+     console.disableYellowBox = true;
   };
 
   render() {
@@ -20,11 +20,9 @@ class App extends React.Component {
             <Scene />
           </Provider>
         </Root>
-        {/* <Scene /> */}
       </View>
     );
   }
 }
 
-//export default App;jjhjh
 export default App;
