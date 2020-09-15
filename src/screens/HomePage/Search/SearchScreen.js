@@ -24,7 +24,7 @@ import { color } from '@values/colors';
 import Modal from 'react-native-modal';
 import IconPack from '@login/IconPack';
 import CheckBox from '@react-native-community/checkbox';
-import { Toast } from 'native-base'
+import { Toast,Picker, Icon } from 'native-base'
 import { strings } from '@values/strings'
 
 import { searchProducts , searchByCode} from '@search/SearchAction'
@@ -72,7 +72,9 @@ class SearchScreen extends Component {
             successAllParameterVersion: 0,
             errorAllParamaterVersion: 0,
             karatData: [],
-            isOkKaratClicked:false
+            isOkKaratClicked:false,
+            selectedStatus:'1',
+            
 
         };
 
@@ -178,7 +180,6 @@ class SearchScreen extends Component {
         });
       };
     
-
 
     toggleModal = () => {
         this.setState({ isModalVisible: true, isContinueClicked: false });
@@ -469,7 +470,7 @@ class SearchScreen extends Component {
 
 
     searchProducts = () => {
-        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate, selectedCategories, selectedKarat } = this.state
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate, selectedCategories, selectedKarat , selectedStatus} = this.state
 
         if (selectedCategories.length > 0) {
 
@@ -493,7 +494,7 @@ class SearchScreen extends Component {
             s.append('max_gross_weight', gwTo ? gwTo : '')
             s.append('min_net_weight', nwFrom ? nwFrom : '')
             s.append('max_net_weight', nwTo ? nwTo : '')
-            s.append('product_status', '')
+            s.append('product_status', selectedStatus)
             s.append('melting_id  ', karatIds.toString())
             s.append('created_date_from', fromDate ? fromDate : '')
             s.append('created_date_to', toDate ? toDate : '')
@@ -593,13 +594,22 @@ class SearchScreen extends Component {
     }
 
 
+    setSelectedStatus = value => {
+        this.setState({
+          selectedStatus: value,
+        });
+      };
 
+
+      
     render() {
 
-        const { collection, selectedCategories,selectedKarat,karatData } = this.state
+        const { collection, selectedCategories,selectedKarat,karatData,selectedStatus } = this.state
         const{allParameterData} = this.props
 
         const list = allParameterData && allParameterData.melting
+
+        let statusArray = [{'id':'1','status':'Available'},{'id':'2','status':'Sold'}]
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -639,7 +649,24 @@ class SearchScreen extends Component {
                         
                     </View>
 
-                    <View style={{ paddingVertical: hp(0.5), }}>
+                    <View style={{ paddingVertical: hp(1.2), marginHorizontal:wp(3)}}>
+                    <_Text fsHeading>Product Status:</_Text>
+                  <Picker
+                    iosIcon={ <Icon name="arrow-down"  style={{ marginRight: hp(3), fontSize: 25, }}/>
+                    }
+                    mode="dropdown"
+                    style={{ height: 45, width: '70%',justifyContent: 'space-between', width: wp(95),marginTop:-5}}
+                    selectedValue={this.state.selectedStatus}
+                    onValueChange={(value) => this.setSelectedStatus(value)
+                    }>
+                    {statusArray!=null && statusArray.map(s => (
+                      <Picker.Item label={(s.status).toString()} value={parseInt(s.id)} />
+                    ))}
+                  </Picker>
+                </View>
+
+
+                    <View style={{ paddingVertical: hp(0.2), }}>
                         {this.selectKarat()}
                     </View>
 

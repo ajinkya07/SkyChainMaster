@@ -43,7 +43,7 @@ export default class SubCategoryList extends Component {
                                     borderWidth: 0.4, borderColor: color.gray
                                 }}
                                 source={{ uri: baseUrl + item.image_name }}
-                                defaultSource={require('../../../assets/image/default.png')}
+                                defaultSource={require('../../../assets/image/LoginIcons/SkyChainsLogo.png')}
                             />
                         </View>
 

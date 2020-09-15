@@ -350,10 +350,7 @@ class ProductGrid extends Component {
         this.showToast(strings.serverFailedMsg, 'danger');
       }
     }
-    if (
-      this.state.errorFilteredProductVersion >
-      prevState.errorFilteredProductVersion
-    ) {
+    if (this.state.errorFilteredProductVersion > prevState.errorFilteredProductVersion ) {
       Toast.show({
         text: this.props.errorMsg
           ? this.props.errorMsg
@@ -544,7 +541,7 @@ class ProductGrid extends Component {
     
     return (
       <TouchableOpacity
-        onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() :  this.selectProduct(item) : 
+        onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() :  this.selectProduct(item, item.product_inventory_id) : 
           this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
           >
         <View
@@ -565,7 +562,7 @@ class ProductGrid extends Component {
          
           <View style={gridItemDesign}>
             <TouchableOpacity
-              onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() : this.selectProduct(item): 
+              onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() : this.selectProduct(item, item.product_inventory_id): 
                 this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
 
                onLongPress={() => this.showProductImageModal(item)}>
@@ -676,14 +673,14 @@ class ProductGrid extends Component {
             {item.quantity == 0 && (
               <View style={iconView}>
                 <TouchableOpacity
-                  onPress={() =>  isSelectPressed ? this.selectProduct(item) : this.addProductToWishlist(item)}>
+                  onPress={() =>  isSelectPressed ? this.selectProduct(item, item.product_inventory_id) : this.addProductToWishlist(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => isSelectPressed ? this.selectProduct(item) : this.addProductToCart(item)}>
+                <TouchableOpacity onPress={() => isSelectPressed ? this.selectProduct(item, item.product_inventory_id) : this.addProductToCart(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Cart.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
@@ -728,10 +725,10 @@ class ProductGrid extends Component {
               height: 30, width: 30, borderRadius: 30 / 2,
               borderWidth: 2,
               borderColor: '#19af81',
-              backgroundColor: '#FFFFFF',
+              backgroundColor: item.isSelect ? 'green' : '#FFFFFF',
               position: 'absolute'
             }}>
-              <TouchableOpacity onPress={() => this.selectProduct(item)}>
+              <TouchableOpacity onPress={() => this.selectProduct(item, item.product_inventory_id)}>
               </TouchableOpacity>
             </View>
 
@@ -742,16 +739,43 @@ class ProductGrid extends Component {
     );
   };
 
-selectProduct = (data) =>{
+selectProduct = (data, id) =>{
 
-  const {selectedItem,selectedProducts} = this.state
-
-  const index = this.state.gridData.findIndex(
-    item => data.date_no === item.date_no
-  );
+  const {selectedItem,selectedProducts,gridData} = this.state
 
   
-  //  this.state.gridData[index].isSelect = data;
+  const index = this.state.gridData.findIndex(
+    item => data.date_no == item.date_no
+  );
+
+  if (index != -1 && !gridData[index].isSelect) {
+    console.warn("in if--");
+
+    let array = [];
+    let array2 = []
+    array = [{ id }]
+
+    array2.push(...selectedProducts, ...array);
+
+    console.warn("array2",array2);
+
+    this.setState({ selectedProducts: array2 });
+
+    this.state.gridData[index].isSelect = true;
+
+
+  }
+  else if (index != -1 && gridData[index].isSelect) {
+    console.warn("in else--");
+   
+    this.state.gridData[index].isSelect = false;
+   
+    var ind = selectedProducts.map(x => {return x.product_inventory_id}).indexOf(id);
+   // const ind = selectedProducts.findIndex( i => selectedProducts.index == i.index)
+console.warn("ind==",ind);
+  selectedProducts.splice(ind, 1);
+
+  }
 
   this.setState({
     selectedProducts: this.state.gridData[index],
@@ -1164,7 +1188,7 @@ showAlreadyToast = () =>{
 
     const { sortByParamsData, filterParamsData , allParameterData} = this.props;
 
-
+console.warn("selectedProducts",selectedProducts);
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
   
     return (

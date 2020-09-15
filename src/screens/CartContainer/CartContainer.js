@@ -919,6 +919,7 @@ class CartContainer extends Component {
   };
 
   editCartProduct = editData => {
+    console.warn("editData",editData);
     this.setState({
       isModalVisible: true,
       productcode: editData.collection_sku_code,
