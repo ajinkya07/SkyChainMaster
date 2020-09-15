@@ -199,8 +199,6 @@ export function addProductToWishlist(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_PRODUCT_TO_WISHLIST_DATA_ERROR)
         );
@@ -209,12 +207,10 @@ export function addProductToWishlist(data) {
 }
   
 export function addProductToCart(data) {
-  console.log("addProductToCart formdata",data);
     return dispatch => {
       dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_DATA));
   
       axios.post(urls.addToCartWishlist.url, data, header).then(response => {
-        console.log("addProductToCart success", response.data);
         if (response.data.ack === '1') {
           dispatch(
             onSuccess(response.data, ADD_PRODUCT_TO_CART_DATA_SUCCESS)

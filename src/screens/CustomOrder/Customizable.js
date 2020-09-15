@@ -136,11 +136,7 @@ class Customizable extends Component {
           grossWeight: '',
           netWeight: '',
           length: '',
-          size: '',
           quantity: '',
-          hookType: '',
-          color: '',
-          diameter: '',
           remark: '',
           imageUrl: '',
           date: '',
@@ -178,6 +174,7 @@ class Customizable extends Component {
   handleGrossWeightChange = newText =>
     this.setState({
       grossWeight: newText,
+      netWeight:newText
     });
 
   handleNetWeightChange = newText =>
@@ -304,24 +301,13 @@ class Customizable extends Component {
       this.showToast('Please enter net weight', 'danger');
     } else if (!length) {
       this.showToast('Please enter length', 'danger');
-    } else if (!size) {
-      this.showToast('Please enter size', 'danger');
-    } else if (!quantity) {
+    }  else if (!quantity) {
       this.showToast('Please enter quantity', 'danger');
-    } else if (!hookType) {
-      this.showToast('Please enter hookType', 'danger');
-    } else if (!color) {
-      this.showToast('Please enter color', 'danger');
-    } else if (!diameter) {
-      this.showToast('Please enter diameter', 'danger');
-    } else if (!date) {
+    }  else if (!date) {
       this.showToast('Please select delivery date', 'danger');
     } else if (date != '' && timeStampDate > date) {
       alert('Date must be 10 days greater');
     }
-    // if(!remark){
-    //   this.showToast('Please enter remark','danger')
-    // }
     else if (!imageUrl) {
       this.showToast('Please add image', 'danger');
     } else {
@@ -329,16 +315,14 @@ class Customizable extends Component {
 
       data.append('user_id', userId);
       data.append('gross_wt', grossWeight);
-      data.append('size', size);
       data.append('net_wt', netWeight);
       data.append('length', length);
       data.append('delivery_date', date);
       data.append('remark', remark);
       data.append('file', photo);
-      data.append('color', color);
-      data.append('diameter', diameter);
-      data.append('hook', hookType);
       data.append('melting_id', karatValue);
+      data.append('quantity', quantity);
+
 
       await this.props.submitCustomOrder(data);
     }
@@ -354,8 +338,8 @@ class Customizable extends Component {
     });
   };
 
+  
   setSelectedValue = karat => {
-    console.warn("karat",karat);
     this.setState({
       karatValue: karat,
     });
@@ -410,6 +394,8 @@ class Customizable extends Component {
       </View>
     );
   };
+
+
 
   render() {
     const {isDateTimePickerVisible} = this.state;
@@ -491,9 +477,9 @@ class Customizable extends Component {
                     width="100%"
                     keyboardType="numeric"
                     textInputRef={this.lengthRef}
-                    onSubmitEditing={() => this.sizeRef.current.focus()}
+                    onSubmitEditing={() => this.quantityRef.current.focus()}
                   />
-
+{/* 
                   <FloatingLabelTextInput
                     label="Size (Inches)"
                     value={this.state.size}
@@ -503,7 +489,7 @@ class Customizable extends Component {
                     keyboardType="numeric"
                     textInputRef={this.sizeRef}
                     onSubmitEditing={() => this.quantityRef.current.focus()}
-                  />
+                  /> */}
 
                   <FloatingLabelTextInput
                     label="Quantity"
@@ -513,9 +499,10 @@ class Customizable extends Component {
                     width="100%"
                     keyboardType="numeric"
                     textInputRef={this.quantityRef}
-                    onSubmitEditing={() => this.hookTypeRef.current.focus()}
+                    onSubmitEditing={() => this.remarkRef.current.focus()}
                   />
-                  <FloatingLabelTextInput
+                 
+                  {/* <FloatingLabelTextInput
                     label="Hook Type"
                     value={this.state.hookType}
                     onChangeText={this.handleHookTypeChange}
@@ -541,7 +528,7 @@ class Customizable extends Component {
                     width="100%"
                     textInputRef={this.diameterRef}
                     onSubmitEditing={() => this.remarkRef.current.focus()}
-                  />
+                  /> */}
 
                   <FloatingLabelTextInput
                     label="Remarks"

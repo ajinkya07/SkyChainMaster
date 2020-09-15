@@ -82,6 +82,7 @@ class Notification extends Component {
 
         let url2 = urls.imageUrl
 
+        
         return (
             <TouchableOpacity onPress={() =>  this.props.navigation.navigate('BannerImage', {
                 bannerDataImagePath: item.image_name,
@@ -90,15 +91,26 @@ class Notification extends Component {
                 <View style={{ paddingTop: hp(0.5), paddingBottom: hp(0.5) }}>
                     <View style={{ flexDirection: 'row', flex: 1, marginLeft: hp(1.5), marginRight: hp(0.5) }}>
                         <View style={{ flex: 0.25, justifyContent: 'flex-start', }}>
+                           { item.image_name != '' ?
                             <Image
                                 style={{
                                     height: hp(10), width: hp(10), borderRadius: 10,
                                     borderWidth: 0.4, borderColor: color.gray
                                 }}
-                                source={item.image_name}
+                                source={{uri: url2 + item.image_name}}
                                 defaultSource={IconPack.APP_LOGO}
-
+                                resizeMode='cover'
+                            /> : 
+                            <Image
+                                style={{
+                                    height: hp(10), width: hp(10), borderRadius: 10,
+                                    borderWidth: 0.4, borderColor: color.gray
+                                }}
+                                source={IconPack.APP_LOGO}
+                                defaultSource={IconPack.APP_LOGO}
+                                resizeMode='cover'
                             />
+                            }
                         </View>
 
                         <View style={{ alignContent: 'center', justifyContent: 'center', flex: 0.75 }}>

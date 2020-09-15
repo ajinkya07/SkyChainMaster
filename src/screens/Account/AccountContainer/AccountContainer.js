@@ -287,6 +287,7 @@ async componentDidUpdate(prevProps, prevState) {
 
     const instagram = allParameterData.instagram
     const facebook = allParameterData.facebook
+    const catalog = allParameterData.catalogue
 
 
     return (
@@ -320,6 +321,11 @@ async componentDidUpdate(prevProps, prevState) {
               title="Exclusive"
               icon={IconPack.EXCLUSIVE}
               onPress={() => this.props.navigation.navigate('Exclusive')}
+            />
+            <AccountRow
+              title="Catalog"
+              icon={IconPack.EXCLUSIVE}
+              onPress={() => this.props.navigation.navigate('CustomWebview',{link:catalog, title:'Catalog'})}
             />
             <AccountRow
               title="About Us"

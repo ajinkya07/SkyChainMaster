@@ -433,10 +433,10 @@ class LoginFields extends Component {
           maxLength={maxLength}
           minLength={minLength}
           style={loginFieldsStyles.textInput}
-          placeholderTextColor={loginFieldsStyles.whiteColor}
+          placeholderTextColor={'#FFFFFF'}
           underlineColorAndroid="transparent"
           autoCorrect={false}
-          selectionColor={loginFieldsStyles.whiteColor}
+          selectionColor={'#FFFFFF'}
           autoCapitalize="none"
           placeholder={placeholder}
           placeholderTextColor={placeholderTextColor}
@@ -467,7 +467,7 @@ const loginFieldsStyles = StyleSheet.create({
   textInput: {
     height: 50,
     fontSize: 18,
-    color: 'white',
+    color: '#FFFFFF',
     textAlign: 'left',
     marginTop: 20,
     backgroundColor: '#FFFFFF25',

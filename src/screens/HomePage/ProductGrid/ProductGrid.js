@@ -101,7 +101,9 @@ class ProductGrid extends Component {
       errorTotalCartCountVersion: 0,
       filterData: [],
 
-      isSelectPressed:false
+      isSelectPressed:false,
+      selectedItem:'',
+      selectedProducts:[]
     };
     userId = global.userId;
   }
@@ -463,8 +465,7 @@ class ProductGrid extends Component {
               productAddToCartPlusOneData.data.quantity,
             );
 
-            this.setState(
-              {
+            this.setState({
                 quantity: productAddToCartPlusOneData.data.quantity,
               },
               () => {
@@ -537,15 +538,15 @@ class ProductGrid extends Component {
 
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
-    const { isSelectPressed} = this.state
+    const { isSelectPressed, selectedItem,selectedProducts} = this.state
 
+
+    
     return (
       <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('ProductDetails', {
-            productItemDetails: item,
-          })
-        }>
+        onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() :  this.selectProduct(item) : 
+          this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
+          >
         <View
           style={{
             backgroundColor: color.white,
@@ -564,12 +565,10 @@ class ProductGrid extends Component {
          
           <View style={gridItemDesign}>
             <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate('ProductDetails', {
-                  productItemDetails: item,
-                })
-              }
-              onLongPress={() => this.showProductImageModal(item)}>
+              onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() : this.selectProduct(item): 
+                this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
+
+               onLongPress={() => this.showProductImageModal(item)}>
               <Image
                 resizeMode={'cover'}
                 style={gridImage}
@@ -677,14 +676,14 @@ class ProductGrid extends Component {
             {item.quantity == 0 && (
               <View style={iconView}>
                 <TouchableOpacity
-                  onPress={() => this.addProductToWishlist(item)}>
+                  onPress={() =>  isSelectPressed ? this.selectProduct(item) : this.addProductToWishlist(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.addProductToCart(item)}>
+                <TouchableOpacity onPress={() => isSelectPressed ? this.selectProduct(item) : this.addProductToCart(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Green-Cart.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
@@ -697,7 +696,7 @@ class ProductGrid extends Component {
             {item.quantity > 0 && (
               <View style={iconView}>
                 <TouchableOpacity
-                  onPress={() => this.removeProductFromCartByOne(item)}>
+                  onPress={() => isSelectPressed ? this.showAlreadyToast() :  this.removeProductFromCartByOne(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Minus.png')}
                     style={{ height: hp(3), width: hp(3) }}
@@ -713,7 +712,7 @@ class ProductGrid extends Component {
                 </_Text>
 
                 <TouchableOpacity
-                  onPress={() => this.addProductToCartPlusOne(item)}>
+                  onPress={() => isSelectPressed ? this.showAlreadyToast() : this.addProductToCartPlusOne(item)}>
                   <Image
                     source={require('../../../assets/image/BlueIcons/Plus.png')}
                     style={{ height: hp(3), width: hp(3) }}
@@ -732,7 +731,7 @@ class ProductGrid extends Component {
               backgroundColor: '#FFFFFF',
               position: 'absolute'
             }}>
-              <TouchableOpacity onPress={() => null}>
+              <TouchableOpacity onPress={() => this.selectProduct(item)}>
               </TouchableOpacity>
             </View>
 
@@ -742,6 +741,32 @@ class ProductGrid extends Component {
       </TouchableOpacity>
     );
   };
+
+selectProduct = (data) =>{
+
+  const {selectedItem,selectedProducts} = this.state
+
+  const index = this.state.gridData.findIndex(
+    item => data.date_no === item.date_no
+  );
+
+  
+  //  this.state.gridData[index].isSelect = data;
+
+  this.setState({
+    selectedProducts: this.state.gridData[index],
+  });
+
+}
+
+
+showAlreadyToast = () =>{
+    Toast.show({
+      text:'Product already added to cart',
+      duration:2500
+    })
+  }
+
 
   addProductToWishlist = async item => {
     const { categoryData, page, selectedSortById } = this.state;
@@ -1134,14 +1159,13 @@ class ProductGrid extends Component {
       isGrossWtSelected,
       isProductImageModalVisibel,
       collectionName,
-      isSelectPressed
+      isSelectPressed, selectedProducts, selectedItem
     } = this.state;
 
     const { sortByParamsData, filterParamsData , allParameterData} = this.props;
 
 
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
-
   
     return (
 
@@ -1545,7 +1569,7 @@ class ProductGrid extends Component {
                               onPress={() =>
                                 this.setState({ isGrossWtSelected: true })
                               }>
-                              <Text style={styles.toText}>Gross weight</Text>
+                              <Text style={styles.toText}>Net weight</Text>
                             </TouchableOpacity>
                           </View>
                           {filterParamsData &&
@@ -1573,7 +1597,7 @@ class ProductGrid extends Component {
                             <Text style={styles.toText}>
                               {' '}
                               {this.state.isGrossWtSelected
-                                ? 'Gross weight'
+                                ? 'Net weight'
                                 : 'Net weight'}
                             </Text>
                           </View>
