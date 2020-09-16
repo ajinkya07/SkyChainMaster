@@ -212,6 +212,7 @@ class SearchScreen extends Component {
             let array2 = []
             array = [{ id, name }]
             array2.push(...selectedCategories, ...array);
+            console.warn("array",array2);
             this.setState({ selectedCategories: array2 });
 
         }
@@ -610,6 +611,8 @@ class SearchScreen extends Component {
         const list = allParameterData && allParameterData.melting
 
         let statusArray = [{'id':'1','status':'Available'},{'id':'2','status':'Sold'}]
+
+                    console.warn("selectedCategories",selectedCategories);
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>

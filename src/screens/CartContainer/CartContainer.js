@@ -817,11 +817,11 @@ class CartContainer extends Component {
             <View style={styles.tabCartMiddleContainer}>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>gross wt:</Text>
-                <Text style={styles.text}>{data.values[0]}</Text>
+                <Text style={styles.text}>{parseInt(data.values[0]).toFixed(2)}</Text>
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>net wt:</Text>
-                <Text style={styles.text}>{data.values[1]}</Text>
+                <Text style={styles.text}>{parseInt(data.values[1]).toFixed(2)}</Text>
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>quantity:</Text>
@@ -837,7 +837,7 @@ class CartContainer extends Component {
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>weight:</Text>
-                <Text style={styles.text}>{data.values[5]}</Text>
+                <Text style={styles.text}>{parseInt(data.values[5]).toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.tabCartBottomContainer}>
@@ -1040,11 +1040,11 @@ class CartContainer extends Component {
             <View style={styles.tabCartMiddleContainer}>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>gross wt:</Text>
-                <Text style={styles.text}>{item.values[0]}</Text>
+                <Text style={styles.text}>{parseInt(item.values[0]).toFixed(2)}</Text>
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>net wt:</Text>
-                <Text style={styles.text}>{item.values[1]}</Text>
+                <Text style={styles.text}>{parseInt(item.values[1]).toFixed(2)}</Text>
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>quantity:</Text>
@@ -1060,7 +1060,7 @@ class CartContainer extends Component {
               </View>
               <View style={styles.cartDetail}>
                 <Text style={styles.textColor}>weight:</Text>
-                <Text style={styles.text}>{item.values[5]}</Text>
+                <Text style={styles.text}>{parseInt(item.values[5]).toFixed(2)}</Text>
               </View>
             </View>
             <View style={styles.tabCartBottomContainer}>
@@ -1923,17 +1923,17 @@ class CartContainer extends Component {
                 data={cartWeight && cartWeight}
                 renderItem={({ item }) => (
                   <View style={{ marginHorizontal: 16, marginTop: 20}}>
-                    <View style={{marginBottom: 20}}>
-                      <Text>{`Category: ${item.key}`}</Text>
+                    <View style={{marginBottom: 15}}>
+                      <Text style={{fontWeight:'200',fontSize:16}}>{`Category: ${item.key}`}</Text>
                     </View>
 
-                    <View style={{marginBottom: 30}}>
+                    <View style={{marginBottom: 20}}>
                       <Text>{'Description:'}</Text>
                       {item.cat_data.map(m => {
                         return (
                           <View>
-                            <Text>
-                              Design No: {m.product_id} (Gross Wt:
+                            <Text style={{marginBottom:2}}>
+                             - Design No: {m.product_id} (Gross Wt:
                               {parseInt(m.gross_wt).toFixed(2)}, Net Wt:{parseInt(m.net_wt).toFixed(2)}, Quantity:
                               {m.quantity} )
                             </Text>
@@ -1964,10 +1964,10 @@ class CartContainer extends Component {
                     marginTop: 25,marginBottom:5
                   }}>
                   <View>
-                <Text style={{ fontSize: 16 }}>Total WT: { totalWT && parseInt(totalWT).toFixed(2)}</Text>
+                <Text style={{fontWeight:'200', fontSize: 16 }}>Total WT: { totalWT && parseInt(totalWT).toFixed(2)}</Text>
                   </View>
                   <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 16 }}>Total Quantity: {totalQuantity}</Text>
+                    <Text style={{ fontSize: 16,fontWeight:'200' }}>Total Quantity: {totalQuantity}</Text>
                   </View>
                 </View>
 

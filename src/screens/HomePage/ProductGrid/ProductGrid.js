@@ -45,6 +45,7 @@ import _, { fromPairs } from 'lodash';
 import Theme from '../../../values/Theme';
 
 var userId = '';
+var selectedProductIds = []
 
 class ProductGrid extends Component {
   constructor(props) {
@@ -383,6 +384,9 @@ class ProductGrid extends Component {
           text: addProductToWishlistData && addProductToWishlistData.msg,
           duration: 2500,
         });
+
+        this.setState({selectedProducts:[], isSelectPressed:false})
+        selectedProductIds = []
       }
     }
     if (this.state.errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion ) {
@@ -409,8 +413,9 @@ class ProductGrid extends Component {
 
         await this.props.getProductSubCategoryData(data2);
 
-        this.setState({page:0})
-        }
+        this.setState({page:0, isSelectPressed:false, selectedProducts:[]})
+        selectedProductIds = []
+      }
 
         if (categoryData && fromExclusive) {
           const excl2 = new FormData();
@@ -420,13 +425,13 @@ class ProductGrid extends Component {
           excl2.append('user_id', userId);
           excl2.append('record', 10);
         //  excl2.append('page_no', page);
-        data2.append('page_no', 0);
+          excl2.append('page_no', 0);
           excl2.append('sort_by', '2');
           excl2.append('my_collection_id', categoryData.id);
     
           this.props.getProductSubCategoryData(excl2);
-          this.setState({page:0})
-
+          this.setState({page:0, isSelectPressed:false, selectedProducts:[]})
+          selectedProductIds = []
         }
         
         Toast.show({
@@ -720,18 +725,32 @@ class ProductGrid extends Component {
             )}
           </View>
 
-          {isSelectPressed &&
+          {isSelectPressed && !item.isSelect &&
             <View style={{
               height: 30, width: 30, borderRadius: 30 / 2,
               borderWidth: 2,
               borderColor: '#19af81',
-              backgroundColor: item.isSelect ? 'green' : '#FFFFFF',
+              backgroundColor: '#FFFFFF',
               position: 'absolute'
             }}>
               <TouchableOpacity onPress={() => this.selectProduct(item, item.product_inventory_id)}>
               </TouchableOpacity>
             </View>
+          }
 
+
+          {isSelectPressed && item.isSelect &&
+            <View style={{
+              height: 30, width: 30, borderRadius: 30 / 2,
+              backgroundColor: '#FFFFFF',position: 'absolute'
+            }}>
+              <TouchableOpacity onPress={() => this.selectProduct(item, item.product_inventory_id)}>
+                <Image
+                  source={require('../../../assets/image/tick.png')}
+                  style={{ height: 30, width: 30, borderRadius: 30 / 2 }}
+                />
+              </TouchableOpacity>
+            </View>
           }
 
         </View>
@@ -739,49 +758,54 @@ class ProductGrid extends Component {
     );
   };
 
-selectProduct = (data, id) =>{
 
-  const {selectedItem,selectedProducts,gridData} = this.state
+  selectProduct = (data, id) => {
 
-  
-  const index = this.state.gridData.findIndex(
-    item => data.date_no == item.date_no
-  );
+    const { selectedItem, selectedProducts, gridData } = this.state
 
-  if (index != -1 && !gridData[index].isSelect) {
-    console.warn("in if--");
+    console.warn("id===", id);
+    console.warn("data", data);
+    console.warn("gridData", gridData.length);
 
-    let array = [];
-    let array2 = []
-    array = [{ id }]
 
-    array2.push(...selectedProducts, ...array);
+    const index = this.state.gridData.findIndex(
+      item => data.product_inventory_id == item.product_inventory_id
+    );
 
-    console.warn("array2",array2);
+    if (index != -1 && !gridData[index].isSelect) {
 
-    this.setState({ selectedProducts: array2 });
+      let array = [];
+      let array2 = []
+      array = [{ id }]
 
-    this.state.gridData[index].isSelect = true;
+      array2.push(...selectedProducts, ...array);
 
+
+      this.setState({ selectedProducts: array2 });
+
+      this.state.gridData[index].isSelect = true;
+
+      selectedProductIds = array2.map(x => { return x.id})
+
+
+    }
+    else if (index != -1 && gridData[index].isSelect) {
+
+      this.state.gridData[index].isSelect = false;
+
+     var ind = selectedProducts.map(x => { return x.id }).indexOf(id);
+      selectedProducts.splice(ind, 1);
+      this.setState({selectedProducts:selectedProducts})
+
+      selectedProductIds = selectedProducts.map(i => { return i.id})
+
+    }
+
+    // this.setState({
+    //   selectedProducts: this.state.gridData[index],
+    // });
 
   }
-  else if (index != -1 && gridData[index].isSelect) {
-    console.warn("in else--");
-   
-    this.state.gridData[index].isSelect = false;
-   
-    var ind = selectedProducts.map(x => {return x.product_inventory_id}).indexOf(id);
-   // const ind = selectedProducts.findIndex( i => selectedProducts.index == i.index)
-console.warn("ind==",ind);
-  selectedProducts.splice(ind, 1);
-
-  }
-
-  this.setState({
-    selectedProducts: this.state.gridData[index],
-  });
-
-}
 
 
 showAlreadyToast = () =>{
@@ -804,17 +828,44 @@ showAlreadyToast = () =>{
 
     await this.props.addProductToWishlist(wishlistData);
 
-    const data1 = new FormData();
-    data1.append('table', 'product_master');
-    data1.append('mode_type', 'normal');
-    data1.append('collection_id', categoryData.id);
-    data1.append('user_id', userId);
-    data1.append('record', 10);
-    data1.append('page_no', page);
-    data1.append('sort_by', selectedSortById);
+    // const data1 = new FormData();
+    // data1.append('table', 'product_master');
+    // data1.append('mode_type', 'normal');
+    // data1.append('collection_id', categoryData.id);
+    // data1.append('user_id', userId);
+    // data1.append('record', 10);
+    // data1.append('page_no', page);
+    // data1.append('sort_by', selectedSortById);
 
-    await this.props.getProductSubCategoryData(data1);
+    // await this.props.getProductSubCategoryData(data1);
   };
+
+
+  addSelectedProductWishList = async () => {
+    const { categoryData, page, selectedSortById, } = this.state;
+    let wishData = new FormData();
+
+    if (selectedProductIds.length > 0) {
+      for (let i = 0; i < selectedProductIds.length; i++) {
+
+        wishData.append('product_id', selectedProductIds[i]);
+        wishData.append('user_id', userId);
+        wishData.append('cart_wish_table', 'wishlist');
+        wishData.append('no_quantity', 1);
+        wishData.append('product_inventory_table', 'product_master');
+
+        await this.props.addProductToWishlist(wishData);
+      }
+    }
+    else if (selectedProductIds.length <= 0) {
+      Toast.show({
+        text: 'Please select product',
+        duration:2000
+      })
+    }
+
+  }
+
 
   addProductToCart = async item => {
     const { categoryData, page, selectedSortById } = this.state;
@@ -837,6 +888,39 @@ showAlreadyToast = () =>{
 
     await this.props.getTotalCartCount(countData);
   };
+
+  addSelectedProductCart = async() =>{
+
+    let ctData = new FormData();
+    if(selectedProductIds.length > 0){
+    for (let j = 0; j < selectedProductIds.length; j++) {
+
+      console.warn("selectedProductIds jj ",selectedProductIds[j]);
+      ctData.append('product_id', selectedProductIds[j]);
+      ctData.append('user_id', userId);
+      ctData.append('cart_wish_table', 'cart');
+      ctData.append('no_quantity', 1);
+      ctData.append('product_inventory_table', 'product_master');
+
+      await this.props.addProductToCart(ctData);
+    }
+
+    const cd = new FormData();
+    cd.append('user_id', userId);
+    cd.append('table', 'cart');
+
+    await this.props.getTotalCartCount(cd);
+  }
+  else if(selectedProductIds.length <= 0){
+    Toast.show({
+      text:'Please select product',
+      duration:2000
+
+    })
+  }
+
+  }
+
 
   addProductToCartPlusOne = async item => {
     const { categoryData, page, selectedSortById } = this.state;
@@ -1188,7 +1272,8 @@ showAlreadyToast = () =>{
 
     const { sortByParamsData, filterParamsData , allParameterData} = this.props;
 
-console.warn("selectedProducts",selectedProducts);
+    console.warn("selectedProductIds",selectedProductIds);
+
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
   
     return (
@@ -1280,7 +1365,7 @@ console.warn("selectedProducts",selectedProducts);
           {isSelectPressed &&
             <TouchableOpacity
               disabled={!this.state.gridData || this.state.gridData.length === 0}
-              onPress={() => null}>
+              onPress={() => this.addSelectedProductCart()}>
               <View
                 style={{
                   width: wp(33),
@@ -1307,7 +1392,7 @@ console.warn("selectedProducts",selectedProducts);
           {isSelectPressed &&
             <TouchableOpacity
               disabled={!this.state.gridData || this.state.gridData.length === 0}
-              onPress={() =>null}>
+              onPress={() => this.addSelectedProductWishList()}>
               <View
                 style={{
                   width: wp(33),

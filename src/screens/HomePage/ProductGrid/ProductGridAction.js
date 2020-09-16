@@ -211,6 +211,7 @@ export function addProductToCart(data) {
       dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_DATA));
   
       axios.post(urls.addToCartWishlist.url, data, header).then(response => {
+        console.warn("response",response.data);
         if (response.data.ack === '1') {
           dispatch(
             onSuccess(response.data, ADD_PRODUCT_TO_CART_DATA_SUCCESS)
