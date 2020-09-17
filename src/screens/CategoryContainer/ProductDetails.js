@@ -53,13 +53,19 @@ class ProductDetails extends React.Component {
     this.scrollY = new Animated.Value(0);
 
     const productItem = this.props.route.params.productItemDetails;
+
+    const fromHome = this.props.route.params.fromHome;
+
+    
     this.state = {
       count: 1,
       remark: '',
       isHideDetail: true,
       length: '',
       weight: '',
+      weightArray:[],
       productItem: productItem,
+      fromHome:fromHome,
       successProductDetailsVersion: 0,
       errorProductDetailsVersion: 0,
       currentPage: 0,
@@ -77,16 +83,29 @@ class ProductDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    const {productItem} = this.state;
+    const {productItem, fromHome} = this.state;
 
+    if(fromHome){
     const data = new FormData();
     data.append('table', 'product_master');
-    data.append('mode_type', 'normal');
-    data.append('collection_id', productItem.collection_id);
+    data.append('mode_type', 'home_products');
+    data.append('collection_id', 0);
     data.append('user_id', userId);
-    data.append('product_id', productItem.product_inventory_id);
+    data.append('product_id', productItem.product_id);
 
     this.props.getProductDetails(data);
+    }
+    
+   else if(!fromHome){
+      const data = new FormData();
+      data.append('table', 'product_master');
+      data.append('mode_type', 'normal');
+      data.append('collection_id', productItem.collection_id);
+      data.append('user_id', userId);
+      data.append('product_id', productItem.product_inventory_id);
+  
+      this.props.getProductDetails(data);
+      }
   };
 
 
@@ -151,18 +170,22 @@ class ProductDetails extends React.Component {
       if (productDetailsData.ack == '1') {
         this.setState({
           karatValue: productDetailsData.data[0].default_melting_id,
+         
           productDetailsStateData: productDetailsData.data[0],
-          length:
-            productDetailsData !== undefined
-              ? productDetailsData.data[0].length
-              : '',
-          weight:
-            productDetailsData !== undefined
-              ? productDetailsData.data[0].weight &&
-                productDetailsData.data[0].weight.length !== 0
-                ? productDetailsData.data[0].weight
-                : ''
-              : '',
+         
+          length: productDetailsData !== undefined ? productDetailsData.data[0].length : '',
+
+          weightArray: productDetailsData !== undefined ? productDetailsData.data[0].weight &&
+            productDetailsData.data[0].weight.length !== 0
+            ? productDetailsData.data[0].weight
+            : ''
+            : '',
+
+          weight: productDetailsData !== undefined ? productDetailsData.data[0].weight &&
+            productDetailsData.data[0].weight.length !== 0
+            ? productDetailsData.data[0].weight[0]
+            : ''
+            : '',
         });
       } else {
         this.showToast(strings.serverFailedMsg, 'danger');
@@ -355,8 +378,6 @@ class ProductDetails extends React.Component {
     const{allParameterData} = this.props
 
     let list = allParameterData && allParameterData.melting
-
-    console.warn("karatValue",karatValue);
     
     return (
       <View>
@@ -392,23 +413,24 @@ setSelectedValueKarat = karat => {
   };
 
 
-  PickerWeightDropDown = weight => {
+  PickerWeightDropDown = weightList => {
+
     return (
       <View>
         <Picker
-          iosIcon={
-            <Icon
-              name="arrow-down"
-              style={{marginRight: hp(4), fontSize: 22}}
-            />
-          }
+          iosIcon={ <Icon name="arrow-down" style={{marginRight: hp(4), fontSize: 22}}/>}
           mode="dropdown"
           style={{height: 50, width: wp(55)}}
-          selectedValue={weight}
-          onValueChange={(itemValue, itemIndex) =>
-            this.setSelectedValue(itemValue)
-          }>
-          <Picker.Item label={weight.toString()} value={parseInt(weight)} />
+          selectedValue={this.state.weight}
+          onValueChange={(itemValue, itemIndex) => this.setSelectedValue(itemValue)}>
+          {/* <Picker.Item label={weight.toString()} value={parseInt(weight)} /> */}
+          {weightList && weightList.length > 0 ? (
+            weightList.map((wt) => (
+              <Picker.Item label={(wt).toString()} value={parseInt(`${wt}`)} />
+              )))
+            : null
+          }
+
         </Picker>
       </View>
     );
@@ -475,7 +497,7 @@ setSelectedValueKarat = karat => {
       extrapolate: 'clamp',
     });
 
-    const {productDetailsStateData, weight} = this.state;
+    const {productDetailsStateData, weight,weightArray} = this.state;
 
     let url =
       urls.imageUrl +
@@ -719,8 +741,7 @@ setSelectedValueKarat = karat => {
                           </Text>
                         </View>
                         <View>
-                          {this.PickerWeightDropDown(weight)}
-                          {/* <PickerWeightDropDown weight={ weight} /> */}
+                          {this.PickerWeightDropDown(weightArray)}
                         </View>
                       </View>
 

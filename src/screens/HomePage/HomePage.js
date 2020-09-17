@@ -82,17 +82,19 @@ class HomePage extends Component {
   componentDidMount = async () => {
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    const data = new FormData();
-    data.append('user_id', userId);
-    data.append('image_type', type);
+    await this.getHomePage()
+    await this.getTotalCart()
+    // const data = new FormData();
+    // data.append('user_id', userId);
+    // data.append('image_type', type);
 
-    await this.props.getHomePageData(data);
+    // await this.props.getHomePageData(data);
 
-    const data2 = new FormData();
-    data2.append('user_id', userId);
-    data2.append('table', 'cart');
+    // const data2 = new FormData();
+    // data2.append('user_id', userId);
+    // data2.append('table', 'cart');
 
-    await this.props.getTotalCartCount(data2);
+    // await this.props.getTotalCartCount(data2);
 
     const data3 = new FormData();
     data3.append('user_id', userId);
@@ -213,13 +215,10 @@ class HomePage extends Component {
 
     const { finalCollection, productId } = this.state;
 
-    // if (prevProps.isFocused !== this.props.isFocused) {
-    //   const data4 = new FormData();
-    //   data4.append('user_id', userId);
-    //   data4.append('table', 'cart');
-
-    //   await this.props.getTotalCartCount(data4);
-    // }
+    if (prevProps.isFocused !== this.props.isFocused) {
+      await this.getHomePage()
+      await this.getTotalCart()
+    }
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
       if (homePageData && homePageData.final_collection) {
@@ -241,7 +240,6 @@ class HomePage extends Component {
     }
 
     if (this.state.errorHomePageVersion > prevState.errorHomePageVersion) {
-      // this.failedView()
       Toast.show({
         text:
           homePageData.length !== 0
@@ -263,7 +261,6 @@ class HomePage extends Component {
       if (addToWishlistData.ack === '1') {
         Toast.show({
           text: addToWishlistData && addToWishlistData.msg,
-          //type: 'warning',
           duration: 2500,
         });
       }
@@ -281,6 +278,10 @@ class HomePage extends Component {
           text: addToCartData ? addToCartData.msg : strings.serverFailedMsg,
           duration: 2500,
         });
+
+        await this.getHomePage()
+        await this.getTotalCart()
+
       }
     }
     if (this.state.errorAddToCartVersion > prevState.errorAddToCartVersion) {
@@ -297,24 +298,20 @@ class HomePage extends Component {
         var i;
         var dex;
         for (let m = 0; m < homePageData.final_collection.length; m++) {
-          // homePageData.final_collection[m].product_assign.map((p, c) => {
           Index = homePageData.final_collection[m].product_assign.findIndex(
             item => item.product_id == productId,
           );
           if (Index >= 0) {
             i = m;
-            // break;
             dex = Index;
           }
           // })
         }
         if (dex >= 0) {
-          // homePageData && homePageData.final_collection[i].product_assign.map((data, index) => {
           finalCollection[i].product_assign[dex].in_cart =
             this.props.addToCartPlusOneData.data !== null
               ? parseInt(this.props.addToCartPlusOneData.data.quantity)
               : undefined;
-          // })
 
           this.setState(
             { in_cart: finalCollection[i].product_assign[dex].in_cart },
@@ -325,9 +322,7 @@ class HomePage extends Component {
         }
 
         Toast.show({
-          text: addToCartPlusOneData
-            ? addToCartPlusOneData.msg
-            : strings.serverFailedMsg,
+          text: addToCartPlusOneData ? addToCartPlusOneData.msg : strings.serverFailedMsg,
           duration: 2500,
         });
       }
@@ -340,16 +335,29 @@ class HomePage extends Component {
       });
     }
 
-    if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
-
-    }
+  }
 
 
-    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+  getHomePage= async () => {
+    const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    }
+    const dt = new FormData();
+    dt.append('user_id', userId);
+    dt.append('image_type', type);
+
+    await this.props.getHomePageData(dt);
 
   }
+
+  getTotalCart = async () =>{
+    const ct = new FormData();
+    ct.append('user_id', userId);
+    ct.append('table', 'cart');
+
+    await this.props.getTotalCartCount(ct);
+
+  }
+
 
   failedView = () => {
     return (
@@ -505,13 +513,15 @@ class HomePage extends Component {
           <_Text
             numberOfLines={2}
             fsPrimary
-            style={{ textAlign: 'center', marginTop: hp(1), color: '#7e7e7e' }}>
+            style={{ ...Theme.ffLatoRegular13, color: '#000000' ,textAlign:'center'}}>
             {item.col_name}
           </_Text>
         </View>
       </TouchableOpacity>
     );
   };
+
+
 
   getProductDesigns = (item, index) => {
     const {
@@ -528,15 +538,16 @@ class HomePage extends Component {
     const { plusOnecartValue } = this.state;
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
 
+
     return (
-      <TouchableOpacity onPress={() => alert('inProgress')}>
-        {/* onPress={() => this.props.navigation.navigate('ProductDetails', { productItemDetails: item })}> */}
+      <TouchableOpacity 
+        onPress={() => this.props.navigation.navigate('ProductDetails', { productItemDetails: item, fromHome:true })}>
         <View style={{ height: hp('35') }}>
           <View style={horizontalLatestDesign}>
             <View style={latestDesign}>
               <TouchableOpacity
               style={{width:'100%',overflow:'hidden',borderTopLeftRadius:10,borderTopRightRadius:10}}
-                // onPress={() => this.props.navigation.navigate('ProductDetails', { productItemDetails: item })}
+                onPress={() => this.props.navigation.navigate('ProductDetails', { productItemDetails: item, fromHome:true })}
                 onLongPress={() => this.showImageModal(item)}>
                 <Image
                   style={latestImage}
@@ -569,7 +580,6 @@ class HomePage extends Component {
                   </_Text>
                 </View>
               </View>
-              {/* <View style={border}></View> */}
 
               <View style={latestTextView2}>
                 <View style={{ width: wp(14), marginLeft: 10 }}>
@@ -596,7 +606,6 @@ class HomePage extends Component {
                   </_Text>
                 </View>
               </View>
-              {/* <View style={border}></View> */}
 
               <View style={latestTextView2}>
                 <View style={{ width: wp(14), marginLeft: 10 }}>
@@ -625,18 +634,18 @@ class HomePage extends Component {
               </View>
               <View style={border}></View>
 
-              {/* {item.in_cart === 0 && */}
+              {item.in_cart == 0 &&
               <View style={iconView}>
-                <TouchableOpacity onPress={() => alert('inProgress')}>
-                  {/* onPress={() => this.addToWishlist(item)}> */}
+                <TouchableOpacity 
+                   onPress={() => this.addToWishlist(item)}> 
                   <Image
                     source={require('../../assets/image/BlueIcons/Green-Heart.png')}
                     style={{ height: hp(3), width: hp(3) }}
                     resizeMode="contain"
                   />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => alert('inProgress')}>
-                  {/* onPress={() => this.addToCart(item)}> */}
+                <TouchableOpacity
+                  onPress={() => this.addToCart(item)}>
                   <Image
                     source={require('../../assets/image/BlueIcons/Green-Cart.png')}
                     style={{ height: hp(3), width: hp(3) }}
@@ -644,13 +653,13 @@ class HomePage extends Component {
                   />
                 </TouchableOpacity>
               </View>
-              {/* } */}
+               } 
 
-              {/* {item.in_cart > 0 &&
+              {item.in_cart > 0 &&
                             <View style={iconView}>
                                 <TouchableOpacity
-                                    onPress={() => alert('inProgress')}>
-                                    onPress={() => this.removeFromCartByOne(item)}
+                                    onPress={() => alert('inProgress')}
+                                    onPress={() => this.removeFromCartByOne(item)}>
                                     <Image
                                         source={require('../../assets/image/BlueIcons/Minus.png')}
                                         style={{ height: hp(3.1), width: hp(3.1) }}
@@ -660,12 +669,12 @@ class HomePage extends Component {
                                 <_Text numberOfLines={1}
                                     textColor={color.brandColor}
                                     fsMedium fwHeading >
-                                    {item.in_cart}
+                                    {item.quantity >=1 ? item.quantity : item.in_cart}
                                 </_Text>
 
                                 <TouchableOpacity
-                                    onPress={() => alert('inProgress')}>
-                                    onPress={() => this.addToCartPlusOne(item)}
+                                    onPress={() => alert('inProgress')}
+                                    onPress={() => this.addToCartPlusOne(item)}>
                                     <Image
                                         source={require('../../assets/image/BlueIcons/Plus.png')}
                                         style={{ height: hp(3.1), width: hp(3.1) }}
@@ -673,7 +682,7 @@ class HomePage extends Component {
                                     />
                                 </TouchableOpacity>
                             </View>
-                        } */}
+                        } 
             </View>
           </View>
         </View>
@@ -706,11 +715,6 @@ class HomePage extends Component {
 
     await this.props.addToCart(cartData);
 
-    const data = new FormData();
-    data.append('user_id', userId);
-    data.append('image_type', type);
-
-    // await this.props.getHomePageData(data)
   };
 
   addToCartPlusOne = async item => {
@@ -727,12 +731,8 @@ class HomePage extends Component {
 
     await this.props.addRemoveFromCartByOne(cart);
 
-    // const data = new FormData();
-    // data.append('user_id', userId);
-    // data.append('image_type', type);
-
-    // await this.props.getHomePageData(data)
-
+    await this.getHomePage()
+    
     this.setState({
       productId: item.product_id,
     });
@@ -751,12 +751,7 @@ class HomePage extends Component {
     cart1.append('plus', 0);
 
     await this.props.addRemoveFromCartByOne(cart1);
-
-    // const data = new FormData();
-    // data.append('user_id', userId);
-    // data.append('image_type', type);
-
-    // await this.props.getHomePageData(data)
+    await this.getHomePage()
 
     this.setState({
       productId: item.product_id,
@@ -807,17 +802,9 @@ class HomePage extends Component {
   onRefresh = async () => {
     const type = Platform.OS === 'ios' ? 'ios' : 'android';
 
-    const refreshData = new FormData();
-    refreshData.append('user_id', userId);
-    refreshData.append('image_type', type);
-
-    await this.props.getHomePageData(refreshData);
-
-    const data3 = new FormData();
-    data3.append('user_id', userId);
-    data3.append('table', 'cart');
-
-    await this.props.getTotalCartCount(data3);
+    await this.getHomePage()
+    await this.getTotalCart()
+    
   };
 
   render() {

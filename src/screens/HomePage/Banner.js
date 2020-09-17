@@ -53,17 +53,11 @@ export default class Banner extends Component {
 
 
 
-                <View style={{ marginTop:hp(8), }}>
-                    {/* <Image
-                        source={{ uri: baseUrl + bannerData.brand_image }}
-                        style={{ height: hp(35), width: wp(100) }}
-                        resizeMode='stretch'
-                    /> */}
+                <View style={{ marginTop:hp(12) }}>
+                    
                       <FastImage
-                        style={{ height: hp(35), width: wp(100) }}
-                        source={{ uri: baseUrl + bannerData.brand_image,
-                            // cache: FastImage.cacheControl.cacheOnly,
-                        }}
+                        style={{ height: hp(40), width: wp(100) }}
+                        source={{ uri: baseUrl + bannerData.brand_image}}
                         resizeMode={FastImage.resizeMode.stretch}
                     />
                 </View>

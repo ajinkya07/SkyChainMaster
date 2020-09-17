@@ -97,6 +97,7 @@ class ProductGrid extends Component {
       successProductAddToCartPlusOneVersion: 0,
       errorProductAddToCartPlusOneVersion: 0,
       productInventoryId: '',
+      productInventoryId2:'',
       isGrossWtSelected: true,
       successTotalCartCountVersion: 0,
       errorTotalCartCountVersion: 0,
@@ -399,45 +400,72 @@ class ProductGrid extends Component {
 
     if ( this.state.successAddProductToCartVersion > prevState.successAddProductToCartVersion ) {
       if (addProductToCartData.ack === '1') {
-
-        if (categoryData && !fromExclusive) {
-        const data2 = new FormData();
-        data2.append('table', 'product_master');
-        data2.append('mode_type', 'normal');
-        data2.append('collection_id', categoryData.id);
-        data2.append('user_id', userId);
-        data2.append('record', 10);
-        // data2.append('page_no', page);
-        data2.append('page_no', 0);
-        data2.append('sort_by', selectedSortById);
-
-        await this.props.getProductSubCategoryData(data2);
-
-        this.setState({page:0, isSelectPressed:false, selectedProducts:[]})
-        selectedProductIds = []
-      }
-
-        if (categoryData && fromExclusive) {
-          const excl2 = new FormData();
-          excl2.append('table', 'product_master');
-          excl2.append('mode_type', 'my_collection');
-          excl2.append('collection_id', 0);
-          excl2.append('user_id', userId);
-          excl2.append('record', 10);
-        //  excl2.append('page_no', page);
-          excl2.append('page_no', 0);
-          excl2.append('sort_by', '2');
-          excl2.append('my_collection_id', categoryData.id);
-    
-          this.props.getProductSubCategoryData(excl2);
-          this.setState({page:0, isSelectPressed:false, selectedProducts:[]})
-          selectedProductIds = []
+          var dex = this.state.gridData.findIndex(
+            item => item.product_inventory_id == this.state.productInventoryId2,
+          );
+  
+          if (dex !== -1) {
+            if (addProductToCartData.data && addProductToCartData.data.quantity !== null) {
+              this.state.gridData[dex].quantity = parseInt(addProductToCartData.data.quantity);
+  
+              this.setState({quantity: addProductToCartData.data.quantity},
+                () => {
+                  console.log(JSON.stringify(this.state.gridData));
+                },
+              );
+            } else if (addProductToCartData.data == null) {
+              this.state.gridData[dex].quantity = parseInt(0);
+              this.setState({quantity: '0'},
+                () => {
+                  console.log(JSON.stringify(this.state.gridData));
+                },
+              );
+            }
         }
-        
+
+
+
+        // if (categoryData && !fromExclusive) {
+        //   const data2 = new FormData();
+        //   data2.append('table', 'product_master');
+        //   data2.append('mode_type', 'normal');
+        //   data2.append('collection_id', categoryData.id);
+        //   data2.append('user_id', userId);
+        //   data2.append('record', 10);
+        //   data2.append('page_no', page);
+        //   // data2.append('page_no', 0);
+        //   data2.append('sort_by', selectedSortById);
+
+        //   await this.props.getProductSubCategoryData(data2);
+
+        //   this.setState({ isSelectPressed: false, selectedProducts: [] })
+        //   selectedProductIds = []
+        // }
+
+        // if (categoryData && fromExclusive) {
+        //   const excl2 = new FormData();
+        //   excl2.append('table', 'product_master');
+        //   excl2.append('mode_type', 'my_collection');
+        //   excl2.append('collection_id', 0);
+        //   excl2.append('user_id', userId);
+        //   excl2.append('record', 10);
+        //   //  excl2.append('page_no', page);
+        //   excl2.append('page_no', 0);
+        //   excl2.append('sort_by', '2');
+        //   excl2.append('my_collection_id', categoryData.id);
+
+        //   this.props.getProductSubCategoryData(excl2);
+        //   this.setState({ page: 0, isSelectPressed: false, selectedProducts: [] })
+        //   selectedProductIds = []
+        // }
+
         Toast.show({
           text: addProductToCartData && addProductToCartData.msg,
           duration: 2500,
         });
+          this.setState({ isSelectPressed: false, selectedProducts: [] })
+          selectedProductIds = []
+
       }
     }
     if (this.state.errorAddProductToCartVersion > prevState.errorAddProductToCartVersion ) {
@@ -453,33 +481,24 @@ class ProductGrid extends Component {
         // var Index = _.findIndex(this.state.gridData, {
         //     product_inventory_id: parseInt(this.state.productInventoryId),
         // });
-
         var Index = this.state.gridData.findIndex(
           item => item.product_inventory_id == this.state.productInventoryId,
         );
 
         if (Index !== -1) {
-          if (
-            productAddToCartPlusOneData.data &&
-            productAddToCartPlusOneData.data.quantity !== null
-          ) {
+          if (productAddToCartPlusOneData.data && productAddToCartPlusOneData.data.quantity !== null) {
             this.state.gridData[Index].quantity = parseInt(
               productAddToCartPlusOneData.data.quantity,
             );
 
-            this.setState({
-                quantity: productAddToCartPlusOneData.data.quantity,
-              },
+            this.setState({quantity: productAddToCartPlusOneData.data.quantity},
               () => {
                 console.log(JSON.stringify(this.state.gridData));
               },
             );
           } else if (productAddToCartPlusOneData.data == null) {
             this.state.gridData[Index].quantity = parseInt(0);
-            this.setState(
-              {
-                quantity: '0',
-              },
+            this.setState({quantity: '0'},
               () => {
                 console.log(JSON.stringify(this.state.gridData));
               },
@@ -501,10 +520,7 @@ class ProductGrid extends Component {
       });
     }
 
-    if (
-      this.state.successTotalCartCountVersion >
-      prevState.successTotalCartCountVersion
-    ) {
+    if (this.state.successTotalCartCountVersion > prevState.successTotalCartCountVersion) {
       global.totalCartCount = totalCartCountData.count;
     }
   }
@@ -542,7 +558,6 @@ class ProductGrid extends Component {
 
     const { isSelectPressed, selectedItem,selectedProducts} = this.state
 
-
     
     return (
       <TouchableOpacity
@@ -569,7 +584,6 @@ class ProductGrid extends Component {
             <TouchableOpacity
               onPress={() => isSelectPressed ? item.quantity > 0 ? this.showAlreadyToast() : this.selectProduct(item, item.product_inventory_id): 
                 this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
-
                onLongPress={() => this.showProductImageModal(item)}>
               <Image
                 resizeMode={'cover'}
@@ -615,7 +629,6 @@ class ProductGrid extends Component {
                 </_Text>
               </View>
             </View>
-            {/* <View style={border}></View> */}
 
             <View style={latestTextView2}>
               <View style={{ marginLeft: 5 }}>
@@ -710,7 +723,7 @@ class ProductGrid extends Component {
                   textColor={color.brandColor}
                   fsMedium
                   fwHeading>
-                  {item.quantity > 1 ? item.quantity : item.in_cart}
+                  {item.quantity >=1 ? item.quantity : item.in_cart}
                 </_Text>
 
                 <TouchableOpacity
@@ -760,13 +773,7 @@ class ProductGrid extends Component {
 
 
   selectProduct = (data, id) => {
-
     const { selectedItem, selectedProducts, gridData } = this.state
-
-    console.warn("id===", id);
-    console.warn("data", data);
-    console.warn("gridData", gridData.length);
-
 
     const index = this.state.gridData.findIndex(
       item => data.product_inventory_id == item.product_inventory_id
@@ -828,16 +835,6 @@ showAlreadyToast = () =>{
 
     await this.props.addProductToWishlist(wishlistData);
 
-    // const data1 = new FormData();
-    // data1.append('table', 'product_master');
-    // data1.append('mode_type', 'normal');
-    // data1.append('collection_id', categoryData.id);
-    // data1.append('user_id', userId);
-    // data1.append('record', 10);
-    // data1.append('page_no', page);
-    // data1.append('sort_by', selectedSortById);
-
-    // await this.props.getProductSubCategoryData(data1);
   };
 
 
@@ -887,6 +884,10 @@ showAlreadyToast = () =>{
     countData.append('table', 'cart');
 
     await this.props.getTotalCartCount(countData);
+
+    this.setState({
+      productInventoryId2: item.product_inventory_id,
+    });
   };
 
   addSelectedProductCart = async() =>{
@@ -894,8 +895,6 @@ showAlreadyToast = () =>{
     let ctData = new FormData();
     if(selectedProductIds.length > 0){
     for (let j = 0; j < selectedProductIds.length; j++) {
-
-      console.warn("selectedProductIds jj ",selectedProductIds[j]);
       ctData.append('product_id', selectedProductIds[j]);
       ctData.append('user_id', userId);
       ctData.append('cart_wish_table', 'cart');
@@ -910,6 +909,11 @@ showAlreadyToast = () =>{
     cd.append('table', 'cart');
 
     await this.props.getTotalCartCount(cd);
+
+    
+    this.setState({
+      productInventoryId2: item.product_inventory_id,
+    });
   }
   else if(selectedProductIds.length <= 0){
     Toast.show({
@@ -937,17 +941,6 @@ showAlreadyToast = () =>{
     cart.append('plus', 1);
 
     await this.props.addRemoveProductFromCartByOne(cart);
-
-    // const data3 = new FormData();
-    // data3.append('table', 'product_master');
-    // data3.append('mode_type', 'normal');
-    // data3.append('collection_id', categoryData.id);
-    // data3.append('user_id', userId);
-    // data3.append('record', 10);
-    // data3.append('page_no', page);
-    // data3.append('sort_by', selectedSortById);
-
-    // await this.props.getProductSubCategoryData(data3)
 
     this.setState({
       productInventoryId: item.product_inventory_id,
@@ -977,17 +970,6 @@ showAlreadyToast = () =>{
 
       await this.props.getTotalCartCount(countData1);
     }
-
-    // const data4 = new FormData();
-    // data4.append('table', 'product_master');
-    // data4.append('mode_type', 'normal');
-    // data4.append('collection_id', categoryData.id);
-    // data4.append('user_id', userId);
-    // data4.append('record', 10);
-    // data4.append('page_no', page);
-    // data4.append('sort_by', selectedSortById);
-
-    // await this.props.getProductSubCategoryData(data4)
 
     this.setState({
       productInventoryId: item.product_inventory_id,
@@ -1034,8 +1016,6 @@ showAlreadyToast = () =>{
   setSortBy = item => {
     const { categoryData, page } = this.state;
 
-    // this.closeSortByModal()
-
     const data = new FormData();
     data.append('table', 'product_master');
     data.append('mode_type', 'normal');
@@ -1076,24 +1056,39 @@ showAlreadyToast = () =>{
   };
 
   LoadRandomData = () => {
-    const { categoryData, page } = this.state;
+    const { categoryData, page, fromExclusive } = this.state;
     const { allParameterData } = this.props;
 
 
     let accessCheck = allParameterData && allParameterData.access_check
-
     
     if (accessCheck == '1') {
-      const data = new FormData();
-      data.append('table', 'product_master');
-      data.append('mode_type', 'normal');
-      data.append('collection_id', categoryData.id);
-      data.append('user_id', userId);
-      data.append('record', 10);
-      data.append('page_no', page);
-      data.append('sort_by', '2');
+      if (categoryData && !fromExclusive) {
+        const data = new FormData();
+        data.append('table', 'product_master');
+        data.append('mode_type', 'normal');
+        data.append('collection_id', categoryData.id);
+        data.append('user_id', userId);
+        data.append('record', 10);
+        data.append('page_no', page);
+        data.append('sort_by', '2');
 
-      this.props.getProductSubCategoryData(data);
+        this.props.getProductSubCategoryData(data);
+      }
+      if (categoryData && fromExclusive) {
+        const excl3 = new FormData();
+        excl3.append('table', 'product_master');
+        excl3.append('mode_type', 'my_collection');
+        excl3.append('collection_id', 0);
+        excl3.append('user_id', userId);
+        excl3.append('record', 10);
+        excl3.append('page_no', page);
+        excl3.append('sort_by', '2');
+        excl3.append('my_collection_id', categoryData.id);
+
+        this.props.getProductSubCategoryData(excl3);
+
+      }
     }
     else{
       alert('Your access to full category has been expired. Please contact administrator to get access.')
@@ -1271,8 +1266,6 @@ showAlreadyToast = () =>{
     } = this.state;
 
     const { sortByParamsData, filterParamsData , allParameterData} = this.props;
-
-    console.warn("selectedProductIds",selectedProductIds);
 
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
   
