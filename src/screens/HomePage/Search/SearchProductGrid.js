@@ -234,29 +234,39 @@ class SearchProductGrid extends Component {
     if (this.state.successAddProductToCartVersion > prevState.successAddProductToCartVersion ) {
       if (addProductToCartData.ack === '1') {
 
-        let id = gridData && gridData[0].collection_id
-    
-        const data2 = new FormData();
-        data2.append('table', 'product_master');
-        data2.append('mode_type', 'normal');
-        data2.append('collection_id', id);
-        data2.append('user_id', userId);
-        data2.append('record', 10);
-        // data2.append('page_no', page);
-         data2.append('page_no', 0);
-
-        data2.append('sort_by', selectedSortById);
-
-        await this.props.getProductSubCategoryData(data2);
-        this.setState({page:0})
-
+       // let id = gridData && gridData[0].collection_id
+          var dex = this.state.gridData.findIndex(
+            item => item.product_inventory_id == this.state.productInventoryId2,
+          );
+  
+          if (dex !== -1) {
+            if (addProductToCartData.data && addProductToCartData.data.quantity !== null) {
+              this.state.gridData[dex].quantity = parseInt(addProductToCartData.data.quantity);
+  
+              this.setState({quantity: addProductToCartData.data.quantity},
+                () => {
+                  console.log(JSON.stringify(this.state.gridData));
+                },
+              );
+            } else if (addProductToCartData.data == null) {
+              this.state.gridData[dex].quantity = parseInt(0);
+              this.setState({quantity: '0'},
+                () => {
+                  console.log(JSON.stringify(this.state.gridData));
+                },
+              );
+            }
 
         Toast.show({
           text: addProductToCartData && addProductToCartData.msg,
           duration: 2500,
         });
+
+      }
       }
     }
+
+
     if ( this.state.errorAddProductToCartVersion > prevState.errorAddProductToCartVersion) {
       Toast.show({
         text: addProductToCartData && addProductToCartData.msg,
@@ -278,10 +288,7 @@ class SearchProductGrid extends Component {
               productAddToCartPlusOneData.data.quantity,
             );
 
-            this.setState(
-              {
-                quantity: productAddToCartPlusOneData.data.quantity,
-              },
+            this.setState({quantity: productAddToCartPlusOneData.data.quantity},
               () => {
                 console.log(JSON.stringify(this.state.gridData));
               },
@@ -354,9 +361,7 @@ class SearchProductGrid extends Component {
 
     return (
       <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})
-        }>
+        onPress={() => this.props.navigation.navigate('ProductDetails', {productItemDetails: item,}) }>
         <View
           style={{
             backgroundColor: color.white,
@@ -514,7 +519,7 @@ class SearchProductGrid extends Component {
                   textColor={color.brandColor}
                   fsMedium
                   fwHeading>
-                  {item.quantity > 1 ? item.quantity : item.in_cart}
+                  {item.quantity >= 1 ? item.quantity : item.in_cart}
                 </_Text>
 
                 <TouchableOpacity
@@ -548,16 +553,16 @@ class SearchProductGrid extends Component {
 
     await this.props.addProductToWishlist(wishlistData);
 
-    const data1 = new FormData();
-    data1.append('table', 'product_master');
-    data1.append('mode_type', 'normal');
-    data1.append('collection_id', id);
-    data1.append('user_id', userId);
-    data1.append('record', 10);
-    data1.append('page_no', page);
-    data1.append('sort_by', selectedSortById);
+  //   const data1 = new FormData();
+  //   data1.append('table', 'product_master');
+  //   data1.append('mode_type', 'normal');
+  //   data1.append('collection_id', id);
+  //   data1.append('user_id', userId);
+  //   data1.append('record', 10);
+  //   data1.append('page_no', page);
+  //   data1.append('sort_by', selectedSortById);
 
-   await this.props.getProductSubCategoryData(data1);
+  //  await this.props.getProductSubCategoryData(data1);
   };
 
   addProductToCart = async item => {
@@ -580,7 +585,12 @@ class SearchProductGrid extends Component {
     countData.append('table', 'cart');
 
     await this.props.getTotalCartCount(countData);
+
+    this.setState({
+      productInventoryId2: item.product_inventory_id,
+    });
   };
+
 
   addProductToCartPlusOne = async item => {
     const { page, selectedSortById} = this.state;

@@ -468,6 +468,7 @@ class ProductGrid extends Component {
 
       }
     }
+    
     if (this.state.errorAddProductToCartVersion > prevState.errorAddProductToCartVersion ) {
       Toast.show({
         text: addProductToCartData && addProductToCartData.msg,
@@ -911,17 +912,16 @@ showAlreadyToast = () =>{
     await this.props.getTotalCartCount(cd);
 
     
-    this.setState({
-      productInventoryId2: item.product_inventory_id,
-    });
-  }
-  else if(selectedProductIds.length <= 0){
-    Toast.show({
-      text:'Please select product',
-      duration:2000
-
-    })
-  }
+      this.setState({
+        productInventoryId2: item.product_inventory_id,
+      });
+    }
+    else if (selectedProductIds.length <= 0) {
+      Toast.show({
+        text: 'Please select product',
+        duration: 2000
+      })
+    }
 
   }
 
