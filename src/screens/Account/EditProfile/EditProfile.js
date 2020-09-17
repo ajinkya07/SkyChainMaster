@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   TextInput,FlatList,
   Dimensions,
-  Platform,
+  Platform,ActivityIndicator
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -28,6 +28,7 @@ import { getProfile ,getStateList, getCityList, updateUserProfile} from '@editPr
 import { connect } from 'react-redux'
 import { allParameters } from '@homepage/HomePageAction';
 import { strings } from '@values/strings'
+import Theme from '../../../values/Theme';
 
 
 
@@ -49,12 +50,16 @@ class EditProfile extends Component {
       anniversaryDate: '',
 
       countryData: [],
+      clonecountryData: [],
+
       isCountryModalVisible: false,
       isStateModalVisible: false,
       isCityModalVisible: false,
 
       stateData: [],
+      cloneStateData:[],
       cityData:[],
+      cloneCityData:[],
 
       successGetProfileVersion: 0,
       errorGetProfileVersion: 0,
@@ -78,7 +83,9 @@ class EditProfile extends Component {
 
       enteredCountry:'',
       enteredState:'',
-      enteredCity:''
+      enteredCity:'',
+
+      isFirstTime:true
 
     };
     userId = global.userId;
@@ -184,10 +191,13 @@ class EditProfile extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    const { getProfileData, allParameterData, stateList,cityList,updateProfileData } = this.props;
+    const { getProfileData, allParameterData, stateList, cityList, updateProfileData } = this.props;
+    const { isFirstTime } = this.state
 
-
+    
     if (this.state.successGetProfileVersion > prevState.successGetProfileVersion) {
+
+
       this.setState({
         name: getProfileData.data.full_name ? getProfileData.data.full_name : '',
         email: getProfileData.data.email_id ? getProfileData.data.email_id : '',
@@ -212,13 +222,8 @@ class EditProfile extends Component {
         countryData: allParameterData.country_data,
         selectedCountryId:getProfileData.data.country_id,
         selectedCountry:c[0].name,
-
       })
-
-  
     }
-
-
     if (this.state.errorGetProfileVersion > prevState.errorGetProfileVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
@@ -231,16 +236,13 @@ class EditProfile extends Component {
     }
 
     if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
-
       this.setState({
         countryData: allParameterData.country_data,
       })
     }
-    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
-
-    }
     if (this.state.successGetStateListVersion > prevState.successGetStateListVersion) {
 
+      if(isFirstTime){
       let st = stateList.states.filter(i => i.id == getProfileData.data.state_id  )
      
       const ct = new FormData()
@@ -254,15 +256,29 @@ class EditProfile extends Component {
         selectedState:st[0].name,
       })
     }
-    if (this.state.successGetCityListVersion > prevState.successGetCityListVersion) {
-      let abc = cityList.cities.filter(i => i.id == getProfileData.data.city_id  )
-
-
+    else if(!isFirstTime){
       this.setState({
-        cityData: cityList.cities,
-        selectedCity:abc[0].name,
-        selectedCityId:getProfileData.data.city_id
+        stateData: stateList.states,
       })
+    }
+
+    }
+    if (this.state.successGetCityListVersion > prevState.successGetCityListVersion) {
+
+      if (isFirstTime) {
+        let abc = cityList.cities.filter(i => i.id == getProfileData.data.city_id)
+
+        this.setState({
+          cityData: cityList.cities,
+          selectedCity: abc[0].name,
+          selectedCityId: getProfileData.data.city_id
+        })
+      }
+      else if (!isFirstTime) {
+        this.setState({
+          cityData: cityList.cities,
+        })
+      }
     }
 
   }
@@ -378,7 +394,10 @@ class EditProfile extends Component {
     s.append('country_id', index)
     this.props.getStateList(s)
 
-    this.setState({ isCountryModalVisible: false, selectedCountry: name,selectedCountryId:id })
+    this.setState({ isCountryModalVisible: false,
+      selectedState:'Select state',selectedStateId:'',
+      selectedCity:'Select city',selectedCityId:'',
+      selectedCountry: name,selectedCountryId:id, isFirstTime:false })
 
   }
 
@@ -394,7 +413,9 @@ class EditProfile extends Component {
     c.append('state_id', index)
     this.props.getCityList(c)
 
-    this.setState({ isStateModalVisible: false,selectedState:stateName, selectedStateId:stateId })
+    this.setState({ isStateModalVisible: false,
+      selectedCity:'Select city',selectedCityId:'',
+      selectedState:stateName, selectedStateId:stateId , isFirstTime:false})
   }
 
   setSelecedCity = (index) => {
@@ -409,13 +430,14 @@ class EditProfile extends Component {
   }
 
 
-  updateProfile = () =>{
+  updateProfile = async () =>{
     const {
       name,email,mobileNo,
       designation,companyName, panNo,gstNo,pinCode,
       dobSelected,anniversaryDate,
       selectedCountryId,selectedStateId ,selectedCityId} = this.state
 
+      if(selectedStateId != '' && selectedCityId !=''){
       const updateData = new FormData()
 
       updateData.append('user_id',userId)
@@ -433,45 +455,89 @@ class EditProfile extends Component {
       updateData.append('city_id',selectedCityId)
       updateData.append('pincode',pinCode)
 
-        this.props.updateUserProfile(updateData)
+       await this.props.updateUserProfile(updateData)
+      }
+      else if(selectedStateId == ''){
+        Toast.show({
+          text:'Please select state'
+        })
+      }
 
+      else if(selectedCityId == ''){
+        Toast.show({
+          text:'Please select city'
+        })
+      }
   }
 
 
   searchCountry = (s)=>{
-    const{countryData} = this.state
+    // this.setState({enteredCountry: s});
 
-   // let searchedCountry = countryData.filter(item => item.name.includes(s))
-    this.setState({
-      enteredCountry:s
-    })
+    let filteredData = this.state.countryData.filter(function(item) {
+      return item.name.includes(s);
+    });
+
+    this.setState({clonecountryData: filteredData,enteredCountry:s });
   }
 
   
   searchCity = (c)=>{
-    const{countryData} = this.state
 
-   // let searchedCountry = countryData.filter(item => item.name.includes(c))
-    this.setState({
-      enteredCity:c
-    })
+    let filteredCity = this.state.cityData.filter(function(item) {
+      return item.name.includes(c);
+    });
+
+    this.setState({cloneCityData: filteredCity,enteredCity:c });
   }
 
   
   searchState = (s)=>{
-    const{countryData} = this.state
 
-   // let searchedCountry = countryData.filter(item => item.name.includes(s))
-    this.setState({
-      enteredState:s
-    })
+    let filteredState = this.state.stateData.filter(function(item) {
+      return item.name.includes(s);
+    });
+
+    this.setState({cloneStateData: filteredState,enteredState:s });
   }
+
+  renderEmptyContainer = () => {
+    return (
+      <View>
+        <Text
+          style={{
+            ...Theme.ffLatoRegular16,
+            color: '#303030',
+            letterSpacing: 1,
+            textAlign:'center',
+            marginVertical:10
+          }}>
+          No data found!
+        </Text>
+      </View>
+    );
+  };
+
+
+  renderLoader = () => {
+    return (
+      <View style={{ position: 'absolute',
+      height: hp(100),
+      width: wp(100),
+      alignItems: 'center',
+      justifyContent: 'center',}}>
+        <ActivityIndicator size="large" color={'#0d185c'} />
+      </View>
+    );
+  };
+
+
 
   render() {
 
     const{allParameterData} = this.props
     const{countryData, selectedCountry, selectedState, selectedCity,
-    enteredCity,enteredCountry,enteredState
+    enteredCity,enteredCountry,enteredState , stateData, cityData
     } = this.state
 
     return (
@@ -668,7 +734,7 @@ class EditProfile extends Component {
                   <View
                     style={{
                       marginHorizontal: 20,
-                      marginTop: hp(4),
+                      marginTop: hp(3),
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
@@ -689,7 +755,7 @@ class EditProfile extends Component {
                   <View
                     style={{
                       marginHorizontal: 20,
-                      marginTop: hp(4),
+                      marginTop: hp(3),
                       flexDirection: 'row',
                       justifyContent: 'space-between',
                     }}>
@@ -762,7 +828,9 @@ class EditProfile extends Component {
 
                   {this.state.countryData && this.state.countryData.length > 0 &&
                     <FlatList
-                      data={countryData}
+                      data={ this.state.enteredCountry.length
+                        ? this.state.clonecountryData
+                        : countryData}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => (
                         <TouchableOpacity 
@@ -782,6 +850,8 @@ class EditProfile extends Component {
                         </TouchableOpacity>
 
                       )}
+                      ListEmptyComponent={this.renderEmptyContainer()}
+
                     />
                   }
                   <View
@@ -810,7 +880,7 @@ class EditProfile extends Component {
             isVisible={this.state.isStateModalVisible}
             transparent={true}
             onRequestClose={() => this.setState({ isStateModalVisible: false })}
-            style={{}}>
+          >
             <View style={{ backgroundColor: '#ffffff', paddingHorizontal: 20, marginVertical: hp(11) }}>
               <TouchableWithoutFeedback
                 style={{ flex: 1 }}
@@ -861,7 +931,9 @@ class EditProfile extends Component {
 
                   {this.state.stateData && this.state.stateData.length > 0 &&
                     <FlatList
-                      data={this.state.stateData && this.state.stateData}
+                      data={ this.state.enteredState.length
+                        ? this.state.cloneStateData
+                        : stateData}
                       keyExtractor={item => item.id}
                       renderItem={({ item, index }) => (
                         <TouchableOpacity onPress={() => this.setSelecedState(item.id)}>
@@ -878,8 +950,8 @@ class EditProfile extends Component {
                             </Text>
                           </View>
                         </TouchableOpacity>
-
                       )}
+                      ListEmptyComponent={this.renderEmptyContainer()}
                     />
                   }
 
@@ -959,10 +1031,12 @@ class EditProfile extends Component {
                       
                     </View>
                   </View>
-                  
+
                   {this.state.cityData && this.state.cityData.length > 0 &&
-                  <FlatList
-                    data={this.state.cityData && this.state.cityData}
+                    <FlatList
+                      data={this.state.enteredCity.length
+                        ? this.state.cloneCityData
+                        : cityData}
                     keyExtractor={item => item.id}
                     renderItem={({ item, index }) => (
                       <TouchableOpacity onPress={() => this.setSelecedCity(item.id)}>
@@ -980,6 +1054,7 @@ class EditProfile extends Component {
                       </View>
                     </TouchableOpacity>
                     )}
+                    ListEmptyComponent={this.renderEmptyContainer()}
                     />
                   }
 
@@ -1002,6 +1077,9 @@ class EditProfile extends Component {
               </TouchableWithoutFeedback>
             </View>
           </Modal> 
+
+
+          {this.props.isFetching && this.renderLoader()}
 
         </>
       </SafeAreaView>
