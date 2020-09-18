@@ -561,11 +561,12 @@ const actionButtonRoundedStyle = StyleSheet.create({
   },
   titleStyle: {
     color: '#ffffff',
-    fontSize: hp(1.8),
+    fontSize: hp(2),
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
     fontFamily: 'Lato-Regular',
+    fontWeight: 'bold',
     letterSpacing: 1.3,
   },
 });

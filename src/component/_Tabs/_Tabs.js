@@ -69,11 +69,9 @@ class Container extends React.Component {
     //      {cancelable: false,},
     // );
     if (backPressed > 0) {
-      console.warn('backPressed > 0');
       BackHandler.exitApp();
       backPressed = 0;
     } else {
-      console.warn('backPressed 0');
       backPressed++;
       ToastAndroid.show('Press again to close app', ToastAndroid.SHORT);
       setTimeout(() => {

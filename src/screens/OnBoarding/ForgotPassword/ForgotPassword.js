@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
   },
   loaderView: {
     position: 'absolute',
-    height: hp(100),
+    height: hp(80),
     width: wp(100),
     alignItems: 'center',
     justifyContent: 'center',
@@ -360,11 +360,11 @@ const actionButtonRoundedStyle = StyleSheet.create({
   },
   titleStyle: {
     color: '#ffffff',
-    fontSize: hp(1.8),
+    fontSize: hp(2),
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    //fontWeight: '400',
+    fontWeight: 'bold',
     fontFamily: 'Lato-Regular',
     letterSpacing: 1.3,
   },

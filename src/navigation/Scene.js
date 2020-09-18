@@ -42,10 +42,10 @@ class Scene extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoginValue: '',
+      isLoginValue: false,
+      isInside:true,
       successAllParameterVersion: 0,
       errorAllParamaterVersion: 0,
-
     };
   }
 
@@ -68,12 +68,13 @@ class Scene extends React.Component {
         await this.props.allParameters(data)
     
       } else {
-        this.setState({ isLoginValue: false });
+        this.setState({ isLoginValue: false , isInside:false});
       }
     } else {
-      this.setState({ isLoginValue: false });
+      this.setState({ isLoginValue: false , isInside:false});
     }
   }
+
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { successAllParameterVersion, errorAllParamaterVersion } = nextProps;
@@ -98,19 +99,27 @@ class Scene extends React.Component {
 
 async componentDidUpdate(prevProps, prevState) {
     const { allParameterData } = this.props;
+    const { isLoginValue } = this.state;
 
-    if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
-      // if(allParameterData && allParameterData.user_status !== 'active'){
-      //   this.setState({ isLoginValue: '' });
-      // }
-    }
 
-    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
-        Toast.show({
-            text: this.props.errorMsg,
-            duration: 2500,
-        });
+  if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+   
+    const stat = allParameterData && allParameterData.user_status
+   
+    if(stat != 'active'){
+      this.setState({
+        isLoginValue:false,
+        isInside:false
+      })
     }
+  }
+
+  if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+    Toast.show({
+      text: this.props.errorMsg,
+      duration: 2500,
+    });
+  }
 }
 
 
@@ -274,19 +283,40 @@ async componentDidUpdate(prevProps, prevState) {
     );
   }
 
+  goToWhere = () => {
+    const { isLoginValue,isInside } = this.state;
+    const { allParameterData } = this.props;
+
+    const s = allParameterData && allParameterData.user_status
+
+    if(s == 'active' && isLoginValue == true){
+     return  this.getHomeScene()
+    }
+    else if(isLoginValue == false && s !='active'){
+    return  this.getLoginScene()
+    }
+    else if(isLoginValue == false && !isInside){
+      return  this.getLoginScene()
+    }
+  }
+
+  showToast = () =>{
+    Toast.show({
+      text:'your status is inactive. Kindly contact admin to activate',
+      duration:2500
+    })
+  }
+
+
   render() {
-    const { isLoginValue } = this.state;
+    const { isLoginValue , status} = this.state;
     const { allParameterData } = this.props;
     
     return (
       <NavigationContainer>
-        {isLoginValue !== ''
-          ? isLoginValue === true
-            ? this.getHomeScene()
-            : this.getLoginScene()
-          : null}
-        {/* {this.getLoginScene()} */}
 
+     {/* {isLoginValue !== '' && status == 'active' ? isLoginValue === true  ? this.getHomeScene() : this.getLoginScene() : this.getLoginScene()} */}
+      {this.goToWhere()}
       </NavigationContainer>
     );
   }

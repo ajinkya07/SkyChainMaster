@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { afterOtpRequest, sendOtpRequest } from "@forgotPassword/ForgotAction";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { color } from '@values/colors';
+import IconPack from '@login/IconPack';
 
 
 const { width, height } = Dimensions.get('window');
@@ -186,7 +187,7 @@ class VerifyOtp extends React.Component {
 
     return (
       <Container style={styles.containerStyle}>
-        <ImageBackground source={require('../../../assets/image/BGGradient.png')}
+        <ImageBackground source={IconPack.LOGIN_BG}
           style={styles.bgImage}>
           <Header style={styles.headerStyle}>
             <Left>
@@ -227,7 +228,10 @@ class VerifyOtp extends React.Component {
               </View>
               <TouchableOpacity onPress={() => this.resendOtp()}>
                 <Text
-                  style={{ color: '#ffffff', fontSize: hp(2.2), fontWeight: 'bold' }}>
+                  style={{ color: '#ffffff', fontSize: hp(2), fontWeight: 'bold',
+                  fontFamily: 'Lato-Regular',
+                  letterSpacing: 1.3,
+                  }}>
                   RESEND CODE
                 </Text>
               </TouchableOpacity>
@@ -270,7 +274,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   titleStyle: {
-    color: '#fbcb84',
+    color: '#FFFFFF',
     fontSize: hp(3.5),
     marginTop: hRem * 160,
   },
@@ -303,7 +307,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   loaderView: {
-    position: 'absolute', height: hp(100), width: wp(100),
+    position: 'absolute', height: hp(80), width: wp(100),
     alignItems: 'center', justifyContent: 'center'
   },
 });

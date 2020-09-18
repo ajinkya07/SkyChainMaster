@@ -14,10 +14,11 @@ const store = configureStore();
 
 class App extends React.Component {
   componentDidMount =async () => {
-    // console.disableYellowBox = true;
+    console.disableYellowBox = true;
      SplashScreen.hide()
 
     //  await this.checkPermission();
+
     // this.createNotificationListeners();
     // firebase.notifications().setBadge(0)
     // firebase.notifications().removeAllDeliveredNotifications()
@@ -52,24 +53,24 @@ class App extends React.Component {
   //   }
   // }
 
-  // messageListener = async () => {
-  //   this.notificationListener = firebase.notifications().onNotification((notification) => {
-  //     const { title, body } = notification;
-  //   });
+  // // messageListener = async () => {
+  // //   this.notificationListener = firebase.notifications().onNotification((notification) => {
+  // //     const { title, body } = notification;
+  // //   });
 
-  //   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-  //     const { title, body } = notificationOpen.notification;
-  //   });
+  // //   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
+  // //     const { title, body } = notificationOpen.notification;
+  // //   });
 
-  //   const notificationOpen = await firebase.notifications().getInitialNotification();
-  //   if (notificationOpen) {
-  //     const { title, body } = notificationOpen.notification;
-  //   }
+  // //   const notificationOpen = await firebase.notifications().getInitialNotification();
+  // //   if (notificationOpen) {
+  // //     const { title, body } = notificationOpen.notification;
+  // //   }
 
-  //   this.messageListener = firebase.messaging().onMessage((message) => {
-  //     console.warn(JSON.stringify(message));
-  //   });
-  // }
+  // //   this.messageListener = firebase.messaging().onMessage((message) => {
+  // //     console.warn(JSON.stringify(message));
+  // //   });
+  // // }
 
 
   
