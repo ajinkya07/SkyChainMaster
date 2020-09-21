@@ -241,19 +241,19 @@ class Register extends React.Component {
                 <View style={styles.viewContainer}>
                   <View
                     style={{
-                      marginHorizontal: 60,
-                      height: 90,
-                      marginBottom: 60,
+                      alignItems:'center',
+                      marginTop:hp(4),
+                      height: hp(15),
                     }}>
-                    <Image
-                      source={IconPack.SKY_LOGO}
-                      style={{
-                        width: 150,
-                        height: 150,
-                        resizeMode: 'cover',
-                        borderRadius: 75,
-                      }}
-                    />
+                     <Text style={{fontFamily: 'Lato-Bold',textAlign:'center', letterSpacing: 2,fontSize: 25, color: '#FFFFFF',}}>
+                        SKY CHAINS
+                      </Text>
+                      <Text style={{
+                          fontFamily: 'Lato-Regular', letterSpacing: 2,
+                          fontSize: 14, color: '#0d185c',textAlign:'center'
+                        }}>
+                        designs infinite
+                      </Text>
                   </View>
                   <LoginFields
                     value={fullName ? fullName : null}

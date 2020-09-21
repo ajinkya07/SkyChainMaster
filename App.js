@@ -20,7 +20,7 @@ class App extends React.Component {
 
 
   componentDidMount = async () => {
-    // console.disableYellowBox = true;
+     console.disableYellowBox = true;
      SplashScreen.hide()
 
     await this.checkPermission();

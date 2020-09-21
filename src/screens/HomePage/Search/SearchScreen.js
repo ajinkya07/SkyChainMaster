@@ -875,19 +875,29 @@ class SearchScreen extends Component {
                   <Text style={styles.noFoundText}>No Data found!</Text>
                 </View>
               )}
-              <View style={styles.bottomView}>
+              {/* <View style={styles.bottomView}>
                 <TouchableOpacity onPress={() => alert('inprocess')}>
                   <Text style={styles.bottomTxt}>SELECT ALL</Text>
                 </TouchableOpacity>
+                
                 <TouchableOpacity onPress={() => this.onOKkaratSelected()}>
                   <Text style={styles.bottomTxt} >
                     OK
                   </Text>
                 </TouchableOpacity>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+         */}
+
+                            <View style={[styles.buttonContainer, { marginBottom: hp(1) }]}>
+                                <ActionButtonRounded
+                                    title="CONTINUE"
+                                    onButonPress={() => this.onOKkaratSelected()}
+                                    containerStyle={styles.buttonStyle}
+                                />
+                            </View>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
    
             </SafeAreaView>
         );
@@ -961,7 +971,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    buttonStyle: {},
     closeIcon: {
         width: 20,
         height: 20,
@@ -1062,8 +1071,8 @@ const styles = StyleSheet.create({
         right: 14,
       },
       buttonStyle: {
-        marginTop: 20,
-        marginBottom: 10,
+        marginTop: 10,
+        marginBottom: hp(1),
       },
       flexRow: {
         flexDirection: 'row',

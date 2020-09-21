@@ -184,23 +184,12 @@ class SignIn extends React.Component {
                   <View style={styles.viewContainer}>
                     <View
                       style={{
-                        marginHorizontal: 60,
-                        height: 260,
+                        alignItems:'center',
+                        marginTop:hp(10),
+                        height: hp(19),
                       }}>
-                      {/* <Text
-                      style={{
-                        //color: '#fbcb84',
-                        color: '#ffffff',
-                        //fontWeight: '400',
-                        fontSize: hp(4),
-                        marginBottom: 10,
-                        marginTop: -hp(5),
-                        textAlign: 'center',
-                        fontFamily: 'Lato-Regular',
-                      }}>
-                      Login
-                    </Text> */}
-                      <Image
+                      
+                      {/* <Image
                         source={IconPack.SKY_LOGO}
                         style={{
                           width: 150,
@@ -209,8 +198,20 @@ class SignIn extends React.Component {
                           borderRadius: 75,
                           marginTop: 40,
                         }}
-                      />
+                      /> */}
+                      <Text style={{fontFamily: 'Lato-Bold', 
+                      textAlign:'center',letterSpacing: 2,fontSize: 25, color: '#FFFFFF',}}>
+                        SKY CHAINS
+                      </Text>
+                      <Text style={{
+                          fontFamily: 'Lato-Regular', letterSpacing: 2,
+                          fontSize: 14, color: '#0d185c',textAlign:'center'
+                        }}>
+                        designs infinite
+                      </Text>
                     </View>
+
+
                     <LoginFields
                       value={mobileNo ? mobileNo : null}
                       type="mobileNo"

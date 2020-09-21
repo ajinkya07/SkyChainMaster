@@ -187,74 +187,68 @@ class ForgotPassword extends React.Component {
                 <View style={styles.viewContainer}>
                   <View
                     style={{
-                      marginHorizontal: 50,
-                      height: 250,
-                      alignItems: 'center',
+                      alignItems:'center',
+                      marginTop:hp(3),
+                      height: hp(19),
                     }}>
-                    {/* <Text
-                    style={{
-                      //color: '#fbcb84',
-                      color: '#ffffff',
-                      //fontWeight: '400',
-                      fontSize: hp(4),
-                      marginBottom: hp(10),
-                      marginTop: -hp(10),
-                      textAlign: 'center',
-                      fontFamily: 'Lato-Regular',
-                    }}>
-                    Forgot Password
-                  </Text> */}
-                    <View style={{marginBottom: 30}}>
-                      <Image
-                        source={IconPack.SKY_LOGO}
-                        style={{
-                          width: 150,
-                          height: 150,
-                          resizeMode: 'cover',
-                          borderRadius: 75,
-                        }}
-                      />
+                    
+                    <View style={{marginBottom: hp(5)}}>
+                    <Text style={{fontFamily: 'Lato-Bold',textAlign:'center', letterSpacing: 2,fontSize: 25, color: '#FFFFFF',}}>
+                        SKY CHAINS
+                      </Text>
+                      <Text style={{
+                          fontFamily: 'Lato-Regular', letterSpacing: 2,
+                          fontSize: 14, color: '#0d185c',textAlign:'center'
+                        }}>
+                        designs infinite
+                      </Text>
+
                     </View>
 
                     <Text
                       style={{
                         fontSize: hp(2.2),
-                        color: '#ffffff',
+                        color: '#ffffff',marginHorizontal:20,
                         textAlign: 'center',
                         fontFamily: 'Lato-Regular',
                       }}>
                       Enter the Mobile No. associated with your Account
                     </Text>
                   </View>
-                  <LoginFields
-                    value={mobileNo ? mobileNo : null}
-                    type="mobileNo"
-                    inputKey="mobileNo"
-                    maxLength={10}
-                    minLength={10}
-                    onChangeText={this.onInputChanged}
-                    placeholder="Mobile"
-                    returnKeyType="next"
-                    placeholderTextColor="#ffffff"
-                    Icon={IconPack.MOBILE_LOGO}
-                    keyboardType="phone-pad"
-                    onSubmitEditing={() => this.passwordRef.current.focus()}
-                  />
-                  <LoginFields
-                    value={password ? password : null}
-                    type="password"
-                    inputKey="password"
-                    maxLength={10}
-                    minLength={10}
-                    onChangeText={this.onInputChanged}
-                    placeholder=" New Password"
-                    returnKeyType="done"
-                    secureTextEntry
-                    placeholderTextColor="#ffffff"
-                    isSecure={true}
-                    Icon={IconPack.KEY_LOGO}
-                    textInputRef={this.passwordRef}
-                  />
+            
+
+                  <View style={{ marginTop: hp(3) }}>
+                    <LoginFields
+                      value={mobileNo ? mobileNo : null}
+                      type="mobileNo"
+                      inputKey="mobileNo"
+                      maxLength={10}
+                      minLength={10}
+                      onChangeText={this.onInputChanged}
+                      placeholder="Mobile"
+                      returnKeyType="next"
+                      placeholderTextColor="#ffffff"
+                      Icon={IconPack.MOBILE_LOGO}
+                      keyboardType="phone-pad"
+                      onSubmitEditing={() => this.passwordRef.current.focus()}
+                    />
+                    <LoginFields
+                      value={password ? password : null}
+                      type="password"
+                      inputKey="password"
+                      maxLength={10}
+                      minLength={10}
+                      onChangeText={this.onInputChanged}
+                      placeholder=" New Password"
+                      returnKeyType="done"
+                      secureTextEntry
+                      placeholderTextColor="#ffffff"
+                      isSecure={true}
+                      Icon={IconPack.KEY_LOGO}
+                      textInputRef={this.passwordRef}
+                    />
+
+                  </View>
                   <ActionButtonRounded
                     title="GET OTP"
                     onButonPress={() => this.sendOtp()}
