@@ -80,6 +80,8 @@ target 'SkyChains' do
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'SkyChainsTests' do
     inherit! :complete
     # Pods for testing

@@ -32,6 +32,7 @@ import FromDatePicker from './FromDatePicker'
 import ToDatePicker from './ToDatePicker'
 import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
 import Theme from '../../../values/Theme';
+import { value } from 'react-native-extended-stylesheet';
 
 const { width } = Dimensions.get('window');
 
@@ -368,6 +369,7 @@ class SearchScreen extends Component {
     selectKarat = () => {
         const { selectedKarat,isOkKaratClicked } = this.state
 
+        console.warn("selectedKarat",selectedKarat);
         return (
             <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Melting:</_Text>
@@ -584,6 +586,34 @@ class SearchScreen extends Component {
         // });
     };
 
+    // setToggleCheckBoxAll = () =>{
+    //     const { selectedKarat, toggleCheckBox } = this.state
+    //     const { allParameterData} = this.props
+
+    //     const arr = allParameterData && allParameterData.melting
+
+    //     const val = { ...this.state.karat };
+        
+    //     for(let k = 0; k<arr.length; k++){
+
+    //         val[arr[k].id] = true;
+
+    //         let array = [];
+    //         let array2 = []
+
+    //         let id = arr[k].id
+    //         let  value = arr[k].melting_name
+    //         array = [{ id, value }]
+    //         array2.push(...selectedKarat, ...array);
+    //         console.warn("array2--==",array2);
+    //         this.setState({ selectedKarat: array2 });
+       
+    //     }
+        
+    //     this.setState({ karat: val });
+    //     console.warn("selectedKarat==",selectedKarat);
+    // }
+
 
     closeKaratModal = () => {
         this.setState({
@@ -612,7 +642,6 @@ class SearchScreen extends Component {
 
         let statusArray = [{'id':'1','status':'Available'},{'id':'2','status':'Sold'}]
 
-                    console.warn("selectedCategories",selectedCategories);
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -847,7 +876,7 @@ class SearchScreen extends Component {
                 </View>
               )}
               <View style={styles.bottomView}>
-                <TouchableOpacity onPress={() => alert('SelectAll')}>
+                <TouchableOpacity onPress={() => alert('inprocess')}>
                   <Text style={styles.bottomTxt}>SELECT ALL</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.onOKkaratSelected()}>

@@ -213,11 +213,12 @@ class HomePage extends Component {
       allParameterData
     } = this.props;
 
-    const { finalCollection, productId } = this.state;
+    const { finalCollection, productId, productId2 } = this.state;
 
     if (prevProps.isFocused !== this.props.isFocused) {
-      await this.getHomePage()
-      await this.getTotalCart()
+        await this.getHomePage()
+        await this.getTotalCart()
+
     }
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
@@ -272,18 +273,48 @@ class HomePage extends Component {
         duration: 2500,
       });
     }
-    if ( this.state.successAddToCartVersion > prevState.successAddToCartVersion ) {
+    if (this.state.successAddToCartVersion > prevState.successAddToCartVersion) {
       if (addToCartData.ack === '1') {
+        var inx;
+        var i;
+        var dx;
+        for (let m = 0; m < homePageData.final_collection.length; m++) {
+          inx = homePageData.final_collection[m].product_assign.findIndex(
+            item => item.product_id == productId2,
+          );
+          if (inx >= 0) {
+            i = m;
+            dx = inx;
+          }
+          // })
+        }
+        if (dx >= 0) {
+          finalCollection[i].product_assign[dx].in_cart =
+            this.props.addToCartData.data !== null
+              ? parseInt(this.props.addToCartData.data.quantity)
+              : undefined;
+
+          this.setState(
+            { in_cart: finalCollection[i].product_assign[dx].in_cart },
+            () => {
+              console.log(JSON.stringify(finalCollection));
+            },
+          );
+        }
+
+
         Toast.show({
           text: addToCartData ? addToCartData.msg : strings.serverFailedMsg,
           duration: 2500,
         });
-
+      }
+  
         await this.getHomePage()
         await this.getTotalCart()
 
-      }
     }
+
+
     if (this.state.errorAddToCartVersion > prevState.errorAddToCartVersion) {
       Toast.show({
         text: addToCartData && addToCartData.msg,
@@ -293,6 +324,7 @@ class HomePage extends Component {
     }
 
     if ( this.state.successAddToCartPlusOneVersion > prevState.successAddToCartPlusOneVersion ) {
+
       if (addToCartPlusOneData.ack === '1') {
         var Index;
         var i;
@@ -325,8 +357,12 @@ class HomePage extends Component {
           text: addToCartPlusOneData ? addToCartPlusOneData.msg : strings.serverFailedMsg,
           duration: 2500,
         });
+
+        await this.getHomePage()
+        await this.getTotalCart()
       }
     }
+
     if (this.state.errorAddToCartPlusOneVersion > prevState.errorAddToCartPlusOneVersion) {
       Toast.show({
         text: errorMsg && errorMsg,
@@ -690,6 +726,7 @@ class HomePage extends Component {
     );
   };
 
+
   addToWishlist = item => {
     let wishlistData = new FormData();
 
@@ -714,6 +751,10 @@ class HomePage extends Component {
     cartData.append('product_inventory_table', 'product_master');
 
     await this.props.addToCart(cartData);
+
+    this.setState({
+      productId2: item.product_id,
+    });
 
   };
 
@@ -751,7 +792,6 @@ class HomePage extends Component {
     cart1.append('plus', 0);
 
     await this.props.addRemoveFromCartByOne(cart1);
-    await this.getHomePage()
 
     this.setState({
       productId: item.product_id,
@@ -894,15 +934,16 @@ class HomePage extends Component {
             </View>
           )}
 
-                  {!this.props.isFetching &&
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View
-              style={{
-                paddingLeft: Platform.OS === 'ios' ? hp(2.2) : hp(1), flexDirection: 'row',}}>
-              {collection &&
-                collection.map((item, i) => this.getCategoryDesigns(item, i))}
-            </View>
-          </ScrollView>
+          {!this.props.isFetching &&
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              <View
+                style={{
+                  paddingLeft: Platform.OS === 'ios' ? hp(2.2) : hp(1), flexDirection: 'row',
+                }}>
+                {collection &&
+                  collection.map((item, i) => this.getCategoryDesigns(item, i))}
+              </View>
+            </ScrollView>
           }
 
 
@@ -1050,6 +1091,7 @@ class HomePage extends Component {
         </ScrollView>
 
         {this.props.isFetching ? this.renderLoader() : null}
+        
       </View>
     );
   }

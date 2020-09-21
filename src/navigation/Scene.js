@@ -283,6 +283,7 @@ async componentDidUpdate(prevProps, prevState) {
     );
   }
 
+
   goToWhere = () => {
     const { isLoginValue,isInside } = this.state;
     const { allParameterData } = this.props;
@@ -300,6 +301,7 @@ async componentDidUpdate(prevProps, prevState) {
     }
   }
 
+  
   showToast = () =>{
     Toast.show({
       text:'your status is inactive. Kindly contact admin to activate',
