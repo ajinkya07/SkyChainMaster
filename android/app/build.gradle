@@ -1,6 +1,5 @@
 apply plugin: "com.android.application"
 
-apply plugin: 'com.google.gms.google-services'
 
 import com.android.build.OutputFile
 
@@ -224,7 +223,8 @@ dependencies {
 
     implementation "com.google.firebase:firebase-messaging:20.1.5"
     implementation "com.google.android.gms:play-services-base:17.2.1"
-    implementation "com.google.firebase:firebase-core:16.0.8"
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
      compile(project(':react-native-firebase')) {   
        transitive = false
@@ -239,4 +239,6 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
+
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: 'com.google.gms.google-services'

@@ -1091,7 +1091,6 @@ class HomePage extends Component {
         </ScrollView>
 
         {this.props.isFetching ? this.renderLoader() : null}
-        
       </View>
     );
   }

@@ -19,16 +19,16 @@ class App extends React.Component {
   }
 
 
-  componentDidMount =async () => {
-    console.disableYellowBox = true;
+  componentDidMount = async () => {
+    // console.disableYellowBox = true;
      SplashScreen.hide()
 
-     await this.checkPermission();
+    await this.checkPermission();
 
-    // this.createNotificationListeners();
-    // firebase.notifications().setBadge(0)
-    // firebase.notifications().removeAllDeliveredNotifications()
-
+     this.createNotificationListeners()
+   //  firebase.notifications().setBadge(0)
+     firebase.notifications().removeAllDeliveredNotifications()
+ 
   };
 
   checkPermission = async () => {
@@ -59,112 +59,107 @@ class App extends React.Component {
     }
   }
 
-  // messageListener = async () => {
-  //   this.notificationListener = firebase.notifications().onNotification((notification) => {
-  //     const { title, body } = notification;
-  //   });
 
-  //   this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen) => {
-  //     const { title, body } = notificationOpen.notification;
-  //   });
+  createNotificationListeners = async () => {
+    this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
+      console.warn('NOTIFICATION_DISPALYED_LISTENER', notification)
+    });
 
-  //   const notificationOpen = await firebase.notifications().getInitialNotification();
-  //   if (notificationOpen) {
-  //     const { title, body } = notificationOpen.notification;
-  //   }
-
-  //   this.messageListener = firebase.messaging().onMessage((message) => {
-  //     console.warn(JSON.stringify(message));
-  //   });
-  // }
-
-
-//   createNotificationListeners = async () =>{
-//     this.notificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification: Notification) => {
-
-//     });
-
-//     this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
-//       if (Platform.OS === "android") {
-//         this.androidNotificationHandle(notification);
-//       } else {
-//         this.iosNotificationHandle(notification);
-//       }
-//     });
-  
-//  /*
-//   * If your app is in background, you can listen for when a notification is clicked / tapped / opened as follows:
-//   * */
-//     this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
-//       const { data, notificationId} = notificationOpen.notification;
-//       // const actionType = getNextScreen(data)
-//       // this.redirectToNextScreenAndMarkAsRead(data.gsNotificationId, actionType,  data.payloadID  )
-//     });
-
-//  /*
-//   * If your app is closed, you can check if it was opened by a notification being clicked / tapped / opened as follows:
-//   * */
-//     const notificationOpen = await firebase.notifications().getInitialNotification();
-//     if (notificationOpen) {
-//       const notification: Notification = notificationOpen.notification;  
-//       const { data, notificationId} = notification;
-//       // const actionType = getNextScreen(data)
-//       // this.redirectToNextScreenAndMarkAsRead(data.gsNotificationId, actionType,  data.payloadID )
+    this.notificationListener = firebase.notifications().onNotification((notification: Notification) => {
+      console.warn('NOTIFICATION_ON_NOTIFCATION', notification)
+      if (Platform.OS === "android") {
+        console.warn("for android");
+        this.androidMessageHandle(notification);
+        
       
-//     }
-//   }
+      }
+       else if(Platform.OS ==='ios'){
+         console.warn("ios iosMessageHandle")
+        this.iosMessageHandle(notification);
+      }
   
-  // redirectToNextScreenAndMarkAsRead = (notificationId, actionType, payloadID) =>{
-  //   store.dispatch({ 
-  //     type: "NOTIFICATIONS_REDIRECT_TO_NEXT_SCREEN",
-  //     payload: {notificationId, actionType , reqFrom :'NOTIFICATIONS_TRAY' , isRead:false, payloadID }
-  //   });
-  // }
+      // store.dispatch({ 
+      //   type: "PICKUPS_FETCH_PICKUP_DATES",
+      // });
+    });
+
+    this.notificationOpenedListener = firebase.notifications().onNotificationOpened((notificationOpen: NotificationOpen) => {
+      const { data, notificationId } = notificationOpen.notification;
+      //const actionType = getNextScreen(data)
+      //this.redirectToNextScreenAndMarkAsRead(data.gsNotificationId, actionType, data.payloadID )
+    });
+
+    const notificationOpen = await firebase.notifications().getInitialNotification();
+    if (notificationOpen) {
+
+      const action = notificationOpen.action;
+
+      // Get information about the notification that was opened
+      const notification: Notification = notificationOpen.notification;
+
+    
+
+      const { data, notificationId } = notification;
+      //const actionType = getNextScreen(data)
+      //this.redirectToNextScreenAndMarkAsRead(data.gsNotificationId, actionType , data.payloadID )
+    }
+  }
+
+
+
+
+  //for android notification  sound icon 
+  androidMessageHandle = notification => {
+    const { title, subtitle, data} = notification.data;
+
+    // Build a channel(android only)
+    const channel = new firebase.notifications.Android.Channel('test-channel', 'test-channel', firebase.notifications.Android.Importance.Max)
+    .setDescription('My apps test channel');
+
+    console.warn("channel",channel)
+
+    firebase.notifications().android.createChannel(channel);
+    // .setNotificationId(data.gsNotificationId)
+
+    console.warn("notification",notification)
+    console.warn("notification.data",notification.data)
+
+
+    notification  
+      .setTitle(title)
+      .setBody(subtitle)
+      .setSound('default')
+      .android.setChannelId("test-channel")
+      .android.setAutoCancel(true)
+      .android.setPriority(firebase.notifications.Android.Priority.Max)
+      //.android.setClickAction(notification.android.clickAction)
+     // .android.setSmallIcon("ic_notification") // create this icon in Android Studio
+      //.android.setColor("#0d185c")
+    firebase.notifications().displayNotification(notification);
+    //firebase.notifications().setBadge(parseInt(data.badge))
   
-    //android notification setting e.g icon color sound
-
-  // androidNotificationHandle = notification => {
-  //   const { title, body, data} = notification;
-  //   // Build a channel(android only)
-  //   const channel = new firebase.notifications.Android.Channel('test-channel', 'test-channel', firebase.notifications.Android.Importance.Max)
-  //   .setDescription('My apps test channel');
-  //   firebase.notifications().android.createChannel(channel);
-  //   notification
-  //     .setNotificationId(data.gsNotificationId)
-  //     // .setTitle(title)
-  //     // .setBody(body)
-  //     // .setSound('default')
-  //     .android.setChannelId("test-channel")
-  //     .android.setAutoCancel(true)
-  //     //.android.setPriority(firebase.notifications.Android.Priority.Max)
-  //     //.android.setClickAction(notification.android.clickAction)
-  //     .android.setSmallIcon("ic_notification") // create this icon in Android Studio
-  //     .android.setColor(themeStyle.PRIMARY_COLOR_BLUE)
-  //   firebase.notifications().displayNotification(notification);
-
-  //   firebase.notifications().setBadge(parseInt(data.badge))
-  // };
-  
-
-  // //ios notification setting e.g icon color sound
-  // iosNotificationHandle = notification => {
-  //   const { title, body, data} = notification;
-  //   notification
-  //   .setNotificationId(data.gsNotificationId)
-  //   .setTitle(title)
-  //   .setBody(body)
-  //   .setSound('default')
-  //   .ios.setBadge(parseInt(data.badge));
-  //   firebase.notifications().displayNotification(notification);
-  // };
-  
-  // componentWillUnmount() {
-  //   this.notificationDisplayedListener();
-  //   this.notificationListener();
-  //   this.notificationOpenedListener();
-  // }
+  };
 
 
+  iosMessageHandle = notification => {
+    console.warn("iosMessageHandle",notification)
+
+    const { title, subtitle, data} = notification;
+    notification
+    .setTitle(title)
+    .setBody(subtitle)
+    .setSound('default')
+    //.setData({actionType: data.actionType,})
+    // .ios.setBadge(parseInt(data.badge));
+    firebase.notifications().displayNotification(notification);
+  };
+
+
+  componentWillUnmount() {
+    this.notificationDisplayedListener();
+    this.notificationListener();
+    this.notificationOpenedListener();
+  }
 
 
 
@@ -183,3 +178,15 @@ class App extends React.Component {
 }
 
 export default App;
+
+
+
+
+// Android : 
+
+// {"to":"ec4mFrzHReqd-rjxUK1npx:APA91bFV8IgUGhcXdPhZeR-hZhlMtcacVvpeI5GkwHhNdLB-bNVTSjiOrTgl0YlKW
+// qjdAeFcwL1X_sdMxvPZ-ZCHLvfK1Zvnbkd2CWxixHg9JT8YfgqewRQIwuKs3fCKZM5SvgU5HecC",
+// "priority":"high",
+// "click_action":"order_details",
+// "data":{"title":"Sky Chains","subtitle":"daa","order_id":"0"}}
+
