@@ -15,6 +15,9 @@ import { color } from '@values/colors';
 import { strings } from '@values/strings';
 import _Text from '@text/_Text';
 import FastImage from 'react-native-fast-image';
+import IconPack from '@login/IconPack';
+
+
 
 export default class Banner extends Component {
     constructor(props) {
@@ -51,15 +54,21 @@ export default class Banner extends Component {
                     </View>
                 </View>
 
-
-
                 <View style={{ marginTop:hp(12) }}>
-                    
-                      <FastImage
+{/*                     
+                    <FastImage
                         style={{ height: hp(40), width: wp(100) }}
-                        source={{ uri: baseUrl + bannerData.brand_image}}
+                        source={{ uri: baseUrl + bannerData.brand_image }}
                         resizeMode={FastImage.resizeMode.stretch}
+                    /> */}
+
+                    <Image
+                        source={{ uri: baseUrl + bannerData.brand_image }}
+                        resizeMode='stretch'
+                        style={{ height: hp(40), width: wp(100) }}
+                        defaultSource={IconPack.APP_LOGO}
                     />
+
                 </View>
 
                 <View style={{  marginTop:hp(5),justifyContent: 'center', alignItems: 'center' }}>

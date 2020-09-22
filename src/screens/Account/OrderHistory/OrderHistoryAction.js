@@ -80,13 +80,11 @@ import {
 
   
   export function getOrderHistoryDetails(data) {
-    console.warn("getOrderHistoryDetails",data);
     
       return dispatch => {
         dispatch(showLoadingIndicator(ORDER_HISTORY_DETAILS_DATA));
     
         axios.post(urls.OrderHistoryDetail.url, data, header).then(response => {
-            console.warn("getOrderHistoryDetails", response.data);
             if (response.data.ack ==='1') {
               dispatch(
                 onSuccess(response.data, ORDER_HISTORY_DETAILS_DATA_SUCCESS)
@@ -111,13 +109,11 @@ import {
     
     
   export function reOrderProduct(data) {
-    console.warn("reOrderProduct",data);
     
       return dispatch => {
         dispatch(showLoadingIndicator(REORDER_DATA));
     
         axios.post(urls.ReOrder.url, data, header).then(response => {
-            console.warn("reOrderProduct", response.data);
             if (response.data.ack ==='1') {
               dispatch(
                 onSuccess(response.data, REORDER_DATA_SUCCESS)

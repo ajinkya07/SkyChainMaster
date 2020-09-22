@@ -253,7 +253,7 @@ class OrderHistoryDetail extends Component {
               <Image
                 style={styles.imageStyle}
                 source={{uri: data.image_zoom}}
-                defaultSource={require('../../../assets/image/default.png')}
+                defaultSource={IconPack.APP_LOGO}
               />
             </TouchableOpacity>
           </View>
@@ -272,11 +272,11 @@ class OrderHistoryDetail extends Component {
             </View>
             <View style={styles.rowTextStyle}>
               <Text style={styles.contentText}>gross wt:</Text>
-              <Text style={styles.contentText}>{data.value[3]}</Text>
+              <Text style={styles.contentText}>{parseInt(data.value[3]).toFixed(2)}</Text>
             </View>
             <View style={styles.rowTextStyle}>
               <Text style={styles.contentText}>net wt:</Text>
-              <Text style={styles.contentText}>{data.value[4]}</Text>
+              <Text style={styles.contentText}>{parseInt(data.value[4]).toFixed(2)}</Text>
             </View>
             <View style={styles.rowTextStyle}>
               <Text style={styles.contentText}>order id:</Text>
@@ -345,6 +345,9 @@ class OrderHistoryDetail extends Component {
   render() {
     const {orderHistoryDetailsData} = this.props;
     const {imageToBeDisplayed} = this.state;
+
+
+    const summaryData = orderHistoryDetailsData && orderHistoryDetailsData.order_summary
 
     return (
       <>
@@ -420,7 +423,7 @@ class OrderHistoryDetail extends Component {
                         width: wp(90),
                         marginTop: hp(1),
                       }}
-                      resizeMode="cover"
+                      resizeMode="stretch"
                     />
                   </View>
                 </SafeAreaView>
@@ -501,12 +504,9 @@ class OrderHistoryDetail extends Component {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <_Text fsPrimary fwSmall>
-                      Order No.
-                    </_Text>
-                    <_Text fsPrimary fwSmall>
-                      75
-                    </_Text>
+                    <_Text fsPrimary fwSmall>Order No.</_Text>
+                    <_Text fsPrimary fwSmall>{summaryData.order_no}</_Text>
+                 
                   </View>
 
                   <View
@@ -515,12 +515,8 @@ class OrderHistoryDetail extends Component {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <_Text fsPrimary fwSmall>
-                      Total Items
-                    </_Text>
-                    <_Text fsPrimary fwSmall>
-                      4
-                    </_Text>
+                    <_Text fsPrimary fwSmall>Total Items</_Text>
+                  <_Text fsPrimary fwSmall>{summaryData.total_items}</_Text>
                   </View>
 
                   <View
@@ -529,12 +525,8 @@ class OrderHistoryDetail extends Component {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <_Text fsPrimary fwSmall>
-                      Total weight
-                    </_Text>
-                    <_Text fsPrimary fwSmall>
-                      167
-                    </_Text>
+                    <_Text fsPrimary fwSmall>Total weight</_Text>
+                  <_Text fsPrimary fwSmall>{summaryData.total_weight}</_Text>
                   </View>
 
                   <View
@@ -544,12 +536,8 @@ class OrderHistoryDetail extends Component {
                       justifyContent: 'space-between',
                       flexDirection: 'row',
                     }}>
-                    <_Text fsPrimary fwSmall>
-                      Order Date
-                    </_Text>
-                    <_Text fsPrimary fwSmall>
-                      2020-07-04
-                    </_Text>
+                    <_Text fsPrimary fwSmall>Order Date</_Text>
+                  <_Text fsPrimary fwSmall>{summaryData.order_date}</_Text>
                   </View>
                 </View>
               </SafeAreaView>

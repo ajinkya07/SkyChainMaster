@@ -18,6 +18,7 @@ import Modal from 'react-native-modal';
 import Swiper from 'react-native-swiper'
 import { urls } from '@api/urls'
 import ImageZoom from 'react-native-image-pan-zoom';
+import IconPack from '@login/IconPack';
 
 
 
@@ -62,18 +63,25 @@ export default class BannerImage extends Component {
                 <View key={k}>
                 <ImageZoom 
                     cropWidth={wp(100)}
-                       cropHeight={hp(90)}
+                       cropHeight={hp(95)}
                        imageWidth={wp(100)}
-                       imageHeight={hp(90)}>
-                    <FastImage
+                       imageHeight={hp(95)}>
+                    {/* <FastImage
                         style={{ height: hp(80), width: wp(100) }}
                         source={{
                             uri: url2 + data,
                         }}
                         defaultSource={require('../../assets/image/default.png')}
                         resizeMode={FastImage.resizeMode.contain}
+                    /> */}
+
+                    <Image
+                        source={{ uri: url2 + data }}
+                        resizeMode='contain'
+                        style={{ height: hp(80), width: wp(100) }}
+                        defaultSource={IconPack.APP_LOGO}
                     />
-                    </ImageZoom>
+                </ImageZoom>
 
                 </View>
         )

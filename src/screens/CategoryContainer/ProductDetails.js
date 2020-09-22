@@ -261,13 +261,21 @@ class ProductDetails extends React.Component {
           })
         }>
         <View key={k}>
-          <FastImage
+          {/* <FastImage
             style={{height: hp(30), width: wp(100)}}
             source={{
               uri: url2 + data,
             }}
             resizeMode={FastImage.resizeMode.cover}
+          /> */}
+
+          <Image
+            source={{ uri: url2 + data }}
+            resizeMode='stretch'
+            style={{height: hp(33), width: wp(100)}}
+          defaultSource={IconPack.APP_LOGO}
           />
+
         </View>
       </TouchableOpacity>
     );
@@ -279,8 +287,6 @@ class ProductDetails extends React.Component {
         style={{
           height: hp(33),
           width: wp(100),
-          //borderBottomColor: color.gray,
-          //borderWidth: !this.props.isFetching ? 0.5 : 0
         }}>
         {item ? (
           <Swiper
@@ -679,7 +685,7 @@ setSelectedValueKarat = karat => {
                                           color: '#000000',
                                           textAlign: 'right',
                                         }}>
-                                        {value}
+                                        {value ? value : '-'}
                                       </Text>
                                     );
                                   },

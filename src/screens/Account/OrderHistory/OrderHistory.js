@@ -135,7 +135,7 @@ class OrderHistory extends Component {
               Total Weight
             </Text>
             <Text style={{...Theme.ffLatoRegular13, color: '#000'}}>
-              {item.total_weight}
+              {parseInt(item.total_weight).toFixed(2)}
             </Text>
           </View>
           <View style={styles.rowTextStyle}>
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
   viewContainer: {
     marginTop: Platform.OS === 'ios' ? 12 : 10,
     marginHorizontal: 16,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#f3fcf9',
     flex: 1,
   },
   rowTextStyle: {

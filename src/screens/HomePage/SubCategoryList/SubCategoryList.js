@@ -69,10 +69,13 @@ export default class SubCategoryList extends Component {
     }
 
     getProductGridOrNot = (data) => {
+        console.warn("data==",data);
         if (data.subcategory.length === 0) {
+            console.warn("in if");
             this.props.navigation.navigate("ProductGrid", { gridData: data })
         } else if (data.subcategory.length > 0) {
-            this.props.navigation.navigate("SubCategoryList",{subcategory:data})
+            console.warn("in else");
+            this.props.navigation.push("SubCategoryList",{subcategory:data})
         }
     }
 
@@ -95,8 +98,8 @@ export default class SubCategoryList extends Component {
                    
                         <View style={{ justifyContent: 'center', width: wp(100), paddingVertical:  hp(1) }}>
                             <FlatList
-                                onRefresh={() => alert('inProgress')}
-                                refreshing={false}
+                               // onRefresh={() => alert('inProgress')}
+                                //refreshing={false}
                                 data={subcategoryData.subcategory && subcategoryData.subcategory}
                                 showsVerticalScrollIndicator={false}
                                 keyExtractor={item => item.id}

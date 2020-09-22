@@ -84,17 +84,6 @@ class HomePage extends Component {
 
     await this.getHomePage()
     await this.getTotalCart()
-    // const data = new FormData();
-    // data.append('user_id', userId);
-    // data.append('image_type', type);
-
-    // await this.props.getHomePageData(data);
-
-    // const data2 = new FormData();
-    // data2.append('user_id', userId);
-    // data2.append('table', 'cart');
-
-    // await this.props.getTotalCartCount(data2);
 
     const data3 = new FormData();
     data3.append('user_id', userId);
@@ -215,11 +204,11 @@ class HomePage extends Component {
 
     const { finalCollection, productId, productId2 } = this.state;
 
-    if (prevProps.isFocused !== this.props.isFocused) {
-        await this.getHomePage()
-        await this.getTotalCart()
+    // if (prevProps.isFocused !== this.props.isFocused) {
+    //     await this.getHomePage()
+    //     await this.getTotalCart()
 
-    }
+    // }
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
       if (homePageData && homePageData.final_collection) {
@@ -309,7 +298,7 @@ class HomePage extends Component {
         });
       }
   
-        await this.getHomePage()
+      //  await this.getHomePage()
         await this.getTotalCart()
 
     }
@@ -358,7 +347,7 @@ class HomePage extends Component {
           duration: 2500,
         });
 
-        await this.getHomePage()
+       // await this.getHomePage()
         await this.getTotalCart()
       }
     }
@@ -772,7 +761,7 @@ class HomePage extends Component {
 
     await this.props.addRemoveFromCartByOne(cart);
 
-    await this.getHomePage()
+   // await this.getHomePage()
     
     this.setState({
       productId: item.product_id,
@@ -883,7 +872,7 @@ class HomePage extends Component {
         <ScrollView
           refreshControl={
             <RefreshControl
-              refreshing={isFetching}
+              refreshing={false}
               onRefresh={() => this.onRefresh()}
             />
           }
@@ -948,7 +937,7 @@ class HomePage extends Component {
 
 
           {/* BANNER */}
-          {userStatus.status == 'Active' && !isFetching && 
+          {!isFetching && userStatus.status == 'Active' &&  
             <View>
               <View style={{ marginTop: hp(2), marginBottom: -10, borderColor:'#DDDDDD',
                   height: hp(27), width: '100%', }}>
@@ -959,7 +948,7 @@ class HomePage extends Component {
                     height: hp(27), width: '100%',
                     borderColor: '#DDDDDD', borderWidth: 0.5
                   }}
-                  resizeMode='contain'
+                  resizeMode='cover'
                 />
               </View>
           

@@ -22,6 +22,7 @@ import _Text from '@text/_Text';
 import {connect} from 'react-redux';
 import {color} from '@values/colors';
 import { urls } from '@api/urls'
+import IconPack from '@login/IconPack';
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
 // import {} from '@search/SearchAction';
@@ -387,19 +388,19 @@ class SearchProductGrid extends Component {
                 })
               }
               onLongPress={() => this.showProductImageModal(item)}>
-              {/* <Image
-                            resizeMode={'cover'}
-                            style={gridImage}
-                            defaultSource={require('../../../assets/image/default.png')}
-                            source={{ uri: url + item.image_name }}
-                        /> */}
-              <FastImage
+              <Image
+                resizeMode={'stretch'}
+                style={gridImage}
+                defaultSource={IconPack.APP_LOGO}
+                source={{ uri: url + item.image_name,}}
+              />
+              {/* <FastImage
                 style={gridImage}
                 source={{
                   uri: url + item.image_name,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
-              />
+              /> */}
             </TouchableOpacity>
             <View style={latestTextView}>
               <View style={{width: wp(15), marginLeft: 5}}>
@@ -847,6 +848,17 @@ class SearchProductGrid extends Component {
                       width: wp(90),
                     }}
                   />
+                  <Image
+                    source={{uri: imageUrl + productImageToBeDisplayed.image_name}}
+                    defaultSource={IconPack.APP_LOGO}
+                    style={{
+                      height: hp(34),
+                      width: wp(90),
+                      marginTop: hp(0.5),
+                    }}
+                    resizeMode='stretch'
+                  />
+                  {/* 
                    <FastImage
                     style={{
                       height: hp(34),
@@ -857,7 +869,7 @@ class SearchProductGrid extends Component {
                       uri: imageUrl + productImageToBeDisplayed.image_name,
                     }}
                     resizeMode={FastImage.resizeMode.cover}
-                  />
+                  /> */}
                 </View>
               </SafeAreaView>
             </Modal>

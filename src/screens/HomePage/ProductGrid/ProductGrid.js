@@ -22,6 +22,7 @@ import _Text from '@text/_Text';
 import { connect } from 'react-redux';
 import { color } from '@values/colors';
 import { urls } from '@api/urls'
+import { withNavigationFocus } from '@react-navigation/compat';
 
 import ProductGridStyle from '@productGrid/ProductGridStyle';
 import {
@@ -43,6 +44,7 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import FastImage from 'react-native-fast-image';
 import _, { fromPairs } from 'lodash';
 import Theme from '../../../values/Theme';
+import IconPack from '@login/IconPack';
 
 var userId = '';
 var selectedProductIds = []
@@ -311,6 +313,11 @@ class ProductGrid extends Component {
 
     const { categoryData, page, selectedSortById, gridData ,fromExclusive} = this.state;
 
+    // if (prevProps.isFocused !== this.props.isFocused) {
+    //   console.warn("isFocused");
+    //   await this.getData()
+    // }
+
     if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
       if (productGridData.products && productGridData.products.length > 0) {
         this.setState({
@@ -423,41 +430,7 @@ class ProductGrid extends Component {
             }
         }
 
-
-
-        // if (categoryData && !fromExclusive) {
-        //   const data2 = new FormData();
-        //   data2.append('table', 'product_master');
-        //   data2.append('mode_type', 'normal');
-        //   data2.append('collection_id', categoryData.id);
-        //   data2.append('user_id', userId);
-        //   data2.append('record', 10);
-        //   data2.append('page_no', page);
-        //   // data2.append('page_no', 0);
-        //   data2.append('sort_by', selectedSortById);
-
-        //   await this.props.getProductSubCategoryData(data2);
-
-        //   this.setState({ isSelectPressed: false, selectedProducts: [] })
-        //   selectedProductIds = []
-        // }
-
-        // if (categoryData && fromExclusive) {
-        //   const excl2 = new FormData();
-        //   excl2.append('table', 'product_master');
-        //   excl2.append('mode_type', 'my_collection');
-        //   excl2.append('collection_id', 0);
-        //   excl2.append('user_id', userId);
-        //   excl2.append('record', 10);
-        //   //  excl2.append('page_no', page);
-        //   excl2.append('page_no', 0);
-        //   excl2.append('sort_by', '2');
-        //   excl2.append('my_collection_id', categoryData.id);
-
-        //   this.props.getProductSubCategoryData(excl2);
-        //   this.setState({ page: 0, isSelectPressed: false, selectedProducts: [] })
-        //   selectedProductIds = []
-        // }
+      //await this.getData()
 
         Toast.show({
           text: addProductToCartData && addProductToCartData.msg,
@@ -526,6 +499,38 @@ class ProductGrid extends Component {
     }
   }
 
+  getData = async() =>{
+    const { categoryData, page, selectedSortById, gridData ,fromExclusive} = this.state;
+
+    if (categoryData && !fromExclusive && categoryData.subcategory.length === 0) {
+      const data = new FormData();
+      data.append('table', 'product_master');
+      data.append('mode_type', 'normal');
+      data.append('collection_id', categoryData.id);
+      data.append('user_id', userId);
+      data.append('record', 10);
+      data.append('page_no', page);
+      data.append('sort_by', '2');
+
+    await  this.props.getProductSubCategoryData(data);
+    }
+    if (categoryData && fromExclusive) {
+      const excl = new FormData();
+      excl.append('table', 'product_master');
+      excl.append('mode_type', 'my_collection');
+      excl.append('collection_id', 0);
+      excl.append('user_id', userId);
+      excl.append('record', 10);
+      excl.append('page_no', page);
+      excl.append('sort_by', '2');
+      excl.append('my_collection_id', categoryData.id);
+
+      await this.props.getProductSubCategoryData(excl);
+    }
+
+  }
+
+  
   renderLoader = () => {
     return (
       <View style={styles.loaderView}>
@@ -572,10 +577,7 @@ class ProductGrid extends Component {
             width: wp(46),
             marginHorizontal: hp(1),
             borderRadius: 15,shadowColor: '#000',
-            shadowOffset: {
-              width: 0.5,
-              height: 0.5,
-            },
+            shadowOffset: {width: 0.5,height: 0.5},
             shadowOpacity: 0.25,shadowRadius: 2, elevation: 2.2,
           }}
           activeOpacity={1}>
@@ -587,9 +589,9 @@ class ProductGrid extends Component {
                 this.props.navigation.navigate('ProductDetails', {productItemDetails: item,})}
                onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'cover'}
+                resizeMode={'stretch'}
                 style={gridImage}
-                defaultSource={require('../../../assets/image/LoginIcons/SkyChainsLogo.png')}
+                defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name }}
               />
 
@@ -808,11 +810,6 @@ class ProductGrid extends Component {
       selectedProductIds = selectedProducts.map(i => { return i.id})
 
     }
-
-    // this.setState({
-    //   selectedProducts: this.state.gridData[index],
-    // });
-
   }
 
 
@@ -840,7 +837,8 @@ showAlreadyToast = () =>{
 
 
   addSelectedProductWishList = async () => {
-    const { categoryData, page, selectedSortById, } = this.state;
+    const { categoryData, page, selectedSortById,gridData } = this.state;
+  
     let wishData = new FormData();
 
     if (selectedProductIds.length > 0) {
@@ -853,6 +851,14 @@ showAlreadyToast = () =>{
         wishData.append('product_inventory_table', 'product_master');
 
         await this.props.addProductToWishlist(wishData);
+       
+        const dd = this.state.gridData.findIndex(
+          item => selectedProductIds[i] == item.product_inventory_id
+        );
+    
+        console.warn("dd",dd);
+        this.state.gridData[dd].isSelect = false;
+
       }
     }
     else if (selectedProductIds.length <= 0) {
@@ -893,7 +899,10 @@ showAlreadyToast = () =>{
 
   addSelectedProductCart = async() =>{
 
+    const { categoryData, page, selectedSortById,gridData } = this.state;
+
     let ctData = new FormData();
+
     if(selectedProductIds.length > 0){
     for (let j = 0; j < selectedProductIds.length; j++) {
       ctData.append('product_id', selectedProductIds[j]);
@@ -903,18 +912,26 @@ showAlreadyToast = () =>{
       ctData.append('product_inventory_table', 'product_master');
 
       await this.props.addProductToCart(ctData);
+
+      const cc = this.state.gridData.findIndex(
+        i => selectedProductIds[j] == i.product_inventory_id
+      );
+  
+      console.warn("cc",cc);
+      this.state.gridData[cc].isSelect = false;
+
     }
 
-    const cd = new FormData();
-    cd.append('user_id', userId);
-    cd.append('table', 'cart');
+      const cd = new FormData();
+      cd.append('user_id', userId);
+      cd.append('table', 'cart');
 
-    await this.props.getTotalCartCount(cd);
+      await this.props.getTotalCartCount(cd);
 
-    
-      this.setState({
-        productInventoryId2: item.product_inventory_id,
-      });
+      // this.setState({
+      //   productInventoryId2: item.product_inventory_id,
+      // });
+
     }
     else if (selectedProductIds.length <= 0) {
       Toast.show({
@@ -1866,15 +1883,16 @@ showAlreadyToast = () =>{
                       width: wp(90),
                     }}
                   />
-                  {/* <Image
-                                    source={{ uri: imageUrl + productImageToBeDisplayed.image_name }}
-                                    defaultSource={require('../../../assets/image/default.png')}
-                                    style={{
-                                        height: hp(30), width: wp(90), marginTop: hp(1),
-                                    }}
-                                    resizeMode='cover'
-                                /> */}
-                  <FastImage
+                  <Image
+                    source={{  uri: imageUrl + productImageToBeDisplayed.image_name }}
+                    defaultSource={IconPack.APP_LOGO}
+                    style={{
+                      height: hp(34),
+                      width: wp(90),
+                      marginTop: hp(0.5)}}
+                    resizeMode='stretch'
+                  />
+                  {/* <FastImage
                     style={{
                       height: hp(34),
                       width: wp(90),
@@ -1885,6 +1903,7 @@ showAlreadyToast = () =>{
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                   />
+                   */}
                 </View>
               </SafeAreaView>
             </Modal>
@@ -2035,7 +2054,7 @@ export default connect(
     addRemoveProductFromCartByOne,
     getTotalCartCount,
   },
-)(ProductGrid);
+)(withNavigationFocus(ProductGrid));
 
 class RangeSlider extends React.Component {
   constructor(props) {
