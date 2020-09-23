@@ -124,7 +124,9 @@ export const urls = {
     },
     CallEmail:{
         url: url + 'Call_Email_Us'
-
+    },
+    CustomOrder:{
+        url: url + 'Customized_Order/order_assign'
     }
 
 

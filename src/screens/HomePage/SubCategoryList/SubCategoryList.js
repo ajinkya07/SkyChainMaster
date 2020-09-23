@@ -96,10 +96,8 @@ export default class SubCategoryList extends Component {
                         backgroundColor={color.green}
                     />
                    
-                        <View style={{ justifyContent: 'center', width: wp(100), paddingVertical:  hp(1) }}>
+                        <View style={{ justifyContent: 'center', width: wp(100), flex:1 }}>
                             <FlatList
-                               // onRefresh={() => alert('inProgress')}
-                                //refreshing={false}
                                 data={subcategoryData.subcategory && subcategoryData.subcategory}
                                 showsVerticalScrollIndicator={false}
                                 keyExtractor={item => item.id}

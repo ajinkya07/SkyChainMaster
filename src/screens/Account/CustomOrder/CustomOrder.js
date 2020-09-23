@@ -79,11 +79,61 @@ const CustomOrderDetails = () => {
     </View>
   );
 };
-export default class CustomOrder extends Component {
+
+
+class CustomOrder extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      successCustomVersion: 0,
+      errorCustomVersion: 0,
+      };
+      userId = global.userId;
+
   }
+
+  componentDidMount = async () => {
+    const data = new FormData();
+    data.append('user_id', userId);
+    data.append('user_type', client);
+
+    await this.props.getCustomOrderList(data);
+};
+
+static getDerivedStateFromProps(nextProps, prevState) {
+    const { successCustomVersion, errorCustomVersion } = nextProps;
+
+    let newState = null;
+
+    if (successCustomVersion > prevState.successCustomVersion) {
+        newState = {
+            ...newState,
+            successCustomVersion: nextProps.successCustomVersion,
+        };
+    }
+    if (errorCustomVersion > prevState.errorCustomVersion) {
+        newState = {
+            ...newState,
+            errorCustomVersion: nextProps.errorCustomVersion,
+        };
+    }
+
+    return newState;
+}
+
+async componentDidUpdate(prevProps, prevState) {
+    const { customOrderData } = this.props;
+
+    if (this.state.successCustomVersion > prevState.successCustomVersion) {
+
+    }
+    if (this.state.errorCustomVersion > prevState.errorCustomVersion) {
+        Toast.show({
+            text: this.props.errorMsg,
+            duration: 2500,
+        });
+    }
+}
 
   
 
@@ -111,6 +161,25 @@ export default class CustomOrder extends Component {
     );
   }
 }
+
+
+function mapStateToProps(state) {
+  return {
+      isFetching: state.accountCustomOrderReducer.isFetching,
+      error: state.accountCustomOrderReducer.error,
+      errorMsg: state.accountCustomOrderReducer.errorMsg,
+      successCustomVersion: state.accountCustomOrderReducer.successCustomVersion,
+      errorCustomVersion: state.accountCustomOrderReducer.errorCustomVersion,
+      customOrderData: state.accountCustomOrderReducer.customOrderData,
+
+  };
+}
+
+export default connect(mapStateToProps, { getCustomOrderList })();
+
+
+
+
 const styles = StyleSheet.create({
   viewContainer: {
     marginHorizontal: 5,

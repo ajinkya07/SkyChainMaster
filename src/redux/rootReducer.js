@@ -18,6 +18,8 @@ import exclusiveReducer from '@exclusive/ExclusiveReducer'
 import accountReducer from '@accountContainer/AccountReducer'
 
 import sceneReducer from '@navigation/SceneReducer'
+import accountCustomOrderReducer from '@accountCustomOrder/CustomOrderReducer'
+
 
 
 const appReducer = combineReducers({
@@ -35,7 +37,8 @@ const appReducer = combineReducers({
     notificationReducer,
     exclusiveReducer,
     accountReducer,
-    sceneReducer
+    sceneReducer,
+    accountCustomOrderReducer
 });
 
 const rootReducer = (state, action) => {
