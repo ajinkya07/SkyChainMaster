@@ -186,7 +186,7 @@ class Notification extends Component {
               source={require('../../../assets/gif/noData.gif')}
               style={{height: hp(20), width: hp(20)}}
             />
-            <Text style={{fontSize: 18, fontWeight: '400', textAlign: 'center'}}>
+            <Text style={{fontSize: 18, fontWeight: '400', textAlign: 'center',marginTop:10}}>
               {msg}
             </Text>
           </View>

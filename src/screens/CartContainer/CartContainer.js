@@ -1758,7 +1758,7 @@ class CartContainer extends Component {
                     <DateTimePicker
                       isVisible={isDateTimePickerVisible}
                       onConfirm={date => this.handleDatePicked(date)}
-                      onCancel={this.hideDateTimePicker()}
+                      onCancel={()=>this.hideDateTimePicker()}
                     />
                   )}
                 </View>

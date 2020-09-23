@@ -44,7 +44,6 @@ import {
       dispatch(showLoadingIndicator(CUSTOM_ORDER_DATA));
   
       axios.post(urls.CustomOrder.url, data, header).then(response => {
-        console.warn("response",response.data);
           if (response.data.ack ==='1') {
             dispatch(
               onSuccess(response.data, CUSTOM_ORDER_DATA_SUCCESS)
