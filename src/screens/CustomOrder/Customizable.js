@@ -282,9 +282,10 @@ class Customizable extends Component {
     } = this.state;
 
     var timeStamp = new Date().getTime() + 10 * 24 * 60 * 60 * 1000;
-    var timeStampDate = moment(
-      new Date(timeStamp).toISOString().slice(0, 10),
-    ).format('DD-MM-YYYY');
+    var timeStampDate = moment(new Date(timeStamp).toISOString().slice(0, 10),).format('DD-MM-YYYY');
+
+    var date1 = moment(timeStampDate, 'DD-MM-YYYY').valueOf();
+    var date2 = moment(date, 'DD-MM-YYYY').valueOf();
 
     var photo = {
       uri:
@@ -305,7 +306,8 @@ class Customizable extends Component {
       this.showToast('Please enter quantity', 'danger');
     }  else if (!date) {
       this.showToast('Please select delivery date', 'danger');
-    } else if (date != '' && timeStampDate > date) {
+    } else if (date != '' && date1 > date2) {
+            // here showing alert hence > , in cart hitting api hence <
       alert('Date must be 10 days greater');
     }
     else if (!imageUrl) {
@@ -322,7 +324,6 @@ class Customizable extends Component {
       data.append('file', photo);
       data.append('melting_id', karatValue);
       data.append('quantity', quantity);
-
 
       await this.props.submitCustomOrder(data);
     }
