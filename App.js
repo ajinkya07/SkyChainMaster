@@ -9,6 +9,7 @@ import SplashScreen from 'react-native-splash-screen'
 
  import firebase from 'react-native-firebase';
  import { Notification, NotificationOpen } from 'react-native-firebase';
+ import AsyncStorage from '@react-native-community/async-storage';
 
 
 const store = configureStore();
@@ -25,10 +26,10 @@ class App extends React.Component {
 
     await this.checkPermission();
 
-     this.createNotificationListeners()
-   //  firebase.notifications().setBadge(0)
-     firebase.notifications().removeAllDeliveredNotifications()
- 
+    this.createNotificationListeners()
+    //  firebase.notifications().setBadge(0)
+    firebase.notifications().removeAllDeliveredNotifications()
+
   };
 
   checkPermission = async () => {
@@ -45,6 +46,9 @@ class App extends React.Component {
     const fcmToken = await firebase.messaging().getToken();
     if (fcmToken) {
       console.warn("fcmToken", fcmToken);
+
+      AsyncStorage.setItem('fcmToken', fcmToken)
+
     } else {
     }
   }

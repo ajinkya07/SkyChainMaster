@@ -30,10 +30,12 @@ import {
   validatePassword,
   validateUserName,
 } from '@values/validate';
+import AsyncStorage from '@react-native-community/async-storage';
+import { strings } from '@values/strings'
 
 const {width, height} = Dimensions.get('window');
 
-import {signInRequest} from '@login/LoginAction';
+import {signInRequest, sendFCM} from '@login/LoginAction';
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -45,13 +47,22 @@ class SignIn extends React.Component {
       isMobile: false,
       successLoginVersion: 0,
       errorLoginVersion: 0,
+
+      successFcmVersion:0,
+      errorFcmVersion:0,
+  
     };
     this.mobileRef = React.createRef();
     this.passwordRef = React.createRef();
+
+    userId = global.userId;
+
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {successLoginVersion, errorLoginVersion} = nextProps;
+    const {successLoginVersion, errorLoginVersion,
+      successFcmVersion,errorFcmVersion
+    } = nextProps;
     let newState = null;
 
     if (successLoginVersion > prevState.successLoginVersion) {
@@ -66,14 +77,30 @@ class SignIn extends React.Component {
         errorLoginVersion: nextProps.errorLoginVersion,
       };
     }
+    if (successFcmVersion > prevState.successFcmVersion) {
+      newState = {
+        ...newState,
+        successFcmVersion: nextProps.successFcmVersion,
+      };
+    }
+    if (errorFcmVersion > prevState.errorFcmVersion) {
+      newState = {
+        ...newState,
+        errorFcmVersion: nextProps.errorFcmVersion,
+      };
+    }
+   
+   
     return newState;
   }
+
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.successLoginVersion > prevState.successLoginVersion) {
       if (this.props.loginData.user_status === 'Available') {
-        this.showToast('Login successfull', 'success');
-        this.props.navigation.navigate('Container');
+        // this.showToast('Login successfull', 'success');
+        // this.props.navigation.navigate('Container');
+        this.sendFcmToken()
       } else {
         this.showToast('Please contact admin', 'danger');
       }
@@ -82,7 +109,30 @@ class SignIn extends React.Component {
     if (this.state.errorLoginVersion > prevState.errorLoginVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
+
+    if (this.state.successFcmVersion > prevState.successFcmVersion) {
+      console.warn("successFcmVersion",this.props.fcmData);
+      this.props.navigation.navigate('Container');
+    }
+
+    if (this.state.errorFcmVersion > prevState.errorFcmVersion) {
+      this.showToast(this.props.errorMsg, 'danger');
+    }
   }
+
+  sendFcmToken = async () => {
+    let fcmToken = await AsyncStorage.getItem('fcmToken');
+
+    const fcmData = new FormData();
+    
+    fcmData.append('worker_id', userId);
+    fcmData.append('type', 'client');
+    fcmData.append('gcm_no', fcmToken);
+
+   await this.props.sendFCM(fcmData)
+
+  }
+
 
   onInputChanged = ({inputKey, isValid, value}) => {
     let validationKey = '';
@@ -104,6 +154,8 @@ class SignIn extends React.Component {
     });
   };
 
+
+
   renderLoader() {
     return (
       <View style={styles.loaderView}>
@@ -114,7 +166,7 @@ class SignIn extends React.Component {
 
   showToast = (msg, type, duration) => {
     Toast.show({
-      text: msg ? msg : 'Server error, Please try again',
+      text: msg ? msg : strings.serverFailedMsg,
       type: type ? type : 'danger',
       duration: duration ? duration : 2500,
     });
@@ -342,13 +394,15 @@ function mapStateToProps(state) {
     successLoginVersion: state.loginReducer.successLoginVersion,
     errorLoginVersion: state.loginReducer.errorLoginVersion,
     loginData: state.loginReducer.loginData,
+
+    successFcmVersion: state.loginReducer.successFcmVersion,
+    errorFcmVersion: state.loginReducer.errorFcmVersion,
+    fcmData: state.loginReducer.fcmData,
+  
   };
 }
 
-export default connect(
-  mapStateToProps,
-  {signInRequest},
-)(SignIn);
+export default connect(mapStateToProps,{signInRequest,sendFCM})(SignIn);
 
 class LoginFields extends Component {
   constructor(props) {

@@ -88,7 +88,6 @@ async componentDidUpdate(prevProps, prevState) {
 
    let url2 = urls.imageUrl + customOrderData.path + item.image_name
 
-   console.warn("url2",url2);
 
    return (
     <View style={styles.viewContainer}>

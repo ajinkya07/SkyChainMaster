@@ -43,7 +43,6 @@ export function submitCustomOrder(data) {
 
     axios.post(urls.CustomizeOrder.url, data, header).then(response => {
 
-      console.warn("submitCusomOrder", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, CUSTOMIZE_ORDER_DATA_SUCCESS)
