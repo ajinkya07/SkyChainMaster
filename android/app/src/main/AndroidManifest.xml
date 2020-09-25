@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.skychains">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+ package="com.skychains">
 
   <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -44,7 +46,7 @@
 
     <!-- firebase setup -->
 
-    <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"/>
+    <!-- <receiver android:name="io.invertase.firebase.notifications.RNFirebaseNotificationReceiver"/>
       <receiver 
         android:enabled="true"
         android:exported="true"
@@ -60,9 +62,9 @@
       <intent-filter>
         <action android:name="io.invertase.firebase.notifications.BackgroundAction"/>
       </intent-filter>
-    </receiver>
-    <service android:name="io.invertase.firebase.notifications.RNFirebaseBackgroundNotificationActionsService"/>
+    </receiver> -->
 
+    <!-- <service android:name="io.invertase.firebase.notifications.RNFirebaseBackgroundNotificationActionsService"/> -->
 
     
   </application>
