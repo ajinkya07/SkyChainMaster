@@ -1,4 +1,4 @@
-import React, {useState, Component, useRef} from 'react';
+import React, { useState, Component, useRef } from 'react';
 import {
   View,
   Text,
@@ -15,14 +15,14 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
-import {Container, Content, Icon, Toast} from 'native-base';
+import { Container, Content, Icon, Toast } from 'native-base';
 import IconPack from '@login/IconPack';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 import {
   validateEmail,
   validateMobNum,
@@ -33,24 +33,24 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { strings } from '@values/strings'
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-import {signInRequest, sendFCM} from '@login/LoginAction';
+import { signInRequest, sendFCM } from '@login/LoginAction';
 
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      password: '',
+      password: 'asdasd',
       isPassword: false,
-      mobileNo: '',
+      mobileNo: '8446116325',
       isMobile: false,
       successLoginVersion: 0,
       errorLoginVersion: 0,
 
-      successFcmVersion:0,
-      errorFcmVersion:0,
-  
+      successFcmVersion: 0,
+      errorFcmVersion: 0,
+
     };
     this.mobileRef = React.createRef();
     this.passwordRef = React.createRef();
@@ -60,8 +60,8 @@ class SignIn extends React.Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const {successLoginVersion, errorLoginVersion,
-      successFcmVersion,errorFcmVersion
+    const { successLoginVersion, errorLoginVersion,
+      successFcmVersion, errorFcmVersion
     } = nextProps;
     let newState = null;
 
@@ -89,8 +89,8 @@ class SignIn extends React.Component {
         errorFcmVersion: nextProps.errorFcmVersion,
       };
     }
-   
-   
+
+
     return newState;
   }
 
@@ -111,7 +111,7 @@ class SignIn extends React.Component {
     }
 
     if (this.state.successFcmVersion > prevState.successFcmVersion) {
-      console.warn("successFcmVersion",this.props.fcmData);
+      console.warn("successFcmVersion", this.props.fcmData);
       this.props.navigation.navigate('Container');
     }
 
@@ -124,17 +124,17 @@ class SignIn extends React.Component {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
 
     const fcmData = new FormData();
-    
+
     fcmData.append('worker_id', userId);
     fcmData.append('type', 'client');
     fcmData.append('gcm_no', fcmToken);
 
-   await this.props.sendFCM(fcmData)
+    await this.props.sendFCM(fcmData)
 
   }
 
 
-  onInputChanged = ({inputKey, isValid, value}) => {
+  onInputChanged = ({ inputKey, isValid, value }) => {
     let validationKey = '';
     switch (inputKey) {
       case 'mobileNo':
@@ -173,7 +173,7 @@ class SignIn extends React.Component {
   };
 
   loginRequest = () => {
-    const {password, isPassword, mobileNo, isMobile} = this.state;
+    const { password, isPassword, mobileNo, isMobile } = this.state;
 
     let error = '';
     try {
@@ -181,10 +181,10 @@ class SignIn extends React.Component {
         error = 'Please enter mobile number';
         throw new Error();
       }
-      if (!isMobile) {
-        error = 'Please enter valid mobile number';
-        throw new Error();
-      }
+      // if (!isMobile) {
+      //   error = 'Please enter valid mobile number';
+      //   throw new Error();
+      // }
       if (password == '') {
         error = 'Please enter password';
         throw new Error();
@@ -213,7 +213,7 @@ class SignIn extends React.Component {
   };
 
   render() {
-    const {mobileNo, password} = this.state;
+    const { mobileNo, password } = this.state;
 
     return (
       <Container>
@@ -225,7 +225,7 @@ class SignIn extends React.Component {
                 ios: -150,
                 android: 500,
               })}
-              style={{flex: 1}}>
+              style={{ flex: 1 }}>
               <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={'always'}>
                 <Content
                   contentContainerStyle={{
@@ -236,11 +236,11 @@ class SignIn extends React.Component {
                   <View style={styles.viewContainer}>
                     <View
                       style={{
-                        alignItems:'center',
-                        marginTop:hp(10),
+                        alignItems: 'center',
+                        marginTop: hp(10),
                         height: hp(19),
                       }}>
-                      
+
                       {/* <Image
                         source={IconPack.SKY_LOGO}
                         style={{
@@ -251,14 +251,16 @@ class SignIn extends React.Component {
                           marginTop: 40,
                         }}
                       /> */}
-                      <Text style={{fontFamily: 'Lato-Bold', 
-                      textAlign:'center',letterSpacing: 2,fontSize: 25, color: '#FFFFFF',}}>
+                      <Text style={{
+                        fontFamily: 'Lato-Bold',
+                        textAlign: 'center', letterSpacing: 2, fontSize: 25, color: '#FFFFFF',
+                      }}>
                         SKY CHAINS
                       </Text>
                       <Text style={{
-                          fontFamily: 'Lato-Regular', letterSpacing: 2,
-                          fontSize: 14, color: '#0d185c',textAlign:'center'
-                        }}>
+                        fontFamily: 'Lato-Regular', letterSpacing: 2,
+                        fontSize: 14, color: '#0d185c', textAlign: 'center'
+                      }}>
                         designs infinite
                       </Text>
                     </View>
@@ -294,7 +296,7 @@ class SignIn extends React.Component {
                       textInputRef={this.passwordRef}
                     />
 
-                    <View style={{justifyContent: 'flex-end', marginLeft: 110}}>
+                    <View style={{ justifyContent: 'flex-end', marginLeft: 110 }}>
                       <TouchableOpacity
                         onPress={() =>
                           this.props.navigation.navigate('ForgotPassword')
@@ -323,7 +325,7 @@ class SignIn extends React.Component {
 
                     {this.props.isFetching && this.showLoader()}
 
-                    <View style={{flexDirection: 'row'}}>
+                    <View style={{ flexDirection: 'row' }}>
                       <Text
                         style={{
                           paddingTop: 12,
@@ -373,7 +375,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
   },
-  flex: {flex: 1},
+  flex: { flex: 1 },
   buttonStyle: {
     //marginTop: 60,
   },
@@ -398,11 +400,11 @@ function mapStateToProps(state) {
     successFcmVersion: state.loginReducer.successFcmVersion,
     errorFcmVersion: state.loginReducer.errorFcmVersion,
     fcmData: state.loginReducer.fcmData,
-  
+
   };
 }
 
-export default connect(mapStateToProps,{signInRequest,sendFCM})(SignIn);
+export default connect(mapStateToProps, { signInRequest, sendFCM })(SignIn);
 
 class LoginFields extends Component {
   constructor(props) {
@@ -452,8 +454,8 @@ class LoginFields extends Component {
           break;
       }
     }
-    this.setState({isValid, text});
-    onChangeText && onChangeText({inputKey, isValid, value: text, inputId});
+    this.setState({ isValid, text });
+    onChangeText && onChangeText({ inputKey, isValid, value: text, inputId });
   };
 
   setSecureInput = secureInput => {
@@ -479,7 +481,7 @@ class LoginFields extends Component {
       textInputRef,
       onSubmitEditing,
     } = this.props;
-    const {isPasswordField, secureInput} = this.state;
+    const { isPasswordField, secureInput } = this.state;
 
     return (
       <View
@@ -579,7 +581,7 @@ const loginFieldsStyles = StyleSheet.create({
 });
 
 //-------------ActionButtonCommon-----------//
-const ActionButtonRounded = ({title, onButonPress, containerStyle}) => {
+const ActionButtonRounded = ({ title, onButonPress, containerStyle }) => {
   return (
     <TouchableOpacity
       onPress={() => {
