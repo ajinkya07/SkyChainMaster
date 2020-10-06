@@ -286,15 +286,17 @@ class Customizable extends Component {
 
     var date1 = moment(timeStampDate, 'DD-MM-YYYY').valueOf();
     var date2 = moment(date, 'DD-MM-YYYY').valueOf();
-
-    var photo = {
-      uri:
-        Platform.OS === 'android'
-          ? imageData.path
-          : imageData.path.replace('file://', ''),
-      type: imageData.mime,
-      name: imageData.modificationDate + '.jpg',
-    };
+    var photo = ''
+    if (imageData) {
+      photo = {
+        uri:
+          Platform.OS === 'android'
+            ? imageData.path
+            : imageData.path.replace('file://', ''),
+        type: imageData.mime,
+        name: imageData.modificationDate + '.jpg',
+      };
+    }
 
     if (!grossWeight) {
       this.showToast('Please enter gross weight', 'danger');
@@ -364,7 +366,7 @@ class Customizable extends Component {
             />
           }
           mode="dropdown"
-          style={{ height: 40, width: wp(55) }}
+          style={{ height: 40, width: wp(40) }}
           selectedValue={karatValue}
           onValueChange={(itemValue, itemIndex) => this.setSelectedValue(itemValue)
           }>

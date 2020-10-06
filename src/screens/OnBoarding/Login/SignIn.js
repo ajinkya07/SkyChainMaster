@@ -41,9 +41,9 @@ class SignIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      password: 'asdasd',
+      password: '',
       isPassword: false,
-      mobileNo: '8446116325',
+      mobileNo: '',
       isMobile: false,
       successLoginVersion: 0,
       errorLoginVersion: 0,
@@ -181,10 +181,10 @@ class SignIn extends React.Component {
         error = 'Please enter mobile number';
         throw new Error();
       }
-      // if (!isMobile) {
-      //   error = 'Please enter valid mobile number';
-      //   throw new Error();
-      // }
+      if (!isMobile) {
+        error = 'Please enter valid mobile number';
+        throw new Error();
+      }
       if (password == '') {
         error = 'Please enter password';
         throw new Error();

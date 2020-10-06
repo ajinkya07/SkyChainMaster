@@ -189,7 +189,7 @@ class CartContainer extends Component {
       quantity: '',
       length: '',
       weightArr: [],
-      weight:'',
+      weight: '',
       isModalVisible: false,
       date: '',
       isPlaceOrderModalVisible: false,
@@ -919,7 +919,7 @@ class CartContainer extends Component {
   };
 
   editCartProduct = editData => {
-    console.warn("editData",editData);
+    console.warn("editData", editData);
     this.setState({
       isModalVisible: true,
       productcode: editData.collection_sku_code,
@@ -1303,7 +1303,7 @@ class CartContainer extends Component {
   };
 
   render() {
-    const { cartData, wishlistData, isFetching, cartSummaryData,cartWeightData } = this.props;
+    const { cartData, wishlistData, isFetching, cartSummaryData, cartWeightData } = this.props;
     const {
       wishStateData,
       cartStateData,
@@ -1311,18 +1311,19 @@ class CartContainer extends Component {
       isDateTimePickerVisible,
       imageToBeDisplayed,
       weight,
-      weightArr
+      weightArr, isPlaceOrderModalVisible, isContinueModalVisible
     } = this.state;
 
 
     const cartSummary = cartSummaryData && cartSummaryData.cart_summary && cartSummaryData.cart_summary.product_master
-    const cartWeight= cartWeightData && cartWeightData.data && cartWeightData.data.cart_data
+    const cartWeight = cartWeightData && cartWeightData.data && cartWeightData.data.cart_data
 
     const totalWT = cartWeightData && cartWeightData.data && cartWeightData.data.total_weight;
 
     const totalQuantity = cartWeightData && cartWeightData.data && cartWeightData.data.total_quantity;
 
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
+
 
     return (
       <Container style={{ flex: 1 }}>
@@ -1586,7 +1587,7 @@ class CartContainer extends Component {
                     selectedValue={this.state.weight}
                     onValueChange={(value) => this.setSelectedValue(value)
                     }>
-                    {this.state.weightArr!=null && this.state.weightArr.map(w => (
+                    {this.state.weightArr != null && this.state.weightArr.map(w => (
                       <Picker.Item label={w.toString()} value={parseInt(w)} />
                     ))}
                   </Picker>
@@ -1631,213 +1632,206 @@ class CartContainer extends Component {
         </Modal>
 
         {/* PLACE ORDER */}
-        <Modal
-          style={{
-            justifyContent: 'flex-end',
-            marginBottom: 0,
-            marginLeft: 0,
-            marginRight: 0,
-          }}
-          isVisible={this.state.isPlaceOrderModalVisible}
-          transparent={true}
-          onRequestClose={() =>
-            this.setState({ isPlaceOrderModalVisible: false })
-          }
-          onBackdropPress={() =>
-            this.setState({ isPlaceOrderModalVisible: false })
-          }
-          onBackButtonPress={() =>
-            this.setState({ isPlaceOrderModalVisible: false })
-          }>
-          <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
-            <View
-              style={[
-                styles.bottomContainer,
-                { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
-              ]}>
+        {this.state.isPlaceOrderModalVisible &&
+          <Modal
+            style={{
+              justifyContent: 'flex-end',
+              marginBottom: 0,
+              marginLeft: 0,
+              marginRight: 0,
+            }}
+            isVisible={this.state.isPlaceOrderModalVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ isPlaceOrderModalVisible: false })}
+            onBackdropPress={() => this.setState({ isPlaceOrderModalVisible: false })}
+            onBackButtonPress={() => this.setState({ isPlaceOrderModalVisible: false })}>
+            <TouchableWithoutFeedback style={{ flex: 1 }}>
               <View
-                style={{
-                  backgroundColor: 'white',
-                  marginLeft: wp(44),
-                  borderColor: 'red',
-                  borderWidth: 2,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: hp(7),
-                  width: hp(7),
-                  borderRadius: hp(3.5),
-                  bottom: hp(3.2),
-                }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.setState({ isPlaceOrderModalVisible: false })
-                  }
-                  hitSlop={{
-                    position: 'absolute',
-                    top: 5,
-                    bottom: 5,
-                    left: 5,
-                    right: 5,
+                style={[
+                  styles.bottomContainer,
+                  { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
+                ]}>
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    marginLeft: wp(44),
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: hp(7),
+                    width: hp(7),
+                    borderRadius: hp(3.5),
+                    bottom: hp(3.2),
                   }}>
-                  <Image
-                    source={require('../../assets/image/remove.png')}
-                    style={{ height: hp(5), width: hp(5) }}
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <ScrollView>
-                <View style={{ marginHorizontal: 20, marginTop: 5 }}>
-                  <FloatingLabelTextInput
-                    label="Name"
-                    value={this.state.name}
-                    onChangeText={this.handleNameChange}
-                    resetValue={this.resetFieldName}
-                    imageIcon="profile"
-                    width="95%"
-                    marginLeft={8}
-                  />
-                  <FloatingLabelTextInput
-                    label="Email"
-                    value={this.state.email}
-                    onChangeText={this.handleEmailChange}
-                    resetValue={this.resetFieldEmail1}
-                    imageIcon="email"
-                    editable={false}
-                    selectTextOnFocus={false}
-                    width="95%"
-                    marginLeft={8}
-                  />
-                  <FloatingLabelTextInput
-                    label="Mobile"
-                    value={this.state.mobileNo}
-                    onChangeText={this.handleMobileChange}
-                    resetValue={this.resetFieldMobileNo}
-                    imageIcon="Mobile"
-                    width="95%"
-                    marginLeft={8}
-                  />
-                  <FloatingLabelTextInput
-                    label="Comments"
-                    value={this.state.comments1}
-                    onChangeText={this.handleCommentsChange1}
-                    resetValue={this.resetFieldComment1}
-                    imageIcon="comments"
-                    width="95%"
-                    marginLeft={8}
-                  />
-                  <View
-                    style={{
-                      marginTop: 32,
-                      flexDirection: 'row',
+                  <TouchableOpacity
+                    onPress={() => this.setState({ isPlaceOrderModalVisible: false })}
+                    hitSlop={{
+                      position: 'absolute',
+                      top: 5,
+                      bottom: 5,
+                      left: 5,
+                      right: 5,
                     }}>
-                    <View style={{ marginRight: 10 }}>
-                      <Image
-                        source={require('../../assets/image/BlueIcons/Date.png')}
-                        style={{ width: 25, height: 25, resizeMode: 'cover' }}
-                      />
-                    </View>
+                    <Image
+                      source={require('../../assets/image/remove.png')}
+                      style={{ height: hp(5), width: hp(5) }}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <ScrollView>
+                  <View style={{ marginHorizontal: 20, marginTop: 5 }}>
+                    <FloatingLabelTextInput
+                      label="Name"
+                      value={this.state.name}
+                      onChangeText={this.handleNameChange}
+                      resetValue={this.resetFieldName}
+                      imageIcon="profile"
+                      width="95%"
+                      marginLeft={8}
+                    />
+                    <FloatingLabelTextInput
+                      label="Email"
+                      value={this.state.email}
+                      onChangeText={this.handleEmailChange}
+                      resetValue={this.resetFieldEmail1}
+                      imageIcon="email"
+                      editable={false}
+                      selectTextOnFocus={false}
+                      width="95%"
+                      marginLeft={8}
+                    />
+                    <FloatingLabelTextInput
+                      label="Mobile"
+                      value={this.state.mobileNo}
+                      onChangeText={this.handleMobileChange}
+                      resetValue={this.resetFieldMobileNo}
+                      imageIcon="Mobile"
+                      width="95%"
+                      marginLeft={8}
+                    />
+                    <FloatingLabelTextInput
+                      label="Comments"
+                      value={this.state.comments1}
+                      onChangeText={this.handleCommentsChange1}
+                      resetValue={this.resetFieldComment1}
+                      imageIcon="comments"
+                      width="95%"
+                      marginLeft={8}
+                    />
                     <View
                       style={{
-                        borderBottomWidth: 0.5,
-                        borderColor: '#a3a3a3',
-                        width: '88%',
-                        marginLeft: 6,
+                        marginTop: 32,
+                        flexDirection: 'row',
                       }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.showDateTimePicker();
+                      <View style={{ marginRight: 10 }}>
+                        <Image
+                          source={require('../../assets/image/BlueIcons/Date.png')}
+                          style={{ width: 25, height: 25, resizeMode: 'cover' }}
+                        />
+                      </View>
+                      <View
+                        style={{
+                          borderBottomWidth: 0.5,
+                          borderColor: '#a3a3a3',
+                          width: '88%',
+                          marginLeft: 6,
                         }}>
-                        <Text style={styles.textDatePickerStyle}>
-                          {!this.state.date ? 'Date' : this.state.date}
-                        </Text>
-                      </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.showDateTimePicker();
+                          }}>
+                          <Text style={styles.textDatePickerStyle}>
+                            {!this.state.date ? 'Date' : this.state.date}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
+
+                    {isDateTimePickerVisible && (
+                      <DateTimePicker
+                        isVisible={isDateTimePickerVisible}
+                        onConfirm={date => this.handleDatePicked(date)}
+                        onCancel={() => this.hideDateTimePicker()}
+                      />
+                    )}
                   </View>
 
-                  {isDateTimePickerVisible && (
-                    <DateTimePicker
-                      isVisible={isDateTimePickerVisible}
-                      onConfirm={date => this.handleDatePicked(date)}
-                      onCancel={()=>this.hideDateTimePicker()}
-                    />
-                  )}
-                </View>
-
-                <View style={[styles.btnView, { marginVertical: 15 }]}>
-                  {this.state.isPlaceOrderModalVisible &&
-                    !this.props.isFetching ? (
-                      <ActionButtonRounded
-                        title="PLACE ORDER"
-                        onButonPress={() => this.placeOrderFromCart()}
-                        containerStyle={styles.buttonStyle}
-                      />
-                    ) : (
-                      <ActivityIndicator size="small" color={color.brandColor} />
-                    )}
-                </View>
-              </ScrollView>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
+                  <View style={[styles.btnView, { marginVertical: 15 }]}>
+                    {this.state.isPlaceOrderModalVisible &&
+                      !this.props.isFetching ? (
+                        <ActionButtonRounded
+                          title="PLACE ORDER"
+                          onButonPress={() => this.placeOrderFromCart()}
+                          containerStyle={styles.buttonStyle}
+                        />
+                      ) : (
+                        <ActivityIndicator size="small" color={color.brandColor} />
+                      )}
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        }
 
         {/* CONTINUE PLACE ORDER */}
-        <Modal
-          isVisible={this.state.isContinueModalVisible}
-          transparent={true}
-          onRequestClose={() => this.setState({ isContinueModalVisible: false })}
-          onBackdropPress={() => this.setState({ isContinueModalVisible: false })}
-          onBackButtonPress={() =>
-            this.setState({ isContinueModalVisible: false })
-          }>
-          <TouchableWithoutFeedback
-            style={{ flex: 1 }}
-            onPress={() => this.setState({ isContinueModalVisible: false })}>
-            <View style={styles.mainContainer}>
-              <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
-                <View>
-                  <View style={styles.alertContainer}>
-                    <Image source={IconPack.RATE} style={styles.alertIcon} />
-                    <Text style={styles.alertText}>Alert !</Text>
-                  </View>
+        {this.state.isContinueModalVisible &&
+          <Modal
+            isVisible={this.state.isContinueModalVisible}
+            transparent={true}
+            onRequestClose={() => this.setState({ isContinueModalVisible: false })}
+            onBackdropPress={() => this.setState({ isContinueModalVisible: false })}
+            onBackButtonPress={() => this.setState({ isContinueModalVisible: false })}>
+            <TouchableWithoutFeedback
+              style={{ flex: 1 }}
+              onPress={() => this.setState({ isContinueModalVisible: false })}>
+              <View style={styles.mainContainer}>
+                <TouchableWithoutFeedback style={{ flex: 1 }} onPress={() => null}>
+                  <View>
+                    <View style={styles.alertContainer}>
+                      <Image source={IconPack.RATE} style={styles.alertIcon} />
+                      <Text style={styles.alertText}>Alert !</Text>
+                    </View>
 
-                  <TouchableOpacity
-                    onPress={() =>
-                      this.setState({ isContinueModalVisible: false })
-                    }
-                    style={styles.closeIconContainer}>
-                    <Image source={IconPack.WHITE_CLOSE} style={styles.closeIcon} />
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() =>
+                        this.setState({ isContinueModalVisible: false })
+                      }
+                      style={styles.closeIconContainer}>
+                      <Image source={IconPack.WHITE_CLOSE} style={styles.closeIcon} />
+                    </TouchableOpacity>
 
-                  <View style={styles.bottomContainer}>
-                    <Text style={styles.cartSummaryText}>Cart Summary</Text>
-                    <View style={styles.middleViewContainer}>
-                      <Text style={styles.middleText}>Product Master :</Text>
-                      <Text style={styles.middleText}>
-                        Gross Weight : {cartSummary && cartSummary.gross_wt ? parseInt(cartSummary.gross_wt).toFixed(2) : ''}
+                    <View style={styles.bottomContainer}>
+                      <Text style={styles.cartSummaryText}>Cart Summary</Text>
+                      <View style={styles.middleViewContainer}>
+                        <Text style={styles.middleText}>Product Master :</Text>
+                        <Text style={styles.middleText}>
+                          Gross Weight : {cartSummary && cartSummary.gross_wt ? parseInt(cartSummary.gross_wt).toFixed(2) : ''}
+                        </Text>
+                        <Text style={styles.middleText}>Quantity : {cartSummary && cartSummary.quantity ? cartSummary.quantity : ''}</Text>
+                      </View>
+                      <View style={{ marginHorizontal: 20 }}>
+                        <Text style={styles.middleText}>
+                          Are you sure ? You want to check out, Click continue to
+                          proceed further
                       </Text>
-                      <Text style={styles.middleText}>Quantity : {cartSummary && cartSummary.quantity ? cartSummary.quantity : ''}</Text>
-                    </View>
-                    <View style={{ marginHorizontal: 20 }}>
-                      <Text style={styles.middleText}>
-                        Are you sure ? You want to check out, Click continue to
-                        proceed further
-                      </Text>
-                    </View>
-                    <View style={styles.btnView}>
-                      <ActionButtonRounded
-                        title="CONTINUE"
-                        onButonPress={() => this.placeOrderView()}
-                        containerStyle={styles.buttonStyle}
-                      />
+                      </View>
+                      <View style={styles.btnView}>
+                        <ActionButtonRounded
+                          title="CONTINUE"
+                          onButonPress={() => this.placeOrderView()}
+                          containerStyle={styles.buttonStyle}
+                        />
+                      </View>
                     </View>
                   </View>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-
+                </TouchableWithoutFeedback>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        }
         {/* DELETE ALL CART MODAL */}
         <Modal
           isVisible={this.state.isDeleteCartVisible}
@@ -1923,18 +1917,18 @@ class CartContainer extends Component {
                 showsVerticalScrollIndicator={false}
                 data={cartWeight && cartWeight}
                 renderItem={({ item }) => (
-                  <View style={{ marginHorizontal: 16, marginTop: 20}}>
-                    <View style={{marginBottom: 15}}>
-                      <Text style={{fontWeight:'200',fontSize:16}}>{`Category: ${item.key}`}</Text>
+                  <View style={{ marginHorizontal: 16, marginTop: 20 }}>
+                    <View style={{ marginBottom: 15 }}>
+                      <Text style={{ fontWeight: '200', fontSize: 16 }}>{`Category: ${item.key}`}</Text>
                     </View>
 
-                    <View style={{marginBottom: 20}}>
+                    <View style={{ marginBottom: 20 }}>
                       <Text>{'Description:'}</Text>
                       {item.cat_data.map(m => {
                         return (
                           <View>
-                            <Text style={{marginBottom:2}}>
-                             - Design No: {m.product_id} (Gross Wt:
+                            <Text style={{ marginBottom: 2 }}>
+                              - Design No: {m.product_id} (Gross Wt:
                               {parseInt(m.gross_wt).toFixed(2)}, Net Wt:{parseInt(m.net_wt).toFixed(2)}, Quantity:
                               {m.quantity} )
                             </Text>
@@ -1953,7 +1947,7 @@ class CartContainer extends Component {
                       <Text>{`Total WT: ${item.total_weight}`}</Text>
                     </View>
 
-                    <View style={{borderBottomWidth: 1,borderColor: '#ddd',borderBottomWidth: 0.8}}/>
+                    <View style={{ borderBottomWidth: 1, borderColor: '#ddd', borderBottomWidth: 0.8 }} />
                   </View>
                 )}
               />
@@ -1962,13 +1956,13 @@ class CartContainer extends Component {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginTop: 25,marginBottom:5
+                    marginTop: 25, marginBottom: 5
                   }}>
                   <View>
-                <Text style={{fontWeight:'200', fontSize: 16 }}>Total WT: { totalWT && parseInt(totalWT).toFixed(2)}</Text>
+                    <Text style={{ fontWeight: '200', fontSize: 16 }}>Total WT: {totalWT && parseInt(totalWT).toFixed(2)}</Text>
                   </View>
                   <View style={{ marginLeft: 30 }}>
-                    <Text style={{ fontSize: 16,fontWeight:'200' }}>Total Quantity: {totalQuantity}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: '200' }}>Total Quantity: {totalQuantity}</Text>
                   </View>
                 </View>
 
@@ -1984,6 +1978,7 @@ class CartContainer extends Component {
           </>
 
         </Modal>
+
       </Container>
     );
   }
@@ -2019,7 +2014,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica',
     color: 'gray',
     textAlign: 'center',
-    marginTop:5
+    marginTop: 5
   },
   mainContainer: {
     flex: 1,
@@ -2064,7 +2059,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 16,
     borderBottomRightRadius: 16,
   },
-  
+
   middleViewContainer: {
     marginVertical: 20,
   },

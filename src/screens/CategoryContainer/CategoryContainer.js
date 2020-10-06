@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View, Text, FlatList, StyleSheet,
   ImageBackground, SafeAreaView,
-  Image, TouchableOpacity, ActivityIndicator,Platform,
+  Image, TouchableOpacity, ActivityIndicator, Platform,
 }
   from 'react-native';
 import {
@@ -19,10 +19,9 @@ import _CustomHeader from '@customHeader/_CustomHeader'
 import _Container from '@container/_Container';
 import { connect } from 'react-redux';
 import { urls } from '@api/urls'
-import {
-  getHomePageData
-} from '@homepage/HomePageAction';
+import { getHomePageData } from '@homepage/HomePageAction';
 import IconPack from '../OnBoarding/Login/IconPack';
+import Theme from '../../values/Theme';
 
 
 
@@ -53,45 +52,45 @@ class CategoryContainer extends Component {
     }
   }
 
-  
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { successHomePageVersion, errorHomePageVersion,
     } = nextProps;
     let newState = null;
 
     if (successHomePageVersion > prevState.successHomePageVersion) {
-        newState = {
-            ...newState,
-            successHomePageVersion: nextProps.successHomePageVersion,
-        };
+      newState = {
+        ...newState,
+        successHomePageVersion: nextProps.successHomePageVersion,
+      };
     }
     if (errorHomePageVersion > prevState.errorHomePageVersion) {
-        newState = {
-            ...newState,
-            errorHomePageVersion: nextProps.errorHomePageVersion,
-        };
+      newState = {
+        ...newState,
+        errorHomePageVersion: nextProps.errorHomePageVersion,
+      };
     }
-    
 
-    
+
+
 
     return newState;
-}
+  }
 
 
   async componentDidUpdate(prevProps, prevState) {
-    const { totalCartCountData, addToWishlistData,errorMsg,
-        addToCartData, homePageData, addToCartPlusOneData } = this.props;
+    const { totalCartCountData, addToWishlistData, errorMsg,
+      addToCartData, homePageData, addToCartPlusOneData } = this.props;
 
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
-        if (homePageData && homePageData.collection) {
-            this.setState({
-              categories: homePageData && homePageData.collection ? homePageData.collection : []
-            })
-        }
+      if (homePageData && homePageData.collection) {
+        this.setState({
+          categories: homePageData && homePageData.collection ? homePageData.collection : []
+        })
+      }
     }
-}
+  }
 
   showToast = (msg, type, duration) => {
     Toast.show({
@@ -126,20 +125,20 @@ class CategoryContainer extends Component {
     }
   }
 
-  
+
   noDataFound = (msg) => {
     return (
-      <View style={{flex:1, justifyContent: 'center', alignItems: 'center', bottom: hp(5) }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', bottom: hp(5) }}>
         <Image
           source={require("../../assets/gif/noData.gif")}
           style={{ height: hp(20), width: hp(20) }}
         />
-        <Text style={{ fontSize: 18, fontWeight: '400',textAlign:'center' }}>{msg}</Text>
+        <Text style={{ fontSize: 18, fontWeight: '400', textAlign: 'center' }}>{msg}</Text>
       </View>
     )
   }
 
-  onRefresh = async() =>{
+  onRefresh = async () => {
     const type = Platform.OS === 'ios' ? 'ios' : 'android'
 
     const refreshData = new FormData();
@@ -148,7 +147,7 @@ class CategoryContainer extends Component {
 
     await this.props.getHomePageData(refreshData)
 
-}
+  }
 
 
   render() {
@@ -164,11 +163,11 @@ class CategoryContainer extends Component {
         {fromSeeMore &&
           <_CustomHeader
             Title={'Category'}
-          //  RightBtnIcon1={require('../../assets/image/BlueIcons/Search.png')}
+            //  RightBtnIcon1={require('../../assets/image/BlueIcons/Search.png')}
             RightBtnIcon2={require('../../assets/image/BlueIcons/Notification-White.png')}
             LeftBtnPress={() => this.props.navigation.goBack()}
             //RightBtnPressOne={()=> this.props.navigation.navigate('SearchScreen')}
-            RightBtnPressTwo={()=> this.props.navigation.navigate('Notification')}
+            RightBtnPressTwo={() => this.props.navigation.navigate('Notification')}
             rightIconHeight2={hp(3.5)}
             LeftBtnPress={() => this.props.navigation.goBack()}
             backgroundColor={color.green}
@@ -202,9 +201,9 @@ class CategoryContainer extends Component {
                     </View>
 
                     <View style={{ alignContent: 'center', justifyContent: 'center', flex: 0.70 }}>
-                      <_Text numberOfLines={2} fwPrimary
-                        //textColor={color.white}
-                        fsMedium style={{ marginRight: hp(3), marginLeft: Platform.OS === 'ios' ? hp(1) : 0 }}>
+                      <_Text numberOfLines={2} fsMedium
+                        style={{ ...Theme.ffLatoRegular18, marginRight: hp(1), marginLeft: Platform.OS === 'ios' ? hp(1) : 0 }}
+                      >
                         {capitalizeFirstLetter(item.col_name)}
                       </_Text>
                     </View>
@@ -256,5 +255,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, {getHomePageData})(CategoryContainer);
- 
+export default connect(mapStateToProps, { getHomePageData })(CategoryContainer);
