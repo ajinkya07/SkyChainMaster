@@ -441,10 +441,11 @@ class HomePage extends Component {
               resizeMode='cover'
             />
           } */}
-          <Image style={{ height: hp(26.5), width: wp(100) }}
+          <Image style={{ height: hp(27), width: wp(100), }}
             source={{ uri: baseUrl + data.brand_image }}
             defaultSource={IconPack.APP_LOGO}
             resizeMode='cover'
+
           />
 
         </View>
@@ -456,7 +457,7 @@ class HomePage extends Component {
     return (
       <View
         style={{
-          height: hp(26.5),
+          height: hp(27),
           width: wp(100),
         }}>
         {bannerData ? (

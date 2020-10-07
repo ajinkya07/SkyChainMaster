@@ -32,7 +32,6 @@ import FromDatePicker from './FromDatePicker'
 import ToDatePicker from './ToDatePicker'
 import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
 import Theme from '../../../values/Theme';
-import { value } from 'react-native-extended-stylesheet';
 
 const { width } = Dimensions.get('window');
 
@@ -368,7 +367,6 @@ class SearchScreen extends Component {
 
     selectKarat = () => {
         const { selectedKarat, isOkKaratClicked } = this.state
-
         return (
             <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Melting:</_Text>
@@ -400,6 +398,7 @@ class SearchScreen extends Component {
 
     selectCategories = () => {
         const { selectedCategories, isContinueClicked } = this.state
+
         return (
             <View style={{ marginHorizontal: wp(3) }}>
                 <_Text fsHeading>Select Categories:</_Text>
@@ -413,31 +412,40 @@ class SearchScreen extends Component {
                     </View>
                 }
 
-                <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => this.toggleModal()}>
+                {/* <TouchableOpacity onPress={() => this.toggleModal()}>
+                    <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
                         <View style={styles.roundedButton}>
                             <View style={styles.buttonText}>
                                 <_Text fsHeading bold>SELECT CATEGORIES</_Text>
                             </View>
                         </View>
-                    </TouchableOpacity>
+                    </View>
+                </TouchableOpacity> */}
+                <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
+                    <ActionButtonRounded2
+                        title="SELECT CATEGORIES"
+                        onButonPress={() => this.toggleModal()}
+                        containerStyle={styles.roundedButton}
+                        textStyle={styles.buttonText}
+                    />
                 </View>
-            </View>
 
+            </View>
         )
     }
 
     searchButton = () => {
         return (
-            <View style={{ marginBottom: hp(4), marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => this.searchProducts()}>
+            <TouchableWithoutFeedback onPress={() => this.searchProducts()}>
+                <View style={{ marginBottom: hp(4), marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
                     <View style={styles.roundedButtonSearch}>
                         <View style={styles.buttonText}>
                             <_Text fsHeading bold textColor={'#FFFFFF'}>SEARCH</_Text>
                         </View>
                     </View>
-                </TouchableOpacity>
-            </View>
+                </View>
+            </TouchableWithoutFeedback>
+
         )
     }
 
@@ -634,13 +642,15 @@ class SearchScreen extends Component {
 
     render() {
 
-        const { collection, selectedCategories, selectedKarat, karatData, selectedStatus } = this.state
+        const { collection, isModalVisible, isSearchCodeVisible, isKaratModalVisible,
+            selectedKarat, karatData, selectedStatus,
+            selectedCategories, isContinueClicked
+        } = this.state
         const { allParameterData } = this.props
 
         const list = allParameterData && allParameterData.melting
 
         let statusArray = [{ 'id': '1', 'status': 'Available' }, { 'id': '2', 'status': 'Sold' }]
-
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -652,8 +662,9 @@ class SearchScreen extends Component {
                     rightIconHeight2={hp(3.5)}
                     backgroundColor="#19af81"
                 />
-                <ScrollView>
-
+                <ScrollView alwaysBounceVertical={false}
+                    bounces={false}
+                >
                     <View style={{ paddingVertical: hp(1.5), justifyContent: 'center', alignItems: 'center' }}>
                         <_Text fsHeading>Code Search:</_Text>
                         <TouchableOpacity onPress={() => this.searchModal()}>
@@ -671,6 +682,7 @@ class SearchScreen extends Component {
                     <View style={{ paddingVertical: hp(1.5), }}>
                         {this.grossWeight()}
                     </View>
+
                     <View style={{ paddingVertical: hp(1.5), }}>
                         {this.netWeight()}
                     </View>
@@ -680,7 +692,7 @@ class SearchScreen extends Component {
 
                     </View>
 
-                    <View style={{ paddingVertical: hp(1.2), marginHorizontal: wp(3) }}>
+                    <View style={{ paddingVertical: hp(1), marginHorizontal: wp(3) }}>
                         <_Text fsHeading>Product Status:</_Text>
                         <Picker
                             iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 25, }} />}
@@ -690,202 +702,239 @@ class SearchScreen extends Component {
                             onValueChange={(value) => this.setSelectedStatus(value)
                             }>
                             {statusArray && statusArray.map(s => (
-                                <Picker.Item label={(s.status).toString()} value={parseInt(s.id)} />
+                                <Picker.Item key={(s.id).toString()} label={(s.status)} value={parseInt(s.id)} />
                             ))}
                         </Picker>
                     </View>
 
 
-                    <View style={{ paddingVertical: hp(0.2), }}>
+                    <View style={{ paddingVertical: hp(1), }}>
                         {this.selectKarat()}
                     </View>
 
-                    <View style={{ paddingVertical: 0, marginTop: 5 }}>
+                    <View style={{ paddingVertical: hp(0.5), }}>
                         {this.selectCategories()}
                     </View>
 
-                    <View style={{ paddingVertical: hp(0.5), }}>
+
+                    {/* <View style={{ paddingVertical: hp(0.5), }}>
                         {this.searchButton()}
-                    </View>
+                    </View> */}
+
 
                 </ScrollView>
 
-                <Modal
-                    isVisible={this.state.isModalVisible}
-                    transparent={true}
-                    onRequestClose={() => this.closeModal()}
-                    onBackdropPress={() => this.closeModal()}
-                    onBackButtonPress={() => this.closeModal()}
+                {/* <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    {this.selectCategories()}
+                </View> */}
 
-                    style={{ margin: 28 }}>
-                    <SafeAreaView>
-                        <TouchableWithoutFeedback
-                            style={{ flex: 1 }}
-                            onPress={() => this.setState({ isModalVisible: false, })
-                            }>
-                            <>
-                                <View style={styles.flex}>
-                                    <View style={styles.selectCategoriesContainer}>
-                                        <Text style={styles.selectCategoryText}>
-                                            Select Categories
-                                  </Text>
-                                        <View style={styles.closeIconView}>
-                                            <TouchableOpacity
-                                                onPress={() => this.closeModal()}>
-                                                <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
-                                            </TouchableOpacity>
-                                        </View>
-
-                                    </View>
-
-                                    <FlatList
-                                        style={{ backgroundColor: '#ffffff' }}
-                                        showsVerticalScrollIndicator={false}
-                                        data={collection && collection}
-                                        renderItem={({ item }) => (
-                                            <View style={styles.categoryContainer}>
-                                                <Text style={styles.categoryText}>
-                                                    {item.col_name}
-                                                </Text>
-                                                <CheckBox
-                                                    style={styles.checkBox}
-                                                    tintColors={{ true: '#11255a', false: 'gray' }}
-                                                    value={this.state.check[item.id]}
-                                                    onChange={() => this.checkBox_Test(item.id, item.col_name)}
-                                                    boxType="square"
-                                                    onFillColor="#11255a"
-                                                    onTintColor="gray"
-                                                    onCheckColor="#ffffff"
-                                                />
-                                            </View>
-                                        )}
-                                    />
-                                    <View style={styles.buttonContainer}>
-                                        <ActionButtonRounded
-                                            title="CONTINUE"
-                                            onButonPress={() => this.continuecategoryModal()}
-                                            containerStyle={styles.buttonStyle}
-                                        />
-                                    </View>
-                                </View>
-                            </>
-                        </TouchableWithoutFeedback>
-                    </SafeAreaView>
-                </Modal>
-
-
-                <View style={styles.flex}>
-                    <Modal isVisible={this.state.isSearchCodeVisible}
-                        onBackdropPress={() => this.setState({ isSearchCodeVisible: false })}
-                        onBackButtonPress={() => this.setState({ isSearchCodeVisible: false })}
-                        onRequestClose={() => this.setState({ isSearchCodeVisible: false })}
-
-                        style={{ margin: 30 }}>
-                        <View style={styles.container}>
-                            <View style={styles.topContainer}>
-                                <Text style={styles.title}>Search By Code</Text>
-                            </View>
-                            <View style={styles.bottomConatiner}>
-                                <View style={styles.flexRow}>
-                                    <View style={styles.searchImgView}>
-                                        <Image
-                                            style={{ height: hp(3.2), width: hp(3.2) }}
-                                            source={IconPack.SEARCH_WHITE}
-                                        />
-                                    </View>
-
-                                    <View style={{ marginRight: 15, flex: 1 }}>
-                                        <FloatingLabelTextInput
-                                            label="Search"
-                                            value={this.state.searchText}
-                                            onChangeText={this.handleSearchChange}
-                                            resetValue=""
-                                            width="100%"
-                                        />
-                                    </View>
-                                </View>
-                                <ActionButtonRounded
-                                    title="CONTINUE"
-                                    onButonPress={() => this.searchByCode()}
-                                    containerStyle={styles.buttonStyle}
-                                />
-                            </View>
-
-                            <TouchableOpacity style={styles.imageView}
-                                onPress={() => this.setState({ isSearchCodeVisible: false })}>
-                                <Image
-                                    source={IconPack.WHITE_CLOSE}
-                                    style={styles.imageStyle}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </Modal>
+                <View style={{
+                    alignItems: 'center',
+                    justifyContent: 'center', marginBottom: 10, marginTop: 10,
+                }}>
+                    <ActionButtonRounded
+                        title="SEARCH"
+                        onButonPress={() => this.searchProducts()}
+                        containerStyle={styles.roundedButtonSearch}
+                        textStyle={{
+                            color: '#FFFFFF',
+                            fontSize: 16, fontFamily: 'Lato-Bold',
+                        }}
+                    />
                 </View>
 
+                {isModalVisible &&
+                    <Modal
+                        isVisible={this.state.isModalVisible}
+                        // transparent={true}
+                        onRequestClose={() => this.closeModal()}
+                        onBackdropPress={() => this.closeModal()}
+                        onBackButtonPress={() => this.closeModal()}
 
-                <Modal
-                    isVisible={this.state.isKaratModalVisible}
-                    transparent={true}
-                    onRequestClose={() => this.closeKaratModal()}
-                    onBackdropPress={() => this.closeKaratModal()}
-                    onBackButtonPress={() => this.closeKaratModal()}
-
-                    style={{ margin: 0 }}>
-                    <TouchableWithoutFeedback >
-                        <View style={styles.container1}>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.titleText}>Select Melting</Text>
+                        style={{ marginHorizontal: 24, marginVertical: Platform.OS === 'ios' ? 70 : 0 }}>
+                        <SafeAreaView>
+                            <View style={styles.selectCategoriesContainer}>
+                                <Text style={styles.selectCategoryText}>
+                                    Select Categories
+                                  </Text>
                                 <View style={styles.closeIconView}>
-                                    <TouchableOpacity
-                                        onPress={() => this.closeKaratModal()}>
+                                    <TouchableOpacity onPress={() => this.closeModal()}>
                                         <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
                                     </TouchableOpacity>
                                 </View>
+
                             </View>
-                            <TextInput
-                                onChangeText={search => this.setState({ search })}
-                                style={styles.searchBar}
-                                placeholder="Find Melting"
-                                placeholderTextColor="#757575"
-                            />
 
-                            {list && list.length > 0 && this.filterList(list).length !== 0 ? (
-                                this.filterList(list).map((listItem, index) => (
-                                    <View style={styles.dataContainer}>
-                                        <Text key={index} style={styles.itemText}>
-                                            {listItem.melting_name}
+                            <FlatList
+                                style={{ backgroundColor: '#ffffff' }}
+                                showsVerticalScrollIndicator={false}
+                                data={collection && collection}
+                                renderItem={({ item }) => (
+                                    <View style={styles.categoryContainer}>
+                                        <Text numberOfLines={2} style={styles.categoryText}>
+                                            {item.col_name.length > 22 ? (item.col_name).substring(0, 22) + '...' : item.col_name}
                                         </Text>
-
-                                        <View style={{ marginRight: 10 }}>
+                                        {  Platform.OS === 'ios' ? <CheckBox
+                                            style={styles.checkBox}
+                                            tintColors={{ true: '#11255a', false: 'gray' }}
+                                            value={this.state.check[item.id]}
+                                            onValueChange={() => this.checkBox_Test(item.id, item.col_name)}
+                                            boxType="square"
+                                            onFillColor="#11255a"
+                                            onTintColor="gray"
+                                            onCheckColor="#ffffff"
+                                        /> :
                                             <CheckBox
-                                                disabled={false}
-                                                value={this.state.karat[listItem.id]}
-                                                onChange={() => this.setToggleCheckBox(listItem.id, listItem.melting_name)}
-                                                // onFillColor="#FFFFFF"
+                                                style={styles.checkBox}
+                                                tintColors={{ true: '#11255a', false: 'gray' }}
+                                                value={this.state.check[item.id]}
+                                                onChange={() => this.checkBox_Test(item.id, item.col_name)}
+                                                boxType="square"
                                                 onFillColor="#11255a"
                                                 onTintColor="gray"
                                                 onCheckColor="#ffffff"
                                             />
-                                        </View>
-                                    </View>
-                                ))
-                            ) : (
-                                    <View style={styles.noContainView}>
-                                        <Text style={styles.noFoundText}>No Data found!</Text>
+                                        }
                                     </View>
                                 )}
-
-
-                            <View style={[styles.buttonContainer, { marginBottom: hp(1) }]}>
+                            />
+                            <View style={styles.buttonContainer}>
                                 <ActionButtonRounded
                                     title="CONTINUE"
-                                    onButonPress={() => this.onOKkaratSelected()}
+                                    onButonPress={() => this.continuecategoryModal()}
                                     containerStyle={styles.buttonStyle}
                                 />
                             </View>
-                        </View>
-                    </TouchableWithoutFeedback>
-                </Modal>
+                        </SafeAreaView>
+                    </Modal>
+                }
+
+
+                {  isSearchCodeVisible &&
+                    <View style={styles.flex}>
+                        <Modal isVisible={this.state.isSearchCodeVisible}
+                            onBackdropPress={() => this.setState({ isSearchCodeVisible: false })}
+                            onBackButtonPress={() => this.setState({ isSearchCodeVisible: false })}
+                            onRequestClose={() => this.setState({ isSearchCodeVisible: false })}
+
+                            style={{ margin: 30 }}>
+                            <View style={styles.container}>
+                                <View style={styles.topContainer}>
+                                    <Text style={styles.title}>Search By Code</Text>
+                                </View>
+                                <View style={styles.bottomConatiner}>
+                                    <View style={styles.flexRow}>
+                                        <View style={styles.searchImgView}>
+                                            <Image
+                                                style={{ height: hp(3.2), width: hp(3.2) }}
+                                                source={IconPack.SEARCH_WHITE}
+                                            />
+                                        </View>
+
+                                        <View style={{ marginRight: 15, flex: 1 }}>
+                                            <FloatingLabelTextInput
+                                                label="Search"
+                                                value={this.state.searchText}
+                                                onChangeText={this.handleSearchChange}
+                                                resetValue=""
+                                                width="100%"
+                                            />
+                                        </View>
+                                    </View>
+                                    <ActionButtonRounded
+                                        title="CONTINUE"
+                                        onButonPress={() => this.searchByCode()}
+                                        containerStyle={styles.buttonStyle}
+                                    />
+                                </View>
+
+                                <TouchableOpacity style={styles.imageView}
+                                    onPress={() => this.setState({ isSearchCodeVisible: false })}>
+                                    <Image
+                                        source={IconPack.WHITE_CLOSE}
+                                        style={styles.imageStyle}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </Modal>
+                    </View>
+                }
+
+                {isKaratModalVisible &&
+                    <Modal
+                        isVisible={this.state.isKaratModalVisible}
+                        transparent={true}
+                        onRequestClose={() => this.closeKaratModal()}
+                        onBackdropPress={() => this.closeKaratModal()}
+                        onBackButtonPress={() => this.closeKaratModal()}
+
+                        style={{ margin: 0 }}>
+                        <TouchableWithoutFeedback >
+                            <View style={styles.container1}>
+                                <View style={styles.titleContainer}>
+                                    <Text style={styles.titleText}>Select Melting</Text>
+                                    <View style={styles.closeIconView}>
+                                        <TouchableOpacity
+                                            onPress={() => this.closeKaratModal()}>
+                                            <Image style={styles.closeIcon} source={IconPack.WHITE_CLOSE} />
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                                <TextInput
+                                    onChangeText={search => this.setState({ search })}
+                                    style={styles.searchBar}
+                                    placeholder="Find Melting"
+                                    placeholderTextColor="#757575"
+                                />
+
+                                {list && list.length > 0 && this.filterList(list).length !== 0 ? (
+                                    this.filterList(list).map((listItem, index) => (
+                                        <View style={styles.dataContainer}>
+                                            <Text key={index} style={styles.itemText}>
+                                                {listItem.melting_name}
+                                            </Text>
+
+                                            <View style={{ marginRight: 10 }}>
+                                                {Platform.OS === 'ios' ? <CheckBox
+                                                    disabled={false}
+                                                    value={this.state.karat[listItem.id]}
+                                                    onValueChange={() => this.setToggleCheckBox(listItem.id, listItem.melting_name)}
+                                                    // onFillColor="#FFFFFF"
+                                                    onFillColor="#11255a"
+                                                    onTintColor="gray"
+                                                    onCheckColor="#ffffff"
+                                                /> :
+                                                    <CheckBox
+                                                        disabled={false}
+                                                        value={this.state.karat[listItem.id]}
+                                                        onChange={() => this.setToggleCheckBox(listItem.id, listItem.melting_name)}
+                                                        // onFillColor="#FFFFFF"
+                                                        onFillColor="#11255a"
+                                                        onTintColor="gray"
+                                                        onCheckColor="#ffffff"
+                                                    />
+                                                }
+                                            </View>
+                                        </View>
+                                    ))
+                                ) : (
+                                        <View style={styles.noContainView}>
+                                            <Text style={styles.noFoundText}>No Data found!</Text>
+                                        </View>
+                                    )}
+
+
+                                <View style={[styles.buttonContainer, { marginBottom: hp(1) }]}>
+                                    <ActionButtonRounded
+                                        title="CONTINUE"
+                                        onButonPress={() => this.onOKkaratSelected()}
+                                        containerStyle={styles.buttonStyle}
+                                    />
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                }
 
             </SafeAreaView>
         );
@@ -963,9 +1012,9 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
     },
-    flex: {
-        flex: 1,
-    },
+    // flex: {
+    //     flex: 1,
+    // },
     selectCategoriesContainer: {
         height: 50,
         backgroundColor: color.green,
@@ -1011,7 +1060,7 @@ const styles = StyleSheet.create({
         marginBottom: 2,
     },
     categoryText: {
-        marginLeft: 32,
+        marginLeft: 25,
         fontFamily: 'Helvetica',
         fontSize: 16,
     },
@@ -1175,6 +1224,23 @@ const ActionButtonRounded = ({ title, onButonPress, containerStyle, }) => {
     );
 };
 
+const ActionButtonRounded2 = ({ title, onButonPress, containerStyle, }) => {
+    return (
+        <TouchableOpacity
+            onPress={() => { onButonPress() }}>
+            <View
+                style={[
+                    actionButtonRoundedStyle.mainContainerStyle,
+                    containerStyle || null,
+                ]}>
+                <View style={actionButtonRoundedStyle.innerContainer}>
+                    <Text style={actionButtonRoundedStyle.titleStyle2}>{title}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+};
+
 const actionButtonRoundedStyle = StyleSheet.create({
     mainContainerStyle: {
         backgroundColor: color.green,
@@ -1191,10 +1257,19 @@ const actionButtonRoundedStyle = StyleSheet.create({
     },
     titleStyle: {
         color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: 16,
         textAlign: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        fontWeight: '400',
+        fontFamily: 'Lato-Bold',
     },
+    titleStyle2: {
+        color: '#000000',
+        fontSize: 16,
+        textAlign: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'Lato-Bold',
+    },
+
 });

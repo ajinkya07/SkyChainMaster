@@ -316,6 +316,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				F0C8FFD302B5E95F6F3B6A36 /* [CP] Copy Pods Resources */,
 				5E4EADCE73424E67AEAEE52E /* [CP-User] [RNFB] Core Configuration */,
+				174F3DEB252CC7F300567AA9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -487,7 +488,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+			shellScript = "export NODE_BINARY=$(which node)\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		174F3DEB252CC7F300567AA9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n";
 		};
 		1FB3E5E2FDBCEC924B658520 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -828,6 +846,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = SkyChains/SkyChains.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZAWGQ38PQJ;

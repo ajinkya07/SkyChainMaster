@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, { Component, useState } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -13,28 +13,28 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
-import {Container, Header, Toast, Picker, Icon} from 'native-base';
+import { Container, Header, Toast, Picker, Icon } from 'native-base';
 import IconPack from '@login/IconPack';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 import {
   getProductDetails,
   addToCartFromDetails,
 } from '@category/ProductDetailsAction';
-import {urls} from '@api/urls';
-import {strings} from '@values/strings';
+import { urls } from '@api/urls';
+import { strings } from '@values/strings';
 import Swiper from 'react-native-swiper';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import _CustomHeader from '@customHeader/_CustomHeader';
-import {parseInt} from 'lodash';
-import {getTotalCartCount} from '@homepage/HomePageAction';
+import { parseInt } from 'lodash';
+import { getTotalCartCount } from '@homepage/HomePageAction';
 import Theme from '../../values/Theme';
 const qs = require('query-string');
 
@@ -56,23 +56,23 @@ class ProductDetails extends React.Component {
 
     const fromHome = this.props.route.params.fromHome;
 
-    
+
     this.state = {
       count: 1,
       remark: '',
       isHideDetail: true,
       length: '',
       weight: '',
-      weightArray:[],
+      weightArray: [],
       productItem: productItem,
-      fromHome:fromHome,
+      fromHome: fromHome,
       successProductDetailsVersion: 0,
       errorProductDetailsVersion: 0,
       currentPage: 0,
 
       successAddCartDetailsVersion: 0,
       errorAddCartDetailsVersion: 0,
-      karatValue:'',
+      karatValue: '',
 
       successAllParameterVersion: 0,
       errorAllParamaterVersion: 0,
@@ -83,29 +83,29 @@ class ProductDetails extends React.Component {
   }
 
   componentDidMount = () => {
-    const {productItem, fromHome} = this.state;
+    const { productItem, fromHome } = this.state;
 
-    if(fromHome){
-    const data = new FormData();
-    data.append('table', 'product_master');
-    data.append('mode_type', 'home_products');
-    data.append('collection_id', 0);
-    data.append('user_id', userId);
-    data.append('product_id', productItem.product_id);
+    if (fromHome) {
+      const data = new FormData();
+      data.append('table', 'product_master');
+      data.append('mode_type', 'home_products');
+      data.append('collection_id', 0);
+      data.append('user_id', userId);
+      data.append('product_id', productItem.product_id);
 
-    this.props.getProductDetails(data);
+      this.props.getProductDetails(data);
     }
-    
-   else if(!fromHome){
+
+    else if (!fromHome) {
       const data = new FormData();
       data.append('table', 'product_master');
       data.append('mode_type', 'normal');
       data.append('collection_id', productItem.collection_id);
       data.append('user_id', userId);
       data.append('product_id', productItem.product_inventory_id);
-  
+
       this.props.getProductDetails(data);
-      }
+    }
   };
 
 
@@ -115,7 +115,7 @@ class ProductDetails extends React.Component {
       errorProductDetailsVersion,
       successAddCartDetailsVersion,
       errorAddCartDetailsVersion,
-      successAllParameterVersion,errorAllParamaterVersion
+      successAllParameterVersion, errorAllParamaterVersion
 
     } = nextProps;
     let newState = null;
@@ -164,15 +164,15 @@ class ProductDetails extends React.Component {
   }
 
   async componentDidUpdate(prevProps, prevState) {
-    const {productDetailsData, addCartDetailsData} = this.props;
+    const { productDetailsData, addCartDetailsData } = this.props;
 
-    if ( this.state.successProductDetailsVersion > prevState.successProductDetailsVersion ) {
+    if (this.state.successProductDetailsVersion > prevState.successProductDetailsVersion) {
       if (productDetailsData.ack == '1') {
         this.setState({
           karatValue: productDetailsData.data[0].default_melting_id,
-         
+
           productDetailsStateData: productDetailsData.data[0],
-         
+
           length: productDetailsData !== undefined ? productDetailsData.data[0].length : '',
 
           weightArray: productDetailsData !== undefined ? productDetailsData.data[0].weight &&
@@ -191,7 +191,7 @@ class ProductDetails extends React.Component {
         this.showToast(strings.serverFailedMsg, 'danger');
       }
     }
-    if (this.state.errorProductDetailsVersion > prevState.errorProductDetailsVersion ) {
+    if (this.state.errorProductDetailsVersion > prevState.errorProductDetailsVersion) {
       this.showToast(this.props.errorMsg, 'danger');
 
       const countData = new FormData();
@@ -201,7 +201,7 @@ class ProductDetails extends React.Component {
       await this.props.getTotalCartCount(countData);
     }
 
-    if ( this.state.successAddCartDetailsVersion >  prevState.successAddCartDetailsVersion ) {
+    if (this.state.successAddCartDetailsVersion > prevState.successAddCartDetailsVersion) {
       if (addCartDetailsData.ack == '1') {
         Toast.show({
           text: this.props.errorMsg,
@@ -209,7 +209,7 @@ class ProductDetails extends React.Component {
         });
       }
     }
-    if ( this.state.errorAddCartDetailsVersion > prevState.errorAddCartDetailsVersion ) {
+    if (this.state.errorAddCartDetailsVersion > prevState.errorAddCartDetailsVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
   }
@@ -242,11 +242,11 @@ class ProductDetails extends React.Component {
   }
 
   setCurrentPage = position => {
-    this.setState({currentPage: position});
+    this.setState({ currentPage: position });
   };
 
   renderScreen = (data, k) => {
-    const {productDetailsStateData} = this.state;
+    const { productDetailsStateData } = this.state;
     let url2 =
       urls.imageUrl +
       (productDetailsStateData !== undefined &&
@@ -272,8 +272,8 @@ class ProductDetails extends React.Component {
           <Image
             source={{ uri: url2 + data }}
             resizeMode='stretch'
-            style={{height: hp(33), width: wp(100)}}
-          defaultSource={IconPack.APP_LOGO}
+            style={{ height: hp(33), width: wp(100) }}
+            defaultSource={IconPack.APP_LOGO}
           />
 
         </View>
@@ -291,7 +291,7 @@ class ProductDetails extends React.Component {
         {item ? (
           <Swiper
             removeClippedSubviews={false}
-            style={{flexGrow: 1}}
+            style={{ flexGrow: 1 }}
             autoplayTimeout={10}
             ref={swiper => {
               this.swiper = swiper;
@@ -333,8 +333,8 @@ class ProductDetails extends React.Component {
             )}
           </Swiper>
         ) : (
-          this.renderLoader()
-        )}
+            this.renderLoader()
+          )}
       </View>
     );
   };
@@ -349,9 +349,9 @@ class ProductDetails extends React.Component {
         }}>
         <Image
           source={require('../../assets/gif/noData.gif')}
-          style={{height: hp(20), width: hp(20)}}
+          style={{ height: hp(20), width: hp(20) }}
         />
-        <Text style={{fontSize: 18, fontWeight: '400'}}>
+        <Text style={{ fontSize: 18, fontWeight: '400' }}>
           {strings.serverFailedMsg}
         </Text>
       </View>
@@ -380,29 +380,29 @@ class ProductDetails extends React.Component {
   };
 
   PickerDropDown = () => {
-    const {karatValue} = this.state;
-    const{allParameterData} = this.props
+    const { karatValue } = this.state;
+    const { allParameterData } = this.props
 
     let list = allParameterData && allParameterData.melting
-    
+
     return (
       <View>
         <Picker
           iosIcon={
             <Image
               source={IconPack.DOWN_ARROW}
-              style={{width: 12, height: 12, resizeMode: 'cover'}}
+              style={{ width: 12, height: 12, resizeMode: 'cover' }}
             />
           }
           mode="dropdown"
-          style={{height: 40, width: wp(55)}}
+          style={{ height: 40, width: wp(55) }}
           selectedValue={karatValue}
-          onValueChange={(itemValue, itemIndex) =>this.setSelectedValueKarat(itemValue)
+          onValueChange={(itemValue, itemIndex) => this.setSelectedValueKarat(itemValue)
           }>
           {list && list.length > 0 ? (
             list.map((listItem, index) => (
               <Picker.Item label={(listItem.melting_name).toString()} value={parseInt(`${listItem.id}`)} />
-              )))
+            )))
 
             : null
           }
@@ -412,7 +412,7 @@ class ProductDetails extends React.Component {
   };
 
 
-setSelectedValueKarat = karat => {
+  setSelectedValueKarat = karat => {
     this.setState({
       karatValue: karat,
     });
@@ -424,16 +424,16 @@ setSelectedValueKarat = karat => {
     return (
       <View>
         <Picker
-          iosIcon={ <Icon name="arrow-down" style={{marginRight: hp(4), fontSize: 22}}/>}
+          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(4), fontSize: 22 }} />}
           mode="dropdown"
-          style={{height: 50, width: wp(55)}}
+          style={{ height: 50, width: wp(55) }}
           selectedValue={this.state.weight}
           onValueChange={(itemValue, itemIndex) => this.setSelectedValue(itemValue)}>
           {/* <Picker.Item label={weight.toString()} value={parseInt(weight)} /> */}
           {weightList && weightList.length > 0 ? (
             weightList.map((wt) => (
               <Picker.Item label={(wt).toString()} value={parseInt(`${wt}`)} />
-              )))
+            )))
             : null
           }
 
@@ -443,7 +443,7 @@ setSelectedValueKarat = karat => {
   };
 
   addtoCart = d => {
-    const {length, count, remark, weight,karatValue} = this.state;
+    const { length, count, remark, weight, karatValue } = this.state;
 
     let addCartData = new FormData();
 
@@ -470,7 +470,7 @@ setSelectedValueKarat = karat => {
   };
 
   addToWishList = d => {
-    const {length, count, remark, weight, karatValue} = this.state;
+    const { length, count, remark, weight, karatValue } = this.state;
 
     const addWishData = new FormData();
 
@@ -503,7 +503,7 @@ setSelectedValueKarat = karat => {
       extrapolate: 'clamp',
     });
 
-    const {productDetailsStateData, weight,weightArray} = this.state;
+    const { productDetailsStateData, weight, weightArray } = this.state;
 
     let url =
       urls.imageUrl +
@@ -511,7 +511,7 @@ setSelectedValueKarat = karat => {
         productDetailsStateData.zoom_image);
 
 
-        return (
+    return (
       <SafeAreaView style={styles.flex}>
         {productDetailsStateData ? (
           <Container style={styles.flex}>
@@ -532,7 +532,7 @@ setSelectedValueKarat = karat => {
                   />
                 </TouchableOpacity>
                 <Animated.Text
-                  style={[styles.headerTextStyle, {opacity: headerOpacity}]}>
+                  style={[styles.headerTextStyle, { opacity: headerOpacity }]}>
                   {productDetailsStateData.product_name}
                 </Animated.Text>
               </View>
@@ -540,14 +540,14 @@ setSelectedValueKarat = karat => {
 
             <AnimatedContent
               onScroll={Animated.event(
-                [{nativeEvent: {contentOffset: {y: this.scrollY}}}],
+                [{ nativeEvent: { contentOffset: { y: this.scrollY } } }],
                 {
                   useNativeDriver: true,
                 },
               )}
               scrollEventThrottle={16}>
-              <SafeAreaView style={styles.safeAreaViewStyle}>
-                <View style={{flex: 1}}>
+              <SafeAreaView style={styles.safeAreaViewStyle} >
+                <View style={{ flex: 1 }}>
                   <View>
                     {/* <Image
                       source={{ uri: url + productDetailsStateData.image_name[0] }}
@@ -559,7 +559,7 @@ setSelectedValueKarat = karat => {
 
                   <View style={styles.mainContainerStyle}>
                     <View style={styles.topTitleContainer}>
-                      <View style={{width: wp(73)}}>
+                      <View style={{ width: wp(73) }}>
                         <Text
                           style={{
                             color: '#8a8a8a',
@@ -593,7 +593,7 @@ setSelectedValueKarat = karat => {
                     <View style={styles.quantityContainer}>
                       <View>
                         <Text
-                          style={{...Theme.ffLatoRegular16, color: '#000000'}}>
+                          style={{ ...Theme.ffLatoRegular16, color: '#000000' }}>
                           Quantity
                         </Text>
                       </View>
@@ -608,7 +608,7 @@ setSelectedValueKarat = karat => {
                         <TextInput
                           style={styles.countTextInput}
                           keyboardType={'numeric'}
-                          onChangeText={count => this.setState({count})}
+                          onChangeText={count => this.setState({ count })}
                           value={String(this.state.count)}
                         />
                         <TouchableOpacity
@@ -628,7 +628,7 @@ setSelectedValueKarat = karat => {
                       />
                       <TextInput
                         style={styles.remarksInput}
-                        onChangeText={remark => this.setState({remark})}
+                        onChangeText={remark => this.setState({ remark })}
                         value={String(this.state.remark)}
                         placeholder="Remarks"
                         placeholderTextColor="#000000"
@@ -655,9 +655,9 @@ setSelectedValueKarat = karat => {
                       </TouchableOpacity>
                       {this.state.isHideDetail ? (
                         <>
-                          <View style={{marginTop: 0}}>
+                          <View style={{ marginTop: 0 }}>
                             <View style={styles.descriptionSubContainer}>
-                              <View style={{flexDirection: 'column'}}>
+                              <View style={{ flexDirection: 'column' }}>
                                 {productDetailsStateData.key_label.map(
                                   (key, i) => {
                                     return (
@@ -674,7 +674,7 @@ setSelectedValueKarat = karat => {
                                 )}
                               </View>
 
-                              <View style={{flexDirection: 'column'}}>
+                              <View style={{ flexDirection: 'column' }}>
                                 {productDetailsStateData.key_value.map(
                                   (value, j) => {
                                     return (
@@ -772,7 +772,7 @@ setSelectedValueKarat = karat => {
                           <TextInput
                             style={styles.lengthTextInput}
                             keyboardType={'numeric'}
-                            onChangeText={length => this.setState({length})}
+                            onChangeText={length => this.setState({ length })}
                             value={String(this.state.length)}
                           />
                         </View>
@@ -803,7 +803,7 @@ setSelectedValueKarat = karat => {
                           style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            flex: 1.4,
+                            flex: 1.1,
                             borderRightWidth: 2,
                             borderRightColor: '#fbcb84',
                             margin: 3,
@@ -846,8 +846,8 @@ setSelectedValueKarat = karat => {
             </AnimatedContent>
           </Container>
         ) : (
-          this.renderLoader()
-        )}
+            this.renderLoader()
+          )}
       </SafeAreaView>
     );
   }
@@ -869,7 +869,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   headerStyle: {
-    backgroundColor:'#FFFFFF',
+    backgroundColor: '#FFFFFF',
     elevation: 0,
     borderBottomWidth: 0,
     alignItems: 'center',

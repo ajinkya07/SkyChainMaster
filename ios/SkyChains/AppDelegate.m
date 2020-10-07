@@ -6,6 +6,7 @@
 #import <Firebase.h>
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
+#import "RNSplashScreen.h"
 
 #if DEBUG
 #import <FlipperKit/FlipperClient.h>
@@ -51,6 +52,8 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
+  [RNSplashScreen show];
+
   // for firebase notification
   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
   center.delegate = self;
