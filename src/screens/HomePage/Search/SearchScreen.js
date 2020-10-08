@@ -838,6 +838,8 @@ class SearchScreen extends Component {
                                                 onChangeText={this.handleSearchChange}
                                                 resetValue=""
                                                 width="100%"
+                                                returnKeyType={'done'}
+
                                             />
                                         </View>
                                     </View>

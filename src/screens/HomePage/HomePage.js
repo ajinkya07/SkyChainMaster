@@ -568,7 +568,7 @@ class HomePage extends Component {
 
     const { plusOnecartValue } = this.state;
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
-
+    console.warn("item", item);
 
     return (
       <TouchableOpacity
@@ -689,7 +689,7 @@ class HomePage extends Component {
               {item.in_cart > 0 &&
                 <View style={iconView}>
                   <TouchableOpacity
-                    onPress={() => alert('inProgress')}
+                    // onPress={() => alert('inProgress')}
                     onPress={() => this.removeFromCartByOne(item)}>
                     <Image
                       source={require('../../assets/image/BlueIcons/Minus.png')}
@@ -704,7 +704,7 @@ class HomePage extends Component {
                   </_Text>
 
                   <TouchableOpacity
-                    onPress={() => alert('inProgress')}
+                    // onPress={() => alert('inProgress')}
                     onPress={() => this.addToCartPlusOne(item)}>
                     <Image
                       source={require('../../assets/image/BlueIcons/Plus.png')}
@@ -889,7 +889,7 @@ class HomePage extends Component {
           {this.carausalView(bannerData)}
 
           {/* CATEGORY DESIGNS */}
-          {!this.props.isFetching && collection && collection.length > 0 && (
+          {collection && collection.length > 0 && (
             <View style={topHeading}>
               <View style={heading}>
                 <_Text
@@ -929,7 +929,7 @@ class HomePage extends Component {
             </View>
           )}
 
-          {!this.props.isFetching &&
+          {collection && collection.length > 0 &&
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View
                 style={{
@@ -943,7 +943,7 @@ class HomePage extends Component {
 
 
           {/* BANNER */}
-          {!isFetching && userStatus.status == 'Active' &&
+          {userStatus.status == 'Active' &&
             <View>
               <View style={{
                 marginTop: hp(2), marginBottom: -10, borderColor: '#DDDDDD',
@@ -976,7 +976,7 @@ class HomePage extends Component {
 
           {/* PRODUCT DESIGNS */}
 
-          {finalCollection && !isFetching &&
+          {finalCollection &&
             finalCollection.map((data, index) => (
               <View>
                 <View style={topHeading1}>

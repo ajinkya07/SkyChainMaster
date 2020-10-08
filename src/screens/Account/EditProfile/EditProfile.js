@@ -700,6 +700,8 @@ class EditProfile extends Component {
                     width="95%"
                     style={10}
                     textInputRef={this.pinCodeRef}
+                    returnKeyType={'done'}
+
                   />
                   <DatePickerComponent
                     dateLabel="DOB (optional)"

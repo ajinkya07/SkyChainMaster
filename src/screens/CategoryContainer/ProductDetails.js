@@ -388,12 +388,7 @@ class ProductDetails extends React.Component {
     return (
       <View>
         <Picker
-          iosIcon={
-            <Image
-              source={IconPack.DOWN_ARROW}
-              style={{ width: 12, height: 12, resizeMode: 'cover' }}
-            />
-          }
+          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22, }} />}
           mode="dropdown"
           style={{ height: 40, width: wp(55) }}
           selectedValue={karatValue}
@@ -424,7 +419,7 @@ class ProductDetails extends React.Component {
     return (
       <View>
         <Picker
-          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(4), fontSize: 22 }} />}
+          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22 }} />}
           mode="dropdown"
           style={{ height: 50, width: wp(55) }}
           selectedValue={this.state.weight}
@@ -803,7 +798,7 @@ class ProductDetails extends React.Component {
                           style={{
                             alignItems: 'center',
                             justifyContent: 'center',
-                            flex: 1.1,
+                            flex: 1,
                             borderRightWidth: 2,
                             borderRightColor: '#fbcb84',
                             margin: 3,

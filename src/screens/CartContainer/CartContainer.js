@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
   ScrollView,
-  SafeAreaView,
+  SafeAreaView, KeyboardAvoidingView,
   Platform,
   Alert,
 } from 'react-native';
@@ -1568,6 +1568,8 @@ class CartContainer extends Component {
                     keyboardType="numeric"
                     width="95%"
                     marginLeft={8}
+                    returnKeyType={'done'}
+
                   />
                 </View>
                 <View style={{}}>
@@ -1603,6 +1605,8 @@ class CartContainer extends Component {
                     keyboardType="numeric"
                     width="95%"
                     marginLeft={8}
+                    returnKeyType={'done'}
+
                   />
                   <FloatingLabelTextInput
                     label="Comments"
@@ -1612,6 +1616,8 @@ class CartContainer extends Component {
                     imageIcon="comments"
                     width="95%"
                     marginLeft={8}
+                    returnKeyType={'done'}
+
                   />
                 </View>
                 <View style={styles.btnView}>
@@ -1646,132 +1652,142 @@ class CartContainer extends Component {
             onBackdropPress={() => this.setState({ isPlaceOrderModalVisible: false })}
             onBackButtonPress={() => this.setState({ isPlaceOrderModalVisible: false })}>
             <TouchableWithoutFeedback style={{ flex: 1 }}>
-              <View
-                style={[
-                  styles.bottomContainer,
-                  { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
-                ]}>
+              <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : null}
+                keyboardVerticalOffset={Platform.select({
+                  ios: -125,
+                  android: 500,
+                })}
+              // style={{ flex: 1 }}
+              >
                 <View
-                  style={{
-                    backgroundColor: 'white',
-                    marginLeft: wp(44),
-                    borderColor: 'red',
-                    borderWidth: 2,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: hp(7),
-                    width: hp(7),
-                    borderRadius: hp(3.5),
-                    bottom: hp(3.2),
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => this.setState({ isPlaceOrderModalVisible: false })}
-                    hitSlop={{
-                      position: 'absolute',
-                      top: 5,
-                      bottom: 5,
-                      left: 5,
-                      right: 5,
+                  style={[
+                    styles.bottomContainer,
+                    { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 },
+                  ]}>
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      marginLeft: wp(44),
+                      borderColor: 'red',
+                      borderWidth: 2,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: hp(7),
+                      width: hp(7),
+                      borderRadius: hp(3.5),
+                      bottom: hp(3.2),
                     }}>
-                    <Image
-                      source={require('../../assets/image/remove.png')}
-                      style={{ height: hp(5), width: hp(5) }}
-                    />
-                  </TouchableOpacity>
-                </View>
-
-                <ScrollView>
-                  <View style={{ marginHorizontal: 20, marginTop: 5 }}>
-                    <FloatingLabelTextInput
-                      label="Name"
-                      value={this.state.name}
-                      onChangeText={this.handleNameChange}
-                      resetValue={this.resetFieldName}
-                      imageIcon="profile"
-                      width="95%"
-                      marginLeft={8}
-                    />
-                    <FloatingLabelTextInput
-                      label="Email"
-                      value={this.state.email}
-                      onChangeText={this.handleEmailChange}
-                      resetValue={this.resetFieldEmail1}
-                      imageIcon="email"
-                      editable={false}
-                      selectTextOnFocus={false}
-                      width="95%"
-                      marginLeft={8}
-                    />
-                    <FloatingLabelTextInput
-                      label="Mobile"
-                      value={this.state.mobileNo}
-                      onChangeText={this.handleMobileChange}
-                      resetValue={this.resetFieldMobileNo}
-                      imageIcon="Mobile"
-                      width="95%"
-                      marginLeft={8}
-                    />
-                    <FloatingLabelTextInput
-                      label="Comments"
-                      value={this.state.comments1}
-                      onChangeText={this.handleCommentsChange1}
-                      resetValue={this.resetFieldComment1}
-                      imageIcon="comments"
-                      width="95%"
-                      marginLeft={8}
-                    />
-                    <View
-                      style={{
-                        marginTop: 32,
-                        flexDirection: 'row',
+                    <TouchableOpacity
+                      onPress={() => this.setState({ isPlaceOrderModalVisible: false })}
+                      hitSlop={{
+                        position: 'absolute',
+                        top: 5,
+                        bottom: 5,
+                        left: 5,
+                        right: 5,
                       }}>
-                      <View style={{ marginRight: 10 }}>
-                        <Image
-                          source={require('../../assets/image/BlueIcons/Date.png')}
-                          style={{ width: 25, height: 25, resizeMode: 'cover' }}
-                        />
-                      </View>
+                      <Image
+                        source={require('../../assets/image/remove.png')}
+                        style={{ height: hp(5), width: hp(5) }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <ScrollView>
+                    <View style={{ marginHorizontal: 20, marginTop: 5 }}>
+                      <FloatingLabelTextInput
+                        label="Name"
+                        value={this.state.name}
+                        onChangeText={this.handleNameChange}
+                        resetValue={this.resetFieldName}
+                        imageIcon="profile"
+                        width="95%"
+                        marginLeft={8}
+                      />
+                      <FloatingLabelTextInput
+                        label="Email"
+                        value={this.state.email}
+                        onChangeText={this.handleEmailChange}
+                        resetValue={this.resetFieldEmail1}
+                        imageIcon="email"
+                        editable={false}
+                        selectTextOnFocus={false}
+                        width="95%"
+                        marginLeft={8}
+                      />
+                      <FloatingLabelTextInput
+                        label="Mobile"
+                        value={this.state.mobileNo}
+                        onChangeText={this.handleMobileChange}
+                        resetValue={this.resetFieldMobileNo}
+                        imageIcon="Mobile"
+                        width="95%"
+                        marginLeft={8}
+                      />
+                      <FloatingLabelTextInput
+                        label="Comments"
+                        value={this.state.comments1}
+                        onChangeText={this.handleCommentsChange1}
+                        resetValue={this.resetFieldComment1}
+                        imageIcon="comments"
+                        width="95%"
+                        marginLeft={8}
+                        returnKeyType={'done'}
+
+                      />
                       <View
                         style={{
-                          borderBottomWidth: 0.5,
-                          borderColor: '#a3a3a3',
-                          width: '88%',
-                          marginLeft: 6,
+                          marginTop: 28,
+                          flexDirection: 'row',
                         }}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            this.showDateTimePicker();
+                        <View style={{ marginRight: 10 }}>
+                          <Image
+                            source={require('../../assets/image/BlueIcons/Date.png')}
+                            style={{ width: 25, height: 25, resizeMode: 'cover' }}
+                          />
+                        </View>
+                        <View
+                          style={{
+                            borderBottomWidth: 0.5,
+                            borderColor: '#a3a3a3',
+                            width: '88%',
+                            marginLeft: 6,
                           }}>
-                          <Text style={styles.textDatePickerStyle}>
-                            {!this.state.date ? 'Date' : this.state.date}
-                          </Text>
-                        </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.showDateTimePicker();
+                            }}>
+                            <Text style={{ color: this.state.date ? null : '#a3a3a3', fontSize: 18, }}>
+                              {!this.state.date ? 'Date' : this.state.date}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
                       </View>
+
+                      {isDateTimePickerVisible && (
+                        <DateTimePicker
+                          isVisible={isDateTimePickerVisible}
+                          onConfirm={date => this.handleDatePicked(date)}
+                          onCancel={() => this.hideDateTimePicker()}
+                        />
+                      )}
                     </View>
 
-                    {isDateTimePickerVisible && (
-                      <DateTimePicker
-                        isVisible={isDateTimePickerVisible}
-                        onConfirm={date => this.handleDatePicked(date)}
-                        onCancel={() => this.hideDateTimePicker()}
-                      />
-                    )}
-                  </View>
-
-                  <View style={[styles.btnView, { marginVertical: 15 }]}>
-                    {this.state.isPlaceOrderModalVisible &&
-                      !this.props.isFetching ? (
-                        <ActionButtonRounded
-                          title="PLACE ORDER"
-                          onButonPress={() => this.placeOrderFromCart()}
-                          containerStyle={styles.buttonStyle}
-                        />
-                      ) : (
-                        <ActivityIndicator size="small" color={color.brandColor} />
-                      )}
-                  </View>
-                </ScrollView>
-              </View>
+                    <View style={[styles.btnView, { marginVertical: 15 }]}>
+                      {this.state.isPlaceOrderModalVisible &&
+                        !this.props.isFetching ? (
+                          <ActionButtonRounded
+                            title="PLACE ORDER"
+                            onButonPress={() => this.placeOrderFromCart()}
+                            containerStyle={styles.buttonStyle}
+                          />
+                        ) : (
+                          <ActivityIndicator size="small" color={color.brandColor} />
+                        )}
+                    </View>
+                  </ScrollView>
+                </View>
+              </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
           </Modal>
         }
@@ -2076,7 +2092,7 @@ const styles = StyleSheet.create({
   textDatePickerStyle: {
     color: '#a3a3a3',
     //textAlign: 'left',
-    marginTop: 5,
+    // marginTop: 5,
     fontSize: 18,
   },
   bottomView: {

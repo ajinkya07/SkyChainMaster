@@ -157,7 +157,7 @@ export default class FloatingLabelInput extends Component {
             onBlur={this.handleBlur}
             ref={this.props.textInputRef}
             onSubmitEditing={this.props.onSubmitEditing}
-            returnKeyType="next"
+            returnKeyType={this.props.returnKeyType ? this.props.returnKeyType : "next"}
           />
           {isFocused && this.props.value !== '' ? (
             <TouchableOpacity

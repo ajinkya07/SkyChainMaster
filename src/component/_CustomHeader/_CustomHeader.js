@@ -17,13 +17,13 @@ export default class _CustomHeader extends Component {
 
   render() {
     return (
-      <View>
+      <View >
         <Header
           hasTabs
           style={{
             width: wp(100),
-            height: hp(7.4),
-            paddingVertical: Platform.OS === 'ios' ? hp(2) : 2,
+            height: hp(7),
+            marginBottom: 10,
             backgroundColor: this.props.backgroundColor
               ? this.props.backgroundColor
               : 'transparent',
@@ -37,7 +37,7 @@ export default class _CustomHeader extends Component {
                     : require('../../assets/image/back.png')
                 }
                 style={{
-                  top: 2,
+                  // top: 2,
                   height: this.props.height ? this.props.height : hp(2.2),
                   width: this.props.width ? this.props.width : hp(2.2),
                 }}
@@ -67,7 +67,7 @@ export default class _CustomHeader extends Component {
           <Right style={{ flex: 0.65 }}>
             {this.props.RightBtnIcon1 && (
               <Button
-                style={{ marginTop: 8 }}
+                // style={{ marginTop: 8, }}
                 transparent
                 onPress={() => this.props.RightBtnPressOne()}>
                 <Image
@@ -85,7 +85,7 @@ export default class _CustomHeader extends Component {
             )}
             {this.props.RightBtnIcon2 && (
               <Button
-                style={{ marginTop: 8 }}
+                // style={{ marginTop: 8 }}
                 transparent
                 onPress={() => this.props.RightBtnPressTwo()}>
                 <Image

@@ -8,7 +8,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Platform,
+  Platform, KeyboardAvoidingView,
 } from 'react-native';
 import {
   widthPercentageToDP as wp,
@@ -359,12 +359,7 @@ class Customizable extends Component {
     return (
       <View>
         <Picker
-          iosIcon={
-            <Image
-              source={IconPack.DOWN_ARROW}
-              style={{ width: 12, height: 12, resizeMode: 'cover' }}
-            />
-          }
+          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22, }} />}
           mode="dropdown"
           style={{ height: 40, width: wp(40) }}
           selectedValue={karatValue}
@@ -405,12 +400,15 @@ class Customizable extends Component {
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
+
         <Container
           style={{
             flex: 1,
             backgroundColor: '#FFFFFF',
           }}>
-          <ScrollView showsVerticalScrollIndicator={true}>
+
+          <ScrollView showsVerticalScrollIndicator={true} bounces={false}>
+
             <View
               style={{
                 alignItems: 'center',
@@ -540,13 +538,15 @@ class Customizable extends Component {
                     resetValue={this.resetFieldRemark}
                     width="100%"
                     textInputRef={this.remarkRef}
+                    returnKeyType={'done'}
+
                   />
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 10 }}>
                     <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                       <Text
                         style={{
                           ...Theme.ffLatoRegular16,
-                          color: '#000000',
+                          color: '#a3a3a3',
                           marginLeft: 10,
                         }}>
                         Melting
@@ -608,22 +608,10 @@ class Customizable extends Component {
             </TouchableOpacity>
           </View>
 
-          {/* <TouchableOpacity onPress={() => this.submitCustomOrder()}>
-            <View
-              style={{
-                height: 44,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#11255a',
-                borderTopLeftRadius: 16,
-                borderTopRightRadius: 16,
-              }}>
-              <Text style={{fontSize: 16, color: '#fbcb84'}}>SUBMIT ORDER</Text>
-            </View>
-          </TouchableOpacity>
 
-          {this.props.isFetching && this.renderLoader()} */}
         </Container>
+
+
         <TouchableOpacity onPress={() => this.submitCustomOrder()}>
           <View
             style={{
