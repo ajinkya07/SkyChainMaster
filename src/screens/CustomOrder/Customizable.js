@@ -456,7 +456,8 @@ class Customizable extends Component {
                     onChangeText={this.handleGrossWeightChange}
                     resetValue={this.resetFieldGross}
                     width="100%"
-                    keyboardType="numeric"
+                    keyboardType={"numeric"}
+                    returnKeyType={'done'}
                     onSubmitEditing={() => this.netWeightRef.current.focus()}
                   />
                   <FloatingLabelTextInput
@@ -465,7 +466,8 @@ class Customizable extends Component {
                     onChangeText={this.handleNetWeightChange}
                     resetValue={this.resetFieldNet}
                     width="100%"
-                    keyboardType="numeric"
+                    keyboardType={"numeric"}
+                    returnKeyType={'done'}
                     textInputRef={this.netWeightRef}
                     onSubmitEditing={() => this.lengthRef.current.focus()}
                   />
@@ -476,7 +478,8 @@ class Customizable extends Component {
                     onChangeText={this.handleLengthChange}
                     resetValue={this.resetFieldLength}
                     width="100%"
-                    keyboardType="numeric"
+                    keyboardType={"numeric"}
+                    returnKeyType={'done'}
                     textInputRef={this.lengthRef}
                     onSubmitEditing={() => this.quantityRef.current.focus()}
                   />
@@ -498,7 +501,8 @@ class Customizable extends Component {
                     onChangeText={this.handleQuantityChange}
                     resetValue={this.resetFieldQuantity}
                     width="100%"
-                    keyboardType="numeric"
+                    keyboardType={"numeric"}
+                    returnKeyType={'done'}
                     textInputRef={this.quantityRef}
                     onSubmitEditing={() => this.remarkRef.current.focus()}
                   />
@@ -553,7 +557,6 @@ class Customizable extends Component {
                       </Text>
                     </View>
                     {this.PickerDropDown()}
-                    {/* <PickerDropDown /> */}
                   </View>
                   <View
                     style={{
@@ -598,7 +601,6 @@ class Customizable extends Component {
             <TouchableOpacity onPress={() => this.showActionSheet()}>
               <Image
                 style={{
-                  //position: 'absolute',
                   resizeMode: 'cover',
                   width: 50,
                   height: 50,
@@ -618,11 +620,11 @@ class Customizable extends Component {
               height: 44,
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: '#11255a',
+              backgroundColor: color.green,
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
             }}>
-            <Text style={{ fontSize: 16, color: '#fbcb84' }}>SUBMIT ORDER</Text>
+            <Text style={{ fontSize: 16, color: 'white' }}>SUBMIT ORDER</Text>
           </View>
         </TouchableOpacity>
 

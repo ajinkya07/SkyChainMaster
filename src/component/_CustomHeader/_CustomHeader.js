@@ -28,7 +28,7 @@ export default class _CustomHeader extends Component {
               ? this.props.backgroundColor
               : 'transparent',
           }}>
-          <Left style={{ flex: 0.25 }}>
+          <Left style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
             <Button transparent onPress={() => this.props.LeftBtnPress()}>
               <Image
                 source={
@@ -43,8 +43,21 @@ export default class _CustomHeader extends Component {
                 }}
               />
             </Button>
-          </Left>
 
+            {this.props.Title && (
+              <Title
+                style={{
+                  color: '#ffffff',
+                  fontSize: hp(2.6),
+                  fontFamily: 'Lato-Bold',
+                  letterSpacing: 1,
+                }}>
+                {this.props.Title ? this.props.Title : ''}
+              </Title>
+            )}
+
+          </Left>
+          {/* 
           {this.props.Title && (
             <Body style={{ flex: 1 }}>
               <Title
@@ -62,7 +75,7 @@ export default class _CustomHeader extends Component {
                 </Subtitle>
               )}
             </Body>
-          )}
+          )} */}
 
           <Right style={{ flex: 0.65 }}>
             {this.props.RightBtnIcon1 && (

@@ -590,7 +590,7 @@ class ProductGrid extends Component {
                 this.props.navigation.navigate('ProductDetails', { productItemDetails: item, })}
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                //resizeMode={'stretch'}
+                resizeMode={'contain'}
                 style={gridImage}
                 defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name }}
@@ -1469,9 +1469,9 @@ class ProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            //onEndReachedThreshold={0.3}
-            //onEndReached={()=> this.LoadMoreData()}
-            ListFooterComponent={this.footer()}
+            onEndReachedThreshold={0.3}
+            onEndReached={() => this.LoadMoreData()}
+          // ListFooterComponent={this.footer()}
           // ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
           />
         )}

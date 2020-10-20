@@ -389,7 +389,7 @@ class SearchProductGrid extends Component {
               }
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'stretch'}
+                resizeMode={'contain'}
                 style={gridImage}
                 defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name, }}
@@ -804,7 +804,10 @@ class SearchProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            ListFooterComponent={this.footer()}
+            // ListFooterComponent={this.footer()}
+            onEndReachedThreshold={0.3}
+            onEndReached={() => this.LoadMoreData()}
+
           />
         )}
 

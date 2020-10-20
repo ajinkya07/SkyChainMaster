@@ -36,6 +36,9 @@ import _CustomHeader from '@customHeader/_CustomHeader';
 import { parseInt } from 'lodash';
 import { getTotalCartCount } from '@homepage/HomePageAction';
 import Theme from '../../values/Theme';
+
+
+
 const qs = require('query-string');
 
 var userId = '';
@@ -194,11 +197,7 @@ class ProductDetails extends React.Component {
     if (this.state.errorProductDetailsVersion > prevState.errorProductDetailsVersion) {
       this.showToast(this.props.errorMsg, 'danger');
 
-      const countData = new FormData();
-      countData.append('user_id', userId);
-      countData.append('table', 'cart');
-
-      await this.props.getTotalCartCount(countData);
+      this.getTotalCart()
     }
 
     if (this.state.successAddCartDetailsVersion > prevState.successAddCartDetailsVersion) {
@@ -207,12 +206,24 @@ class ProductDetails extends React.Component {
           text: this.props.errorMsg,
           duration: 2500,
         });
+
+        this.getTotalCart()
+
       }
     }
     if (this.state.errorAddCartDetailsVersion > prevState.errorAddCartDetailsVersion) {
       this.showToast(this.props.errorMsg, 'danger');
     }
   }
+
+  getTotalCart = async () => {
+    const countData = new FormData();
+    countData.append('user_id', userId);
+    countData.append('table', 'cart');
+
+    await this.props.getTotalCartCount(countData);
+  }
+
 
   showToast = (msg, type, duration) => {
     Toast.show({
@@ -437,7 +448,7 @@ class ProductDetails extends React.Component {
     );
   };
 
-  addtoCart = d => {
+  addtoCart = async (d) => {
     const { length, count, remark, weight, karatValue } = this.state;
 
     let addCartData = new FormData();
@@ -462,6 +473,7 @@ class ProductDetails extends React.Component {
 
     addCartData.append('Add_To_Cart', adData);
     this.props.addToCartFromDetails(addCartData);
+
   };
 
   addToWishList = d => {
@@ -601,6 +613,7 @@ class ProductDetails extends React.Component {
                           />
                         </TouchableOpacity>
                         <TextInput
+                          editable={false}
                           style={styles.countTextInput}
                           keyboardType={'numeric'}
                           onChangeText={count => this.setState({ count })}
@@ -627,6 +640,7 @@ class ProductDetails extends React.Component {
                         value={String(this.state.remark)}
                         placeholder="Remarks"
                         placeholderTextColor="#000000"
+                        returnKeyType={'done'}
                       />
                     </View>
 
@@ -754,6 +768,7 @@ class ProductDetails extends React.Component {
                             style={{
                               ...Theme.ffLatoRegular15,
                               color: '#000000',
+                              bottom: 10
                             }}>
                             Length
                           </Text>
@@ -769,25 +784,16 @@ class ProductDetails extends React.Component {
                             keyboardType={'numeric'}
                             onChangeText={length => this.setState({ length })}
                             value={String(this.state.length)}
+                            returnKeyType={'done'}
                           />
                         </View>
                       </View>
-                      <View style={styles.bottomTextContainer}>
-                        <Text
-                          style={{
-                            ...Theme.ffLatoRegular15,
-                            color: '#000000',
-                            textAlign: 'left',
-                          }}>
-                          Note: * There may be 10% variation (+/-) in the actual
-                          weight.{' '}
-                        </Text>
-                      </View>
+
                       {/* Footer buttons */}
 
                       <View
                         style={{
-                          backgroundColor: '#11255a',
+                          backgroundColor: color.green,
                           height: hp(6),
                           borderTopLeftRadius: 18,
                           borderTopRightRadius: 18,
@@ -806,7 +812,7 @@ class ProductDetails extends React.Component {
                           <Text
                             style={{
                               textAlign: 'center',
-                              color: '#fbcb84',
+                              color: 'white',
                               fontWeight: '400',
                             }}
                             onPress={() =>
@@ -824,7 +830,7 @@ class ProductDetails extends React.Component {
                           <Text
                             style={{
                               textAlign: 'center',
-                              color: '#fbcb84',
+                              color: 'white',
                               fontWeight: '400',
                             }}
                             onPress={() =>
@@ -953,13 +959,13 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   remarksInput: {
-    borderBottomWidth: 1.3,
-    height: 50,
+    borderBottomWidth: 0.5,
+    height: 40,
     marginHorizontal: 15,
     width: wp(78),
     ...Theme.ffLatoRegular16,
     color: '#000000',
-    borderBottomColor: '#19af81',
+    borderBottomColor: color.brandColor,
   },
   descriptionContainer: {
     backgroundColor: '#f3fcf9',
@@ -1006,11 +1012,12 @@ const styles = StyleSheet.create({
     marginLeft: hp(3),
   },
   lengthTextInput: {
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     height: 40,
     marginHorizontal: 10,
     width: '65%',
     fontSize: 18,
+    bottom: 10
   },
   bottomTextContainer: {
     marginHorizontal: 10,

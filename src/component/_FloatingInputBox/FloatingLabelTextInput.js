@@ -156,6 +156,7 @@ export default class FloatingLabelInput extends Component {
             onFocus={this.handleFocus}
             onBlur={this.handleBlur}
             ref={this.props.textInputRef}
+            keyboardType={this.props.keyboardType ? this.props.keyboardType : 'default'}
             onSubmitEditing={this.props.onSubmitEditing}
             returnKeyType={this.props.returnKeyType ? this.props.returnKeyType : "next"}
           />
