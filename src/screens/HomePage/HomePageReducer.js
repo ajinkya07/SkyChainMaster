@@ -56,9 +56,9 @@ const initialState = {
   errorAddToCartPlusOneVersion: 0,
   addToCartPlusOneData: [],
 
-  allParameterData:'',
-  successAllParameterVersion:0,
-  errorAllParamaterVersion:0,
+  allParameterData: '',
+  successAllParameterVersion: 0,
+  errorAllParamaterVersion: 0,
 
 
 };
@@ -116,7 +116,7 @@ export default function dataReducer(state = initialState, action) {
         isFetching: false,
         error: true,
         errorMsg: action.error,
-        totalCartCountData:{count:0},
+        totalCartCountData: { count: 0 },
         errorTotalCartCountVersion: ++state.errorTotalCartCountVersion
       };
 
@@ -211,35 +211,35 @@ export default function dataReducer(state = initialState, action) {
 
 
 
-      case ALL_PARAMETER_DATA:
-        return {
-          ...state,
-          isFetching: true
-        };
-  
-      case ALL_PARAMETER_DATA_SUCCESS:
-        return {
-          ...state,
-          errorMsg: "",
-          isFetching: false,
-          allParameterData: action.data,
-          successAllParameterVersion: ++state.successAllParameterVersion,
-          error: false
-        };
-  
-      case ALL_PARAMETER_DATA_ERROR:
-        return {
-          ...state,
-          isFetching: false,
-          error: true,
-          errorMsg: action.error,
-          errorAllParamaterVersion: ++state.errorAllParamaterVersion
-        };
-  
-      case ALL_PARAMETER_DATA_RESET_REDUCER:
-        return initialState;
-  
-  
+    case ALL_PARAMETER_DATA:
+      return {
+        ...state,
+        isFetching: true
+      };
+
+    case ALL_PARAMETER_DATA_SUCCESS:
+      return {
+        ...state,
+        errorMsg: "",
+        isFetching: false,
+        allParameterData: action.data,
+        successAllParameterVersion: ++state.successAllParameterVersion,
+        error: false
+      };
+
+    case ALL_PARAMETER_DATA_ERROR:
+      return {
+        ...state,
+        isFetching: false,
+        error: true,
+        errorMsg: action.error,
+        errorAllParamaterVersion: ++state.errorAllParamaterVersion
+      };
+
+    case ALL_PARAMETER_DATA_RESET_REDUCER:
+      return initialState;
+
+
 
     default:
       return state;

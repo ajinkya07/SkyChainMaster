@@ -18,12 +18,12 @@ const initialState = {
   errorMsg: "",
   successLoginVersion: 0,
   errorLoginVersion: 0,
-  successLoginVersioMobile:0,
-  errorLoginVersionMobile:0,
+  successLoginVersioMobile: 0,
+  errorLoginVersionMobile: 0,
   loginData: [],
 
-  successFcmVersion:0,
-  errorFcmVersion:0,
+  successFcmVersion: 0,
+  errorFcmVersion: 0,
   fcmData: []
 };
 
@@ -37,8 +37,7 @@ export default function dataReducer(state = initialState, action) {
       };
 
     case LOGIN_DATA_SUCCESS:
-      console.log("action.data",action.data);
-     return {
+      return {
         ...state,
         errorMsg: "",
         isFetching: false,
@@ -55,12 +54,12 @@ export default function dataReducer(state = initialState, action) {
         errorMsg: action.error,
         errorLoginVersion: ++state.errorLoginVersion
       };
-      
+
     case LOGIN_DATA_RESET_REDUCER:
       return initialState;
 
 
-      
+
     case FCM_DATA:
       return {
         ...state,
@@ -68,8 +67,8 @@ export default function dataReducer(state = initialState, action) {
       };
 
     case FCM_DATA_SUCCESS:
-      console.warn("action.data",action.data);
-     return {
+      console.warn("action.data", action.data);
+      return {
         ...state,
         errorMsg: "",
         isFetching: false,
@@ -86,7 +85,7 @@ export default function dataReducer(state = initialState, action) {
         errorMsg: action.error,
         errorFcmVersion: ++state.errorFcmVersion
       };
-      
+
     case FCM_DATA_RESET_REDUCER:
       return initialState;
 

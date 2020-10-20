@@ -207,7 +207,6 @@ class HomePage extends Component {
     // if (prevProps.isFocused !== this.props.isFocused) {
     //     await this.getHomePage()
     //     await this.getTotalCart()
-
     // }
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
@@ -306,7 +305,7 @@ class HomePage extends Component {
 
     if (this.state.errorAddToCartVersion > prevState.errorAddToCartVersion) {
       Toast.show({
-        text: addToCartData && addToCartData.msg,
+        text: errorMsg && errorMsg,
         type: 'danger',
         duration: 2500,
       });
@@ -568,7 +567,6 @@ class HomePage extends Component {
 
     const { plusOnecartValue } = this.state;
     let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
-    console.warn("item", item);
 
     return (
       <TouchableOpacity

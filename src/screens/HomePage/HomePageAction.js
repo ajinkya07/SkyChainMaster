@@ -25,7 +25,7 @@ import {
   ADD_TO_CART_PLUS_ONE_DATA_ERROR,
   ADD_TO_CART_PLUS_ONE_DATA_RESET_REDUCER,
 
-  
+
   ALL_PARAMETER_DATA,
   ALL_PARAMETER_DATA_SUCCESS,
   ALL_PARAMETER_DATA_ERROR,
@@ -139,11 +139,15 @@ export function addToWishlist(data) {
 
 
 export function addToCart(data) {
+  console.log("data", data);
+
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_TO_CART_DATA));
 
     axios.post(urls.addToCartWishlist.url, data, header).then(response => {
       if (response.data.ack === '1') {
+        console.log("response", response);
+
         dispatch(
           onSuccess(response.data, ADD_TO_CART_DATA_SUCCESS)
         )
@@ -155,7 +159,7 @@ export function addToCart(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
+        console.log("addToCart ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_TO_CART_DATA_ERROR)
         );
