@@ -1,4 +1,4 @@
-import React, {useState, Component} from 'react';
+import React, { useState, Component } from 'react';
 import {
   TextInput,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import IconPack from '@login/IconPack';
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 import {
   validateEmail,
   validateMobNum,
@@ -16,7 +16,7 @@ import {
   validatePassword,
   validateUserName,
 } from '@values/validate';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 
 class LoginFields extends Component {
   constructor(props) {
@@ -40,8 +40,6 @@ class LoginFields extends Component {
     } = this.props;
     let isValid = false;
 
-    console.log('this.props', this.props);
-    console.log('text', text);
 
     if (text && text.length > 0) {
       switch (type) {
@@ -69,8 +67,8 @@ class LoginFields extends Component {
           break;
       }
     }
-    this.setState({isValid, text});
-    onChangeText && onChangeText({inputKey, isValid, value: text, inputId});
+    this.setState({ isValid, text });
+    onChangeText && onChangeText({ inputKey, isValid, value: text, inputId });
   };
 
   setSecureInput = secureInput => {
@@ -96,7 +94,7 @@ class LoginFields extends Component {
       placeholderTextColor,
       Icon,
     } = this.props;
-    const {isPasswordField, secureInput} = this.state;
+    const { isPasswordField, secureInput } = this.state;
 
     return (
       <View
@@ -119,12 +117,13 @@ class LoginFields extends Component {
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}
         />
-        <View style={loginFieldsStyles.loginIconStyle}>
+        {/* <View style={loginFieldsStyles.loginIconStyle}>
           <Image
             style={loginFieldsStyles.userTextInputButtonLeft}
             source={Icon}
           />
-        </View>
+        </View> */}
+
         {isSecure && (
           <View style={loginFieldsStyles.buttonStyle}>
             <TouchableOpacity onPress={() => this.setSecureInput(secureInput)}>

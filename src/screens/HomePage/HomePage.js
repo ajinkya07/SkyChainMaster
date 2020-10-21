@@ -374,6 +374,7 @@ class HomePage extends Component {
   }
 
   getTotalCart = async () => {
+    console.log("for total");
     const ct = new FormData();
     ct.append('user_id', userId);
     ct.append('table', 'cart');
@@ -745,6 +746,7 @@ class HomePage extends Component {
 
     await this.props.addToCart(cartData);
 
+    this.getTotalCart()
     this.setState({
       productId2: item.product_id,
     });

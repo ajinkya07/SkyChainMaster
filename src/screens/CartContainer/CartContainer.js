@@ -1295,7 +1295,7 @@ class CartContainer extends Component {
     else {
       this.props.placeOrderFromCart(orderData);
 
-      navigate('Container')
+      // navigate('Container')
 
     }
     // else if (date != '' && date1 < date2) {
@@ -2223,6 +2223,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
+  console.log("state", state);
   return {
     isFetching: state.cartContainerReducer.isFetching,
     error: state.cartContainerReducer.error,

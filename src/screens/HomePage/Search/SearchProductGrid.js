@@ -663,7 +663,7 @@ class SearchProductGrid extends Component {
           style={{ height: hp(20), width: hp(20) }}
           resizeMode="cover"
         />
-        <_Text style={{ paddingTop: 5 }}>{message}</_Text>
+        <_Text style={{ top: 10, fontSize: 16, texAlign: 'center' }}>{message}</_Text>
       </View>
     );
   };
@@ -804,9 +804,9 @@ class SearchProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            // ListFooterComponent={this.footer()}
-            onEndReachedThreshold={0.3}
-            onEndReached={() => this.LoadMoreData()}
+            ListFooterComponent={this.footer()}
+          //onEndReachedThreshold={0.3}
+          //onEndReached={() => this.LoadMoreData()}
 
           />
         )}

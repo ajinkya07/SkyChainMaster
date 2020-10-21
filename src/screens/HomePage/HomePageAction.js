@@ -90,10 +90,12 @@ export function getHomePageData(data) {
 }
 
 export function getTotalCartCount(data) {
+  console.log("getTotalCartCount payload", data);
   return dispatch => {
     dispatch(showLoadingIndicator(TOTAL_CART_COUNT_DATA));
 
     axios.post(urls.TotalCartCount.url, data, header).then(response => {
+      console.log("TotalCartCount", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, TOTAL_CART_COUNT_DATA_SUCCESS)

@@ -1001,7 +1001,8 @@ class ProductGrid extends Component {
     });
   };
 
-  showNoDataFound = message => {
+  showNoDataFound = (message) => {
+    console.log("message", message);
     return (
       <View
         style={{
@@ -1014,7 +1015,7 @@ class ProductGrid extends Component {
           style={{ height: hp(20), width: hp(20) }}
           resizeMode="cover"
         />
-        <_Text style={{ paddingTop: 5 }}>{message}</_Text>
+        <_Text style={{ top: 10, fontSize: 16, texAlign: 'center' }}>{message}</_Text>
       </View>
     );
   };
@@ -1469,10 +1470,10 @@ class ProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            onEndReachedThreshold={0.3}
-            onEndReached={() => this.LoadMoreData()}
-          // ListFooterComponent={this.footer()}
-          // ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
+            //onEndReachedThreshold={0.3}
+            // onEndReached={() => this.LoadMoreData()}
+            ListFooterComponent={this.footer()}
+            ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
           />
         )}
 
