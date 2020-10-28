@@ -41,8 +41,13 @@ import { withNavigationFocus } from '@react-navigation/compat';
 import { ThemeProvider } from '@react-navigation/native';
 import Theme from '../../values/Theme';
 import IconPack from '../OnBoarding/Login/IconPack';
+import styles from './Styles';
+import Carousel, { Pagination, ParallaxImage, SliderEntry } from 'react-native-snap-carousel';
+
+
 
 var userId = '';
+const SLIDER_1_FIRST_ITEM = 0
 
 class HomePage extends Component {
   constructor(props) {
@@ -74,6 +79,7 @@ class HomePage extends Component {
 
       successAllParameterVersion: 0,
       errorAllParamaterVersion: 0,
+      slider1ActiveSlide: SLIDER_1_FIRST_ITEM
 
     };
     userId = global.userId;
@@ -274,7 +280,7 @@ class HomePage extends Component {
             i = m;
             dx = inx;
           }
-          // })
+
         }
         if (dx >= 0) {
           finalCollection[i].product_assign[dx].in_cart =
@@ -346,7 +352,6 @@ class HomePage extends Component {
           duration: 2500,
         });
 
-        // await this.getHomePage()
         await this.getTotalCart()
       }
     }
@@ -374,7 +379,6 @@ class HomePage extends Component {
   }
 
   getTotalCart = async () => {
-    console.log("for total");
     const ct = new FormData();
     ct.append('user_id', userId);
     ct.append('table', 'cart');
@@ -428,26 +432,11 @@ class HomePage extends Component {
           })
         }>
         <View key={k}>
-          {/* {Platform.OS === 'ios' ?
-            <FastImage
-              style={{ height: hp(26.5), width: wp(100) }}
-              source={{ uri: baseUrl + data.brand_image, }}
-              resizeMode={FastImage.resizeMode.cover}
-              fallback={false}
-            /> :
-            <Image style={{ height: hp(26.5), width: wp(100) }}
-              source={{ uri: baseUrl + data.brand_image }}
-              defaultSource={IconPack.APP_LOGO}
-              resizeMode='cover'
-            />
-          } */}
           <Image style={{ height: hp(27), width: wp(100), }}
             source={{ uri: baseUrl + data.brand_image }}
             defaultSource={IconPack.APP_LOGO}
             resizeMode='cover'
-
           />
-
         </View>
       </TouchableOpacity>
     );
@@ -507,6 +496,74 @@ class HomePage extends Component {
     );
   };
 
+  _renderItem = ({ item, index }, parallaxProps) => {
+    const { homePageData } = this.props;
+    let baseUrl = homePageData && homePageData.base_path;
+
+    return (
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('Banner', {
+            bannerData: item,
+            baseUrl: baseUrl,
+          })
+        }>
+        <View key={index} style={{ height: hp(27) }}>
+          <ParallaxImage
+            source={{ uri: baseUrl + item.brand_image }}
+            containerStyle={styles.imageContainer}
+            style={styles.image}
+            parallaxFactor={0.4}
+            {...parallaxProps}
+          />
+        </View >
+      </TouchableOpacity>
+    );
+  }
+
+
+  carausalView2 = (bannerData) => {
+    const sliderWidth = wp(100);
+    const itemHeight = hp(27);
+
+    return (
+      <View style={{ marginBottom: -10 }}>
+        <Carousel
+          ref={c => this._slider1Ref = c}
+          hasParallaxImages={true}
+          loop={true}
+          loopClonesPerSide={2}
+          autoplay={true}
+          autoplayDelay={1500}
+          autoplayInterval={10000}
+          sliderWidth={sliderWidth}
+          sliderHeight={itemHeight}
+          itemWidth={sliderWidth}
+          data={bannerData}
+          renderItem={this._renderItem}
+          hasParallaxImages={true}
+          enableMomentum={true}
+          activeSlideOffset={2}
+          onSnapToItem={(index) => this.setState({ slider1ActiveSlide: index })}
+
+        />
+        <Pagination
+          dotsLength={bannerData.length}
+          activeDotIndex={this.state.slider1ActiveSlide}
+          containerStyle={styles.paginationContainer}
+          dotColor={'green'}
+          dotStyle={styles.paginationDot}
+          inactiveDotColor={'black'}
+          inactiveDotOpacity={0.4}
+          inactiveDotScale={0.6}
+          carouselRef={this._slider1Ref}
+          tappableDots={this._slider1Ref}
+
+        />
+
+      </View>
+    )
+  }
 
   getProductGridOrNot = data => {
     if (data.subcategory.length === 0) {
@@ -767,7 +824,6 @@ class HomePage extends Component {
 
     await this.props.addRemoveFromCartByOne(cart);
 
-    // await this.getHomePage()
 
     this.setState({
       productId: item.product_id,
@@ -787,6 +843,7 @@ class HomePage extends Component {
     cart1.append('plus', 0);
 
     await this.props.addRemoveFromCartByOne(cart1);
+    await this.getHomePage()
 
     this.setState({
       productId: item.product_id,
@@ -886,7 +943,7 @@ class HomePage extends Component {
 
 
 
-          {this.carausalView(bannerData)}
+          {this.carausalView2(bannerData)}
 
           {/* CATEGORY DESIGNS */}
           {collection && collection.length > 0 && (
@@ -1002,36 +1059,6 @@ class HomePage extends Component {
                 </ScrollView>
               </View>
             ))}
-
-          {/* FOLLOW US ON SOCIAL  */}
-
-          {/* {!this.props.isFetching && finalCollection && finalCollection.length > 0 &&
-                        <View style={folloUs}>
-                            <View style={socialIconView}>
-                                <TouchableOpacity>
-                                    <Image
-                                        source={require('../../assets/image/instaIcon.png')}
-                                        style={{ height: hp(5), width: hp(5) }}
-                                    />
-                                </TouchableOpacity>
-                                <TouchableOpacity>
-                                    <Image
-                                        source={require('../../assets/image/facebook.png')}
-                                        style={{ height: hp(4.8), width: hp(4.8) }}
-                                    />
-                                </TouchableOpacity>
-                            </View>
-                            <View style={socialTextView}>
-                                <_Text
-                                    textColor={color.brandColor}
-                                    style={{ textAlign: 'center',...Theme.ffLatoRegular20, }} 
-                                    fsExtraLarge fwSmall>
-                                    Follow us on social media
-                            </_Text>
-                            </View>
-
-                        </View>
-                    } */}
 
           {/*  IMAGE ON LONG PRESS */}
 

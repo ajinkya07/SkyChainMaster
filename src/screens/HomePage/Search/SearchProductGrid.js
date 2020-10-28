@@ -366,15 +366,12 @@ class SearchProductGrid extends Component {
         <View
           style={{
             backgroundColor: color.white,
-            height: Platform.OS === 'android' ? hp(34) : hp(33.5),
+            //height: Platform.OS === 'android' ? hp(34) : hp(33.5),
             width: wp(46),
             marginHorizontal: hp(1),
             borderRadius: 15,
             shadowColor: '#000',
-            shadowOffset: {
-              width: 0.5,
-              height: 0.5,
-            },
+            shadowOffset: { width: 0.5, height: 0.5 },
             shadowOpacity: 0.25,
             shadowRadius: 2,
             elevation: 2.2,
@@ -394,99 +391,50 @@ class SearchProductGrid extends Component {
                 defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name, }}
               />
-              {/* <FastImage
-                style={gridImage}
-                source={{
-                  uri: url + item.image_name,
-                }}
-                resizeMode={FastImage.resizeMode.cover}
-              /> */}
             </TouchableOpacity>
-            <View style={latestTextView}>
-              <View style={{ width: wp(15), marginLeft: 5 }}>
-                <_Text
-                  numberOfLines={1}
-                  fsSmall
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular13 }}>
-                  Code :
-                </_Text>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                width: '100%',
+                paddingHorizontal: 10,
+                marginVertical: 5
+              }}>
+              <View>
+                {item.key.map((key, i) => {
+                  return (
+                    <_Text
+                      numberOfLines={1}
+                      fsSmall
+                      textColor={'#000000'}
+                      style={{ ...Theme.ffLatoRegular13 }}>
+                      {key.replace('_', ' ')}
+                    </_Text>
+                  );
+                })}
               </View>
-              <View
-                style={{
-                  marginRight: 8,
-                  width: wp(24),
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
-                }}>
-                <_Text
-                  numberOfLines={1}
-                  fsPrimary
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular12 }}>
-                  {item.value[0]}
-                </_Text>
+
+              <View>
+                {item.value.map((value, j) => {
+                  return (
+                    <_Text
+                      numberOfLines={1}
+                      fsPrimary
+                      //textColor={color.brandColor}
+                      textColor={'#000000'}
+                      style={{ ...Theme.ffLatoRegular12 }}>
+                      {value ? value : '-'}
+                    </_Text>
+                  );
+                })}
               </View>
             </View>
 
-            <View style={latestTextView2}>
-              <View style={{ marginLeft: 5 }}>
-                <_Text
-                  numberOfLines={1}
-                  fsSmall
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular13 }}>
-                  Gross Wt :
-                </_Text>
-              </View>
-              <View
-                style={{
-                  marginRight: 8,
-                  width: wp(24),
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
-                }}>
-                <_Text
-                  numberOfLines={1}
-                  fsPrimary
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular12 }}>
-                  {parseInt(item.value[1]).toFixed(2)}
-                </_Text>
-              </View>
-            </View>
-
-            <View style={latestTextView2}>
-              <View style={{ marginLeft: 5 }}>
-                <_Text
-                  numberOfLines={1}
-                  fsSmall
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular13 }}>
-                  Name :{' '}
-                </_Text>
-              </View>
-              <View
-                style={{
-                  marginRight: 10,
-                  width: wp(28),
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
-                }}>
-                <_Text
-                  numberOfLines={1}
-                  fsPrimary
-                  textColor={color.brandColor}
-                  textColor={'#000000'}
-                  style={{ ...Theme.ffLatoRegular12 }}>
-                  {item.value[2]}
-                </_Text>
-              </View>
-            </View>
             <View style={border}></View>
 
             {item.quantity == 0 && (
-              <View style={iconView}>
+              <View style={[iconView, { marginBottom: 10 }]}>
                 <TouchableOpacity
                   onPress={() => this.addProductToWishlist(item)}>
                   <Image
@@ -506,7 +454,7 @@ class SearchProductGrid extends Component {
             )}
 
             {item.quantity > 0 && (
-              <View style={iconView}>
+              <View style={[iconView, { marginBottom: 10 }]}>
                 <TouchableOpacity
                   onPress={() => this.removeProductFromCartByOne(item)}>
                   <Image
@@ -554,16 +502,6 @@ class SearchProductGrid extends Component {
 
     await this.props.addProductToWishlist(wishlistData);
 
-    //   const data1 = new FormData();
-    //   data1.append('table', 'product_master');
-    //   data1.append('mode_type', 'normal');
-    //   data1.append('collection_id', id);
-    //   data1.append('user_id', userId);
-    //   data1.append('record', 10);
-    //   data1.append('page_no', page);
-    //   data1.append('sort_by', selectedSortById);
-
-    //  await this.props.getProductSubCategoryData(data1);
   };
 
   addProductToCart = async item => {

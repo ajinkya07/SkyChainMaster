@@ -24,7 +24,7 @@ import { color } from '@values/colors';
 import Modal from 'react-native-modal';
 import IconPack from '@login/IconPack';
 import CheckBox from '@react-native-community/checkbox';
-import { Toast, Picker, Icon } from 'native-base'
+import { Toast, Picker } from 'native-base'
 import { strings } from '@values/strings'
 
 import { searchProducts, searchByCode } from '@search/SearchAction'
@@ -32,12 +32,67 @@ import FromDatePicker from './FromDatePicker'
 import ToDatePicker from './ToDatePicker'
 import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
 import Theme from '../../../values/Theme';
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+
 
 const { width } = Dimensions.get('window');
 
 var categoryIds = []
 
 var karatIds = []
+
+
+// id must be unique for subcategory also
+const data = [
+    {
+        name: 'choco chains',// this is the parent or 'category name'
+        id: 0,
+        // these are the children or 'sub ategory'
+        children: [
+            {
+                name: 'choco',
+                id: 10, // id of subcategory item
+            },
+            {
+                name: 'casting choco',
+                id: 17,
+            },
+        ],
+    },
+
+    {
+        name: 'Indo Italian',  // this is the parent or 'category name'
+        id: 1,
+        // these are the children or 'sub ategory'
+        children: [
+            {
+                name: 'Indo',
+                id: 11, // id of subcategory item
+            },
+            {
+                name: 'Premium Indo',
+                id: 12,
+            },
+        ]
+    },
+    {
+        name: 'I T Mala',  // this is the parent or 'category name'
+        id: 2,
+        // these are the children or 'sub ategory'
+        // If no subcategory send category in childen as first item
+        children: [
+            {
+                name: 'I T Mala',
+                id: 13, // id of subcategory item
+            },
+
+        ]
+    },
+
+
+];
+
 
 
 class SearchScreen extends Component {
@@ -74,7 +129,11 @@ class SearchScreen extends Component {
             karatData: [],
             isOkKaratClicked: false,
             selectedStatus: '1',
-
+            selectedItems: [],
+            selectedItems2: [],
+            items2: [],
+            items3: [],
+            items: []
 
         };
 
@@ -84,15 +143,28 @@ class SearchScreen extends Component {
 
     componentDidMount = () => {
         const { homePageData } = this.props
+        const { items2, items3 } = this.state
 
-        if (homePageData && homePageData.collection) {
+        if (homePageData && homePageData.search_collection) {
             this.setState({
-                collection: homePageData && homePageData.collection ? homePageData.collection : [],
+                collection: homePageData.search_collection
             });
+
+            // var data = homePageData.collection
+            // for (let i = 0; i < data.length; i++) {
+            //     this.state.items2.push({
+            //         id: data[i].id,
+            //         name: `${data[i].col_name}`
+            //     })
+            //     for (let j = 0; j < data[i].subcategory.length; j++) {
+            //         this.state.items3.push({
+            //             id: `${data[i].subcategory[j].id}`,
+            //             name: `${data[i].subcategory[j].col_name}`
+            //         })
+            //     }
+            // }
         }
     }
-
-
 
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -212,7 +284,6 @@ class SearchScreen extends Component {
             let array2 = []
             array = [{ id, name }]
             array2.push(...selectedCategories, ...array);
-            console.warn("array", array2);
             this.setState({ selectedCategories: array2 });
 
         }
@@ -223,16 +294,6 @@ class SearchScreen extends Component {
 
     setToDate = (newDate) => {
         const { fromDate } = this.state
-
-        // var timeStamp = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
-        // var timeStampDate = moment(new Date(timeStamp).toISOString().slice(0, 10)).format('DD-MM-YYYY');
-
-        // if (fromDate != '' && newDate != '' && timeStampDate > newDate) {
-        //     alert('Date must be greater than from date');
-        //   }
-        //   else if (!fromDate && newDate!=''){
-        //     this.setState({ toDate: newDate });   
-        //   }    
 
         this.setState({ toDate: newDate });
 
@@ -338,20 +399,7 @@ class SearchScreen extends Component {
                     <_Text fsMedium style={{ marginTop: hp(1.5) }}>AND   </_Text>
 
                     <View style={{ flexDirection: 'row', width: wp(40) }}>
-                        {/* <DatePicker
-                            defaultDate={new Date()}
-                            // minimumDate={new Date(2018, 1, 1)}
-                            //maximumDate={new Date(2018, 12, 31)}
-                            locale={"en"}
-                            // timeZoneOffsetInMinutes={undefined}
-                            modalTransparent={false}
-                            animationType={"fade"}
-                            androidMode={"default"}
-                            placeHolderText="To Date"
-                            textStyle={{ marginTop: hp(0.5), fontSize: 20 }}
-                            placeHolderTextStyle={{ color: "gray", fontSize: 20 }}
-                            onDateChange={() => this.setToDate()}
-                        /> */}
+
                         <ToDatePicker
                             dateLabel="To Date"
                             setToDate={(d) => this.setToDate(d)}
@@ -412,15 +460,6 @@ class SearchScreen extends Component {
                     </View>
                 }
 
-                {/* <TouchableOpacity onPress={() => this.toggleModal()}>
-                    <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
-                        <View style={styles.roundedButton}>
-                            <View style={styles.buttonText}>
-                                <_Text fsHeading bold>SELECT CATEGORIES</_Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity> */}
                 <View style={{ marginHorizontal: wp(3), justifyContent: 'center', alignItems: 'center' }}>
                     <ActionButtonRounded2
                         title="SELECT CATEGORIES"
@@ -480,16 +519,10 @@ class SearchScreen extends Component {
 
 
     searchProducts = () => {
-        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate, selectedCategories,
+        const { gwFrom, gwTo, nwFrom, nwTo, fromDate, toDate, selectedCategories, selectedItems2,
             selectedKarat, selectedStatus } = this.state
-
-        if (selectedCategories.length > 0) {
-            // var timeStamp = new Date().getTime() + 1 * 24 * 60 * 60 * 1000;
-            // var timeStampDate = moment(new Date(timeStamp).toISOString().slice(0, 10),).format('DD-MM-YYYY');
-
-            // if (toDate != '' && timeStampDate > toDate) {
-            //     alert('Date must be greater than from date');
-            // }
+        console.log("categoryIds", categoryIds);
+        if (selectedItems2.length > 0) {
 
             const s = new FormData()
 
@@ -593,34 +626,6 @@ class SearchScreen extends Component {
         // });
     };
 
-    // setToggleCheckBoxAll = () =>{
-    //     const { selectedKarat, toggleCheckBox } = this.state
-    //     const { allParameterData} = this.props
-
-    //     const arr = allParameterData && allParameterData.melting
-
-    //     const val = { ...this.state.karat };
-
-    //     for(let k = 0; k<arr.length; k++){
-
-    //         val[arr[k].id] = true;
-
-    //         let array = [];
-    //         let array2 = []
-
-    //         let id = arr[k].id
-    //         let  value = arr[k].melting_name
-    //         array = [{ id, value }]
-    //         array2.push(...selectedKarat, ...array);
-    //         console.warn("array2--==",array2);
-    //         this.setState({ selectedKarat: array2 });
-
-    //     }
-
-    //     this.setState({ karat: val });
-    //     console.warn("selectedKarat==",selectedKarat);
-    // }
-
 
     closeKaratModal = () => {
         this.setState({
@@ -639,18 +644,46 @@ class SearchScreen extends Component {
     };
 
 
+    onSelectedItemsChange = (selectedItems) => {
+        this.setState({ selectedItems });
+    };
+
+
+    onSelectedItemsChange2 = (selectedItems2) => {
+        this.setState({ selectedItems2 });
+
+    };
+
+    onConfirmCategory = () => {
+        const { selectedItems2 } = this.state
+
+        categoryIds = selectedItems2.map(x => { return x.id })
+
+        console.log("selectedItems2", selectedItems2);
+
+    }
+
+    onCancelCategory = () => {
+        this.setState({ selectedItems2: [], selectedItems: [] })
+    }
+
+
+
 
     render() {
 
         const { collection, isModalVisible, isSearchCodeVisible, isKaratModalVisible,
             selectedKarat, karatData, selectedStatus,
-            selectedCategories, isContinueClicked
+            selectedCategories, isContinueClicked, items2, items,
+            selectedItems2, selectedItems, items3
         } = this.state
         const { allParameterData } = this.props
 
         const list = allParameterData && allParameterData.melting
 
         let statusArray = [{ 'id': '1', 'status': 'Available' }, { 'id': '2', 'status': 'Sold' }]
+
+        console.log("collection", collection);
 
         return (
             <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -712,25 +745,36 @@ class SearchScreen extends Component {
                         {this.selectKarat()}
                     </View>
 
-                    <View style={{ paddingVertical: hp(0.5), }}>
-                        {this.selectCategories()}
-                    </View>
-
-
                     {/* <View style={{ paddingVertical: hp(0.5), }}>
-                        {this.searchButton()}
+                        {this.selectCategories()}
                     </View> */}
-
+                    <SectionedMultiSelect
+                        items={collection}
+                        IconRenderer={Icon}
+                        uniqueKey="id"
+                        subKey="children"
+                        selectText="Select categories"
+                        showDropDowns={true}
+                        readOnlyHeadings={true}
+                        onSelectedItemsChange={this.onSelectedItemsChange}
+                        onSelectedItemObjectsChange={this.onSelectedItemsChange2}
+                        selectedItems={this.state.selectedItems}
+                        modalWithSafeAreaView={true}
+                        subItemFontFamily={'Roboto'}
+                        onConfirm={this.onConfirmCategory}
+                        onCancel={this.onCancelCategory}
+                        showCancelButton={true}
+                        showRemoveAll={true}
+                    />
 
                 </ScrollView>
 
-                {/* <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                    {this.selectCategories()}
-                </View> */}
+
+
 
                 <View style={{
                     alignItems: 'center',
-                    justifyContent: 'center', marginBottom: 10, marginTop: 10,
+                    justifyContent: 'center', marginBottom: 10, marginTop: 8,
                 }}>
                     <ActionButtonRounded
                         title="SEARCH"
@@ -746,12 +790,11 @@ class SearchScreen extends Component {
                 {isModalVisible &&
                     <Modal
                         isVisible={this.state.isModalVisible}
-                        // transparent={true}
                         onRequestClose={() => this.closeModal()}
                         onBackdropPress={() => this.closeModal()}
                         onBackButtonPress={() => this.closeModal()}
 
-                        style={{ marginHorizontal: 24, marginVertical: Platform.OS === 'ios' ? 70 : 0 }}>
+                        style={{ marginHorizontal: 24, marginVertical: hp(10) }}>
                         <SafeAreaView>
                             <View style={styles.selectCategoriesContainer}>
                                 <Text style={styles.selectCategoryText}>
@@ -772,7 +815,7 @@ class SearchScreen extends Component {
                                 renderItem={({ item }) => (
                                     <View style={styles.categoryContainer}>
                                         <Text numberOfLines={2} style={styles.categoryText}>
-                                            {item.col_name.length > 22 ? (item.col_name).substring(0, 22) + '...' : item.col_name}
+                                            {item.col_name.length > 25 ? (item.col_name).substring(0, 25) + '...' : item.col_name}
                                         </Text>
                                         {  Platform.OS === 'ios' ? <CheckBox
                                             style={styles.checkBox}
@@ -798,6 +841,7 @@ class SearchScreen extends Component {
                                     </View>
                                 )}
                             />
+
                             <View style={styles.buttonContainer}>
                                 <ActionButtonRounded
                                     title="CONTINUE"
@@ -808,6 +852,8 @@ class SearchScreen extends Component {
                         </SafeAreaView>
                     </Modal>
                 }
+
+
 
 
                 {  isSearchCodeVisible &&

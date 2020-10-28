@@ -22,8 +22,8 @@ export default class _CustomHeader extends Component {
           hasTabs
           style={{
             width: wp(100),
-            height: hp(7),
-            marginBottom: 10,
+            height: hp(6),
+            marginBottom: 8,
             backgroundColor: this.props.backgroundColor
               ? this.props.backgroundColor
               : 'transparent',
@@ -37,7 +37,7 @@ export default class _CustomHeader extends Component {
                     : require('../../assets/image/back.png')
                 }
                 style={{
-                  // top: 2,
+                  left: -5, top: 3,
                   height: this.props.height ? this.props.height : hp(2.2),
                   width: this.props.width ? this.props.width : hp(2.2),
                 }}
@@ -51,6 +51,7 @@ export default class _CustomHeader extends Component {
                   fontSize: hp(2.6),
                   fontFamily: 'Lato-Bold',
                   letterSpacing: 1,
+
                 }}>
                 {this.props.Title ? this.props.Title : ''}
               </Title>

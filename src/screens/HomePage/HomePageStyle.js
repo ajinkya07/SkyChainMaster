@@ -34,7 +34,7 @@ export default {
 
   topHeading: {
     flexDirection: 'row',
-    marginTop: hp(2),
+    // marginTop: hp(1),
     width: wp(100),
     paddingLeft: wp(2),
   },

@@ -40,7 +40,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to access camera while placing custom order</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to access photos while placing custom order</string>
 	<key>UIAppFonts</key>

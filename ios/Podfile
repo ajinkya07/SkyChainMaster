@@ -87,6 +87,8 @@ target 'SkyChains' do
  pod 'Firebase/Messaging'
 	
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'SkyChainsTests' do
     inherit! :complete
     # Pods for testing

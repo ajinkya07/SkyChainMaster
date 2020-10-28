@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 
 const horizontalMargin = 20;
 const slideWidth = 280;
@@ -66,7 +66,7 @@ export default {
   },
   gridImage: {
     height: hp(18),
-    width:null,
+    width: null,
     // width: wp(45),
     // top: 1,
     borderBottomLeftRadius: 0,
@@ -88,7 +88,7 @@ export default {
     paddingHorizontal: hp(0.8),
   },
   border: {
-    marginTop: hp(0.8),
+    marginTop: hp(0.5),
     borderTopColor: '#d7d7d7',
     borderWidth: 0.4,
     width: wp(40),
