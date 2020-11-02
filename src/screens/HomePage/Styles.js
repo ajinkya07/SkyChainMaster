@@ -216,17 +216,18 @@ const Styles = {
         marginBottom: IS_IOS ? 0 : -1, // Prevent a random Android rendering issue
         borderColor: 'white',
         height: hp(27),
-        backgroundColor: colors.black
+        backgroundColor: colors.black,
+        resizeMode: 'cover'
     },
     imageContainerEven: {
         backgroundColor: colors.black
     },
     image: {
         ...StyleSheet.absoluteFillObject,
-        resizeMode: 'contain',
         borderRadius: IS_IOS ? entryBorderRadius : 0,
         borderTopLeftRadius: entryBorderRadius,
-        borderTopRightRadius: entryBorderRadius
+        borderTopRightRadius: entryBorderRadius,
+
     },
     // image's border radius is buggy on iOS; let's hack it!
     radiusMask: {

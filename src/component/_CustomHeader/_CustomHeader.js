@@ -37,9 +37,9 @@ export default class _CustomHeader extends Component {
                     : require('../../assets/image/back.png')
                 }
                 style={{
-                  left: -5, top: 3,
-                  height: this.props.height ? this.props.height : hp(2.2),
-                  width: this.props.width ? this.props.width : hp(2.2),
+                  left: -5, top: 1,
+                  height: this.props.height ? this.props.height : hp(2.5),
+                  width: this.props.width ? this.props.width : hp(2.5),
                 }}
               />
             </Button>

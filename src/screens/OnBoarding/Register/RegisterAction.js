@@ -22,7 +22,7 @@ const header = {
   },
 }
 
-export function showLoadingIndicator(type) {  
+export function showLoadingIndicator(type) {
   return {
     type: type
   };
@@ -44,24 +44,24 @@ export function onFailure(error, type) {
 }
 
 export function OTPregisterRequest(data) {
-console.log("registerRequest data",data);
+  console.log("registerRequest data", data);
 
   return dispatch => {
     dispatch(showLoadingIndicator(OTP_REGISTER_DATA));
 
     axios.post(urls.SendOtp.url, data, header).then(response => {
-        console.log("registerRequest", response.data);
-        if (response.data.ack ==='1') {
-          dispatch(
-            onSuccess(response.data, OTP_REGISTER_DATA_SUCCESS)
-          )
-        }
-        else {
-          dispatch(
-            onFailure(response.data.msg, OTP_REGISTER_DATA_ERROR)
-          )
-        }
-      })
+      console.log("registerRequest", response.data);
+      if (response.data.ack === '1') {
+        dispatch(
+          onSuccess(response.data, OTP_REGISTER_DATA_SUCCESS)
+        )
+      }
+      else {
+        dispatch(
+          onFailure(response.data.msg, OTP_REGISTER_DATA_ERROR)
+        )
+      }
+    })
       .catch(function (error) {
         console.log(" OTP ERROR", error);
         dispatch(
@@ -73,29 +73,29 @@ console.log("registerRequest data",data);
 
 
 export function registerAfterOtpRequest(data) {
-  console.log("registerAfterOtpRequest  data",data);
-  
-    return dispatch => {
-      dispatch(showLoadingIndicator(REGISTER_DATA));
-  
-      axios.post(urls.Register.url, data, header).then(response => {
-          console.log("registerAfterOtpRequest", response.data);
-          if (response.data.ack ==='1') {
-            dispatch(
-              onSuccess(response.data, REGISTER_DATA_SUCCESS)
-            )
-          }
-          else {
-            dispatch(
-              onFailure(response.data.msg, REGISTER_DATA_ERROR)
-            )
-          }
-        })
-        .catch(function (error) {
-          console.log(" after register OTP ERROR", error);
-          dispatch(
-            onFailure(strings.serverFailedMsg, REGISTER_DATA_ERROR)
-          );
-        });
-    }
+  console.log("registerAfterOtpRequest", data);
+
+  return dispatch => {
+    dispatch(showLoadingIndicator(REGISTER_DATA));
+
+    axios.post(urls.Register.url, data, header).then(response => {
+      console.log("registerAfterOtpRequest", response.data);
+      if (response.data.ack === '1') {
+        dispatch(
+          onSuccess(response.data, REGISTER_DATA_SUCCESS)
+        )
+      }
+      else {
+        dispatch(
+          onFailure(response.data.msg, REGISTER_DATA_ERROR)
+        )
+      }
+    })
+      .catch(function (error) {
+        console.log(" after register OTP ERROR", error);
+        dispatch(
+          onFailure(strings.serverFailedMsg, REGISTER_DATA_ERROR)
+        );
+      });
   }
+}

@@ -224,6 +224,7 @@ class CartContainer extends Component {
       successCartWeightVersion: 0,
 
 
+
     };
     userId = global.userId;
   }
@@ -615,9 +616,7 @@ class CartContainer extends Component {
       await this.props.getWishlistData(w);
     }
 
-    if (
-      this.state.errorClearAllWislistVersion >
-      prevState.errorClearAllWislistVersion
+    if (this.state.errorClearAllWislistVersion > prevState.errorClearAllWislistVersion
     ) {
       Toast.show({
         text: this.props.errorMsg
@@ -652,9 +651,7 @@ class CartContainer extends Component {
       this.setState({ editStateData: '', isModalVisible: false });
     }
 
-    if (
-      this.state.errorEditCartProductVersion >
-      prevState.errorEditCartProductVersion
+    if (this.state.errorEditCartProductVersion > prevState.errorEditCartProductVersion
     ) {
       Toast.show({
         text: this.props.errorMsg
@@ -695,6 +692,7 @@ class CartContainer extends Component {
         type: 'danger',
       });
     }
+
   }
 
   renderLoader = () => {
@@ -2223,7 +2221,6 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps(state) {
-  console.log("state", state);
   return {
     isFetching: state.cartContainerReducer.isFetching,
     error: state.cartContainerReducer.error,

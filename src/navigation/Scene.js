@@ -102,16 +102,19 @@ class Scene extends React.Component {
     const { allParameterData } = this.props;
     const { isLoginValue } = this.state;
 
+    console.log("componentDidUpdate", allParameterData.user_status);
 
     if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
 
       const stat = allParameterData && allParameterData.user_status
 
-      if (stat != 'active') {
+      if (stat !== 'active') {
         this.setState({
           isLoginValue: false,
           isInside: false
         })
+        global.userId = '';
+        AsyncStorage.setItem('userId', '');
       }
     }
 
@@ -294,7 +297,7 @@ class Scene extends React.Component {
     if (s == 'active' && isLoginValue == true) {
       return this.getHomeScene()
     }
-    else if (isLoginValue == false && s != 'active') {
+    else if (isLoginValue == false && s !== 'active') {
       return this.getLoginScene()
     }
     else if (isLoginValue == false && !isInside) {

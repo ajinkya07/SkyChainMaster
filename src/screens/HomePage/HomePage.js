@@ -96,6 +96,7 @@ class HomePage extends Component {
 
     await this.props.allParameters(data3)
 
+
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -210,10 +211,14 @@ class HomePage extends Component {
 
     const { finalCollection, productId, productId2 } = this.state;
 
-    // if (prevProps.isFocused !== this.props.isFocused) {
-    //     await this.getHomePage()
-    //     await this.getTotalCart()
-    // }
+    if (prevProps.isFocused !== this.props.isFocused) {
+      const allData = new FormData();
+      allData.append('user_id', userId);
+
+      await this.props.allParameters(allData)
+
+    }
+
 
     if (this.state.successHomePageVersion > prevState.successHomePageVersion) {
       if (homePageData && homePageData.final_collection) {
@@ -308,7 +313,6 @@ class HomePage extends Component {
 
     }
 
-
     if (this.state.errorAddToCartVersion > prevState.errorAddToCartVersion) {
       Toast.show({
         text: errorMsg && errorMsg,
@@ -364,6 +368,24 @@ class HomePage extends Component {
       });
     }
 
+    if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
+      const stat = allParameterData && allParameterData.user_status
+
+      if (stat !== 'active') {
+        this.props.navigation.navigate('SignIn')
+        global.userId = '';
+        AsyncStorage.setItem('userId', '');
+        this.showToast("User is not Active. Please contact System Admin", 'danger');
+
+      }
+    }
+
+    if (this.state.errorAllParamaterVersion > prevState.errorAllParamaterVersion) {
+      Toast.show({
+        text: this.props.errorMsg,
+        duration: 2500,
+      });
+    }
   }
 
 
@@ -432,7 +454,7 @@ class HomePage extends Component {
           })
         }>
         <View key={k}>
-          <Image style={{ height: hp(27), width: wp(100), }}
+          <Image style={{ height: hp(28), width: wp(100), }}
             source={{ uri: baseUrl + data.brand_image }}
             defaultSource={IconPack.APP_LOGO}
             resizeMode='cover'
@@ -446,7 +468,7 @@ class HomePage extends Component {
     return (
       <View
         style={{
-          height: hp(27),
+          height: hp(28),
           width: wp(100),
         }}>
         {bannerData ? (
@@ -508,13 +530,11 @@ class HomePage extends Component {
             baseUrl: baseUrl,
           })
         }>
-        <View key={index} style={{ height: hp(27) }}>
-          <ParallaxImage
+        <View key={index}>
+          <Image style={{ height: hp(28), width: wp(100), }}
             source={{ uri: baseUrl + item.brand_image }}
-            containerStyle={styles.imageContainer}
-            style={styles.image}
-            parallaxFactor={0.4}
-            {...parallaxProps}
+            defaultSource={IconPack.APP_LOGO}
+            resizeMode='cover'
           />
         </View >
       </TouchableOpacity>
@@ -523,8 +543,9 @@ class HomePage extends Component {
 
 
   carausalView2 = (bannerData) => {
-    const sliderWidth = wp(100);
-    const itemHeight = hp(27);
+    let { width, height } = Dimensions.get('window')
+    let sliderWidth = width;
+    let itemHeight = hp(28);
 
     return (
       <View style={{ marginBottom: -10 }}>
@@ -534,11 +555,12 @@ class HomePage extends Component {
           loop={true}
           loopClonesPerSide={2}
           autoplay={true}
-          autoplayDelay={1500}
-          autoplayInterval={10000}
+          autoplayDelay={1400}
+          autoplayInterval={8000}
           sliderWidth={sliderWidth}
           sliderHeight={itemHeight}
           itemWidth={sliderWidth}
+          itemHeight={itemHeight}
           data={bannerData}
           renderItem={this._renderItem}
           hasParallaxImages={true}
@@ -624,7 +646,7 @@ class HomePage extends Component {
     } = HomePageStyle;
 
     const { plusOnecartValue } = this.state;
-    let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
+    let url = urls.imageUrl + 'public/backend/product_images/small_image/';
 
     return (
       <TouchableOpacity
@@ -700,7 +722,7 @@ class HomePage extends Component {
                     numberOfLines={1}
                     fsSmall
                     style={{ ...Theme.ffLatoRegular13, color: '#000000' }}>
-                    Inches
+                    Length
                   </_Text>
                 </View>
                 <View
@@ -929,7 +951,6 @@ class HomePage extends Component {
 
     let userStatus = allParameterData && allParameterData.splash_popup && allParameterData.splash_popup[0]
 
-
     return (
       <View style={mainContainer}>
         <ScrollView
@@ -939,7 +960,7 @@ class HomePage extends Component {
               onRefresh={() => this.onRefresh()}
             />
           }
-          showsVerticalScrollIndicator={false}>
+          showsVerticalSscrollIndicator={false}>
 
 
 
@@ -1004,7 +1025,7 @@ class HomePage extends Component {
             <View>
               <View style={{
                 marginTop: hp(2), marginBottom: -10, borderColor: '#DDDDDD',
-                height: hp(27), width: '100%',
+                height: hp(30), width: '100%',
               }}>
                 <Image
                   source={{ uri: userStatus.image }}
@@ -1013,8 +1034,11 @@ class HomePage extends Component {
                     height: hp(27), width: '100%',
                     borderColor: '#DDDDDD', borderWidth: 0.5
                   }}
-                  resizeMode='cover'
+                  resizeMode='stretch'
                 />
+
+
+
               </View>
 
 
@@ -1100,7 +1124,6 @@ class HomePage extends Component {
                       source={{
                         uri: imageUrl + imageToBeDisplayed.images[0].image_name,
                       }}
-                      //defaultSource={require('../../assets/image/default.png')}
                       defaultSource={IconPack.APP_LOGO}
                       style={{
                         height: hp(35),
@@ -1174,78 +1197,3 @@ export default connect(
 )(withNavigationFocus(HomePage));
 
 
-
-
-// {this.state.isModalVisible  && userStatus == 'Active' && (
-//   <View>
-//     <Modal
-//       style={{ justifyContent: 'center' }}
-//       isVisible={this.state.isModalVisible}
-//       onRequestClose={() => this.setState({ isModalVisible: false })}
-//       onBackdropPress={() => this.setState({ isModalVisible: false })}
-//       onBackButtonPress={() => this.setState({ isModalVisible: false }) }>
-//       <SafeAreaView>
-//         <View
-//           style={{
-//             height: hp(68),
-//             backgroundColor: 'white',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             borderRadius: 15,
-//           }}>
-//           <View
-//             style={{
-//               bottom: hp(5),
-//               backgroundColor: 'white',
-//               borderColor: 'red',
-//               borderWidth: 1,
-//               alignItems: 'center',
-//               justifyContent: 'center',
-//               height: hp(8),
-//               width: hp(8),
-//               borderRadius: hp(4),
-//             }}>
-//             <TouchableOpacity
-//               hitSlop={{
-//                 position: 'absolute',
-//                 top: 5,
-//                 bottom: 5,
-//                 left: 5,
-//                 right: 5,
-//               }}
-//               onPress={() => this.onOkPressed()}>
-//               <Image
-//                 source={require('../../assets/image/remove.png')}
-//                 style={{ height: hp(5), width: hp(5) }}
-//               />
-//             </TouchableOpacity>
-//           </View>
-//           <Image
-//             source={{uri : userStatus.image}}
-//             defaultSource={IconPack.APP_LOGO}
-//             style={{
-//               height: hp(45),
-//               width: wp(83),
-//               borderColor: 'gray',
-//               borderWidth: 1,
-//               bottom: hp(2),
-//             }}
-//             resizeMode='contain'
-//           />
-
-//           <_Text fsHeading fwPrimary style={{textAlign:'center',marginBottom:hp(2)}}>{userStatus.description}</_Text>
-
-//           <_CustomButton
-//             onPress={() => this.onOkPressed()}
-//             title="OK"
-//             height={hp(7.1)}
-//             width={wp(80)}
-//             fontSize={hp(2.5)}
-//             fontWeight={Platform.OS === 'ios' ? '400' : 'bold'}
-//             backgroundColor={color.green}
-//           />
-//         </View>
-//       </SafeAreaView>
-//     </Modal>
-//   </View>
-// )}

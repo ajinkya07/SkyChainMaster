@@ -92,6 +92,7 @@ class Register extends React.Component {
     if (this.state.successRegisterVersion > prevState.successRegisterVersion) {
       if (OTPregisterData.otp != '') {
         this.showToast('OTP sent successfully', 'success');
+        console.log("this.state", this.state);
         this.props.navigation.navigate('VerifyOtpForRegister', {
           mobile: OTPregisterData.mobile_number,
           otp: OTPregisterData.otp,
@@ -100,8 +101,6 @@ class Register extends React.Component {
           organisation: this.state.organisation,
           fullName: this.state.fullName,
         });
-      } else {
-        this.showToast('Please contact admin', 'danger');
       }
     }
     if (this.state.errorRegisterVersion > prevState.errorRegisterVersion) {
@@ -155,6 +154,8 @@ class Register extends React.Component {
       emailId,
       isEmail,
     } = this.state;
+
+    console.log("organisation", organisation);
 
     let error = '';
     try {

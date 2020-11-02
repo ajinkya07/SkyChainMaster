@@ -34,6 +34,9 @@ import {
   ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_ERROR,
   ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_RESET_REDUCER,
 
+  PRODUCT_TOTAL_COUNT_ERROR,
+  PRODUCT_TOTAL_COUNT_SUCCESS,
+  PRODUCT_TOTAL_COUNT
 
 } from "@redux/types";
 
@@ -100,7 +103,6 @@ export function getSortByParameters(data) {
     dispatch(showLoadingIndicator(SORT_BY_PARAMS_DATA));
 
     axios.post(urls.sortByParams.url, data, header).then(response => {
-      console.log("getSortByParameters", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, SORT_BY_PARAMS_DATA_SUCCESS)
@@ -113,8 +115,6 @@ export function getSortByParameters(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, SORT_BY_PARAMS_DATA_ERROR)
         );
@@ -122,15 +122,12 @@ export function getSortByParameters(data) {
   }
 }
 
-
-
 export function getfilterParameters(data) {
 
   return dispatch => {
     dispatch(showLoadingIndicator(FILTER_PARAMS_DATA));
 
     axios.post(urls.FilterParams.url, data, header).then(response => {
-      console.log("getfilterParameters", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, FILTER_PARAMS_DATA_SUCCESS)
@@ -143,8 +140,6 @@ export function getfilterParameters(data) {
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, FILTER_PARAMS_DATA_ERROR)
         );
@@ -154,12 +149,10 @@ export function getfilterParameters(data) {
 
 
 export function applyFilterProducts(data) {
-console.log("applyFilterProducts formdata",data);
   return dispatch => {
     dispatch(showLoadingIndicator(FILTER_PRODUCT_DATA));
 
     axios.post(urls.ProductGrid.url, data, header).then(response => {
-      console.log("applyFilterProducts", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, FILTER_PRODUCT_DATA_SUCCESS)
@@ -172,8 +165,6 @@ console.log("applyFilterProducts formdata",data);
       }
     })
       .catch(function (error) {
-        console.log("getHomePageData ERROR", error);
-
         dispatch(
           onFailure(strings.serverFailedMsg, FILTER_PRODUCT_DATA_ERROR)
         );
@@ -205,60 +196,78 @@ export function addProductToWishlist(data) {
       });
   }
 }
-  
+
 export function addProductToCart(data) {
-    return dispatch => {
-      dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_DATA));
-  
-      axios.post(urls.addToCartWishlist.url, data, header).then(response => {
-        console.warn("response",response.data);
-        if (response.data.ack === '1') {
-          dispatch(
-            onSuccess(response.data, ADD_PRODUCT_TO_CART_DATA_SUCCESS)
-          )
-        }
-        else {
-          dispatch(
-            onFailure(response.data.msg, ADD_PRODUCT_TO_CART_DATA_ERROR)
-          )
-        }
-      })
-        .catch(function (error) {
-          console.log("getHomePageData ERROR", error);
-  
-          dispatch(
-            onFailure(strings.serverFailedMsg, ADD_PRODUCT_TO_CART_DATA_ERROR)
-          );
-        });
-    }
-  }
+  return dispatch => {
+    dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_DATA));
 
-
-  export function addRemoveProductFromCartByOne(data) {
-    console.log("addRemoveProductFromCartByOne formdata",data);
-      return dispatch => {
-        dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_PLUS_ONE_DATA));
-    
-        axios.post(urls.addToCartGridAdd.url, data, header).then(response => {
-          console.log("addRemoveProductFromCartByOne success", response.data);
-          if (response.data.ack === '1') {
-            dispatch(
-              onSuccess(response.data, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_SUCCESS)
-            )
-          }
-          else {
-            dispatch(
-              onFailure(response.data.msg, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_ERROR)
-            )
-          }
-        })
-          .catch(function (error) {
-            console.log("getHomePageData ERROR", error);
-    
-            dispatch(
-              onFailure(strings.serverFailedMsg, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_ERROR)
-            );
-          });
+    axios.post(urls.addToCartWishlist.url, data, header).then(response => {
+      if (response.data.ack === '1') {
+        dispatch(
+          onSuccess(response.data, ADD_PRODUCT_TO_CART_DATA_SUCCESS)
+        )
       }
-    }
-  
+      else {
+        dispatch(
+          onFailure(response.data.msg, ADD_PRODUCT_TO_CART_DATA_ERROR)
+        )
+      }
+    })
+      .catch(function (error) {
+        dispatch(
+          onFailure(strings.serverFailedMsg, ADD_PRODUCT_TO_CART_DATA_ERROR)
+        );
+      });
+  }
+}
+
+
+export function addRemoveProductFromCartByOne(data) {
+  return dispatch => {
+    dispatch(showLoadingIndicator(ADD_PRODUCT_TO_CART_PLUS_ONE_DATA));
+
+    axios.post(urls.addToCartGridAdd.url, data, header).then(response => {
+      if (response.data.ack === '1') {
+        dispatch(
+          onSuccess(response.data, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_SUCCESS)
+        )
+      }
+      else {
+        dispatch(
+          onFailure(response.data.msg, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_ERROR)
+        )
+      }
+    })
+      .catch(function (error) {
+        dispatch(
+          onFailure(strings.serverFailedMsg, ADD_PRODUCT_TO_CART_PLUS_ONE_DATA_ERROR)
+        );
+      });
+  }
+}
+
+
+
+
+export function getProductTotalCount(data) {
+  return dispatch => {
+    axios.post(urls.ProductGridCount.url, data, header).then(response => {
+      if (response.data.ack === '1') {
+        dispatch(
+          onSuccess(response.data.data, PRODUCT_TOTAL_COUNT_SUCCESS)
+        )
+      }
+      else {
+        dispatch(
+          onFailure(response.data.msg, PRODUCT_TOTAL_COUNT_ERROR)
+        )
+      }
+    })
+      .catch(function (error) {
+        dispatch(
+          onFailure(strings.serverFailedMsg, PRODUCT_TOTAL_COUNT_ERROR)
+        );
+      });
+  }
+}
+

@@ -90,12 +90,10 @@ export function getHomePageData(data) {
 }
 
 export function getTotalCartCount(data) {
-  console.log("getTotalCartCount payload", data);
   return dispatch => {
     dispatch(showLoadingIndicator(TOTAL_CART_COUNT_DATA));
 
     axios.post(urls.TotalCartCount.url, data, header).then(response => {
-      console.log("TotalCartCount", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, TOTAL_CART_COUNT_DATA_SUCCESS)
@@ -141,15 +139,12 @@ export function addToWishlist(data) {
 
 
 export function addToCart(data) {
-  console.log("data", data);
 
   return dispatch => {
     dispatch(showLoadingIndicator(ADD_TO_CART_DATA));
 
     axios.post(urls.addToCartWishlist.url, data, header).then(response => {
       if (response.data.ack === '1') {
-        console.log("response", response);
-
         dispatch(
           onSuccess(response.data, ADD_TO_CART_DATA_SUCCESS)
         )
@@ -161,7 +156,6 @@ export function addToCart(data) {
       }
     })
       .catch(function (error) {
-        console.log("addToCart ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_TO_CART_DATA_ERROR)
         );
@@ -188,7 +182,6 @@ export function addRemoveFromCartByOne(data) {
       }
     })
       .catch(function (error) {
-        console.log("addToCartPlusOne ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ADD_TO_CART_PLUS_ONE_DATA_ERROR)
         );
@@ -199,8 +192,6 @@ export function addRemoveFromCartByOne(data) {
 
 export function allParameters(data) {
   return dispatch => {
-    dispatch(showLoadingIndicator(ALL_PARAMETER_DATA));
-
     axios.post(urls.AllParameter.url, data, header).then(response => {
       if (response.data) {
         dispatch(
@@ -214,7 +205,6 @@ export function allParameters(data) {
       }
     })
       .catch(function (error) {
-        console.log("addToCartPlusOne ERROR", error);
         dispatch(
           onFailure(strings.serverFailedMsg, ALL_PARAMETER_DATA_ERROR)
         );

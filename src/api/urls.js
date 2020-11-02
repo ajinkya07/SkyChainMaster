@@ -28,6 +28,9 @@ export const urls = {
     ProductGrid: {
         url: url + "Products_Grid"
     },
+    ProductGridCount: {
+        url: url + "Products_Count"
+    },
 
     AddToCartFromDetails: {
         url: url + 'Product_Cart/add_to_cart'
@@ -122,13 +125,13 @@ export const urls = {
     Exclusive: {
         url: url + 'my_Collection'
     },
-    CallEmail:{
+    CallEmail: {
         url: url + 'Call_Email_Us'
     },
-    CustomOrder:{
+    CustomOrder: {
         url: url + 'Customized_Order/order_assign'
     },
-    sendFCMToken:{
+    sendFCMToken: {
         url: url + 'Worker/send_gcm'
     },
 

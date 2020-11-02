@@ -28,7 +28,7 @@ export const HOMEPAGE_DATA = "homePageData";
 export const HOMEPAGE_DATA_SUCCESS = "homePageDataSuccess";
 export const HOMEPAGE_DATA_ERROR = "homePageDataError";
 export const HOMEPAGE_DATA_RESET_REDUCER = "homePageDataResetReducer";
-    
+
 export const PRODUCT_GRID_DATA = "productData";
 export const PRODUCT_GRID_DATA_SUCCESS = "productDataSuccess";
 export const PRODUCT_GRID_DATA_ERROR = "productDataError";
@@ -262,3 +262,7 @@ export const FCM_DATA = "fcmData";
 export const FCM_DATA_SUCCESS = "fcmDataSuccess";
 export const FCM_DATA_ERROR = "fcmDataError";
 export const FCM_DATA_RESET_REDUCER = "fcmDataResetReducer";
+
+export const PRODUCT_TOTAL_COUNT = "productTotalcount";
+export const PRODUCT_TOTAL_COUNT_SUCCESS = "productTotalcountSuccess";
+export const PRODUCT_TOTAL_COUNT_ERROR = "productTotalcountError";

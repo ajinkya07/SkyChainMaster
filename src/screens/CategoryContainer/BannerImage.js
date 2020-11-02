@@ -5,7 +5,7 @@ import {
 } from 'react-native-responsive-screen';
 import {
     View,
-    Text, Image,Dimensions,
+    Text, Image, Dimensions,
     Button, ActivityIndicator,
     FlatList, SafeAreaView, Alert,
     TouchableOpacity,
@@ -32,7 +32,7 @@ export default class BannerImage extends Component {
         this.state = {
             bannerDataImagePath: data,
             baseUrl: url,
-            currentPage:0
+            currentPage: 0
         };
     }
 
@@ -60,20 +60,12 @@ export default class BannerImage extends Component {
 
 
         return (
-                <View key={k}>
-                <ImageZoom 
+            <View key={k}>
+                <ImageZoom
                     cropWidth={wp(100)}
-                       cropHeight={hp(95)}
-                       imageWidth={wp(100)}
-                       imageHeight={hp(95)}>
-                    {/* <FastImage
-                        style={{ height: hp(80), width: wp(100) }}
-                        source={{
-                            uri: url2 + data,
-                        }}
-                        defaultSource={require('../../assets/image/default.png')}
-                        resizeMode={FastImage.resizeMode.contain}
-                    /> */}
+                    cropHeight={hp(95)}
+                    imageWidth={wp(100)}
+                    imageHeight={hp(95)}>
 
                     <Image
                         source={{ uri: url2 + data }}
@@ -83,7 +75,7 @@ export default class BannerImage extends Component {
                     />
                 </ImageZoom>
 
-                </View>
+            </View>
         )
     }
 

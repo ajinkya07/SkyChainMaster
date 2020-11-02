@@ -31,6 +31,7 @@ import {
   addProductToWishlist,
   addProductToCart,
   addRemoveProductFromCartByOne,
+  getProductTotalCount
 } from '@productGrid/ProductGridAction';
 
 import { getTotalCartCount } from '@homepage/HomePageAction';
@@ -74,6 +75,9 @@ class SearchProductGrid extends Component {
       successTotalCartCountVersion: 0,
       errorTotalCartCountVersion: 0,
 
+      productTotalcountSuccessVersion: 0,
+      productTotalcountErrorVersion: 0
+
     };
     userId = global.userId;
   }
@@ -87,7 +91,21 @@ class SearchProductGrid extends Component {
         gridData: this.state.page === 0 ? searchByCategoryData.data.products
           : [...this.state.gridData, ...searchByCategoryData.data.products],
       });
+
+      let id = searchByCategoryData.data.products[0].collection_id
+      const countData = new FormData();
+      countData.append('table', 'product_master');
+      countData.append('mode_type', 'normal');
+      countData.append('collection_id', id);
+      countData.append('user_id', userId);
+      countData.append('record', 10);
+      countData.append('page_no', 0);
+      countData.append('sort_by', '2');
+
+      this.props.getProductTotalCount(countData)
     }
+
+
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -103,6 +121,8 @@ class SearchProductGrid extends Component {
       errorProductAddToCartPlusOneVersion,
       successTotalCartCountVersion,
       errorTotalCartCountVersion,
+      productTotalcountSuccessVersion,
+      productTotalcountErrorVersion
     } = nextProps;
     let newState = null;
 
@@ -172,6 +192,18 @@ class SearchProductGrid extends Component {
       };
     }
 
+    if (productTotalcountSuccessVersion > prevState.productTotalcountSuccessVersion) {
+      newState = {
+        ...newState,
+        productTotalcountSuccessVersion: nextProps.productTotalcountSuccessVersion,
+      };
+    }
+    if (productTotalcountErrorVersion > prevState.productTotalcountErrorVersion) {
+      newState = {
+        ...newState,
+        productTotalcountErrorVersion: nextProps.productTotalcountErrorVersion,
+      };
+    }
     return newState;
   }
 
@@ -194,23 +226,12 @@ class SearchProductGrid extends Component {
       if (productGridData.products && productGridData.products.length > 0) {
         this.setState({
           gridData:
-            this.state.page === 0
-              ? productGridData.products
-              : [...this.state.gridData, ...productGridData.products],
+            this.state.page === 0 ? productGridData.products : [...this.state.gridData, ...productGridData.products],
         });
-      } else {
-        this.showToast('Please contact admin', 'danger');
       }
     }
 
     if (this.state.errorProductGridVersion > prevState.errorProductGridVersion) {
-      Toast.show({
-        text: this.props.errorMsg
-          ? this.props.errorMsg
-          : strings.serverFailedMsg,
-        color: 'warning',
-        duration: 2500,
-      });
       this.setState({ page: 0 });
     }
 
@@ -356,7 +377,7 @@ class SearchProductGrid extends Component {
       iconView,
     } = ProductGridStyle;
 
-    let url = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+    let url = urls.imageUrl + 'public/backend/product_images/small_image/'
 
     const { gridData } = this.state
 
@@ -377,7 +398,11 @@ class SearchProductGrid extends Component {
             elevation: 2.2,
           }}
           activeOpacity={1}>
-          <View style={gridItemDesign}>
+          <View style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: wp(46),
+          }}>
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate('ProductDetails', {
@@ -386,10 +411,19 @@ class SearchProductGrid extends Component {
               }
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'contain'}
-                style={gridImage}
+                resizeMode={'cover'}
+                style={{
+                  height: hp(18),
+                  // width: null,
+                  width: wp(46),
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  borderRadius: 15,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
                 defaultSource={IconPack.APP_LOGO}
-                source={{ uri: url + item.image_name, }}
+                source={{ uri: url + item.image_name }}
               />
             </TouchableOpacity>
 
@@ -421,9 +455,8 @@ class SearchProductGrid extends Component {
                     <_Text
                       numberOfLines={1}
                       fsPrimary
-                      //textColor={color.brandColor}
                       textColor={'#000000'}
-                      style={{ ...Theme.ffLatoRegular12 }}>
+                      style={{ ...Theme.ffLatoRegular13 }}>
                       {value ? value : '-'}
                     </_Text>
                   );
@@ -619,14 +652,26 @@ class SearchProductGrid extends Component {
   };
 
   LoadMoreData = () => {
-    this.setState(
-      {
+    const { productTotalcount } = this.props
+    const { gridData } = this.state
+
+    let count = productTotalcount.count
+
+    console.log("count sss", count);
+
+    if (gridData.length !== count && gridData.length < count) {
+      this.setState({
         page: this.state.page + 1,
-        clickedLoadMore: true,
       },
-      () => this.LoadRandomData(),
-    );
-  };
+        () => this.LoadRandomData(),
+      );
+    }
+    else if (gridData.length === count || gridData.length > count) {
+      Toast.show({
+        text: 'No more products to show',
+      })
+    }
+  }
 
   LoadRandomData = () => {
     const { gridData, page } = this.state;
@@ -742,9 +787,9 @@ class SearchProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            ListFooterComponent={this.footer()}
-          //onEndReachedThreshold={0.3}
-          //onEndReached={() => this.LoadMoreData()}
+            // ListFooterComponent={this.footer()}
+            onEndReachedThreshold={0.4}
+            onEndReached={() => this.LoadMoreData()}
 
           />
         )}
@@ -940,6 +985,10 @@ function mapStateToProps(state) {
     successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
     errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
 
+    productTotalcount: state.productGridReducer.productTotalcount,
+    productTotalcountSuccessVersion: state.productGridReducer.productTotalcountSuccessVersion,
+    productTotalcountErrorVersion: state.productGridReducer.productTotalcountErrorVersion,
+
   }
 }
 
@@ -950,5 +999,6 @@ export default connect(
   addProductToCart,
   addRemoveProductFromCartByOne,
   getTotalCartCount,
+  getProductTotalCount
 }
 )(SearchProductGrid);

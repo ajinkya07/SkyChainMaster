@@ -30,19 +30,19 @@ class VerifyOtpForRegister extends React.Component {
     const mobile = this.props.route.params.mobile;
     const password = this.props.route.params.password;
     const email = this.props.route.params.emailId;
-    const org = this.props.route.params.org;
+    const org = this.props.route.params.organisation;
     const fullName = this.props.route.params.fullName;
 
-    
+
     this.state = {
       finalCode: '',
       code: '',
       receivedOtp: otp,
       receivedMobile: mobile,
       receivedPassword: password,
-      receivedFullName:fullName,
-      receivedEmail:email,
-      receivedOrg:org,
+      receivedFullName: fullName,
+      receivedEmail: email,
+      receivedOrg: org,
       successOTPRegisterVersion: 0,
       errorOTPRegisterVersion: 0,
       successRegisterVersion: 0,
@@ -91,15 +91,12 @@ class VerifyOtpForRegister extends React.Component {
 
 
   async componentDidUpdate(prevProps, prevState) {
-    const { OTPregisterData ,registerData} = this.props
+    const { OTPregisterData, registerData } = this.props
 
     if (this.state.successOTPRegisterVersion > prevState.successOTPRegisterVersion) {
       if (registerData.ack === '1') {
         this.props.navigation.navigate('SignIn')
         this.showToast(registerData.msg, 'success')
-      }
-      else {
-        this.showToast('Please contact admin', 'danger')
       }
     }
 
@@ -107,11 +104,11 @@ class VerifyOtpForRegister extends React.Component {
       this.showToast(this.props.errorMsg, 'danger')
     }
 
-// FOR RESEND OTP & after Register form Click 
+    // FOR RESEND OTP & after Register form Click 
     if (this.state.successRegisterVersion > prevState.successRegisterVersion) {
       if (OTPregisterData.otp != "") {
         this.showToast("OTP sent successfully", 'success')
-        this.setState({receivedOtp:OTPregisterData.otp})
+        this.setState({ receivedOtp: OTPregisterData.otp })
       }
     }
     if (this.state.errorRegisterVersion > prevState.errorRegisterVersion) {
@@ -120,14 +117,10 @@ class VerifyOtpForRegister extends React.Component {
   }
 
   saveCode = (code) => {
-    console.log("code", code);
-
     this.setState({ code: code })
   }
 
   finalEnteredOtp = (finalCode) => {
-    console.log("finalCode", finalCode);
-
     this.setState({ finalCode: finalCode })
   }
 
@@ -151,7 +144,7 @@ class VerifyOtpForRegister extends React.Component {
   verifyOtpForRegister = () => {
     const {
       finalCode, receivedMobile, receivedOtp, receivedPassword,
-      receivedFullName,receivedOrg,receivedEmail
+      receivedFullName, receivedOrg, receivedEmail
     } = this.state;
 
     console.log("this.state", this.state);
@@ -233,7 +226,7 @@ class VerifyOtpForRegister extends React.Component {
                 onCodeFilled={(finalCode) => this.finalEnteredOtp(finalCode)}
 
               />
-              <View style={{ marginBottom: 30,marginTop:hp(2), alignItems: 'center' }}>
+              <View style={{ marginBottom: 30, marginTop: hp(2), alignItems: 'center' }}>
                 <TouchableOpacity onPress={() => this.verifyOtpForRegister()}>
                   <Image
                     style={styles.VerifyButtonStyle}
@@ -243,10 +236,12 @@ class VerifyOtpForRegister extends React.Component {
               </View>
               <TouchableOpacity onPress={() => this.resendOtp()}>
                 <Text
-                  style={{ color: '#ffffff', fontSize: hp(2),
-                  fontFamily: 'Lato-Regular',
-                  letterSpacing: 1.3,
-                  fontWeight: 'bold' }}>
+                  style={{
+                    color: '#ffffff', fontSize: hp(2),
+                    fontFamily: 'Lato-Regular',
+                    letterSpacing: 1.3,
+                    fontWeight: 'bold'
+                  }}>
                   RESEND CODE
                 </Text>
               </TouchableOpacity>
@@ -269,7 +264,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     borderRadius: 10,
     borderColor: '#c4c0b6',
-    borderWidth:2
+    borderWidth: 2
   },
   otpInputHighlightStyle: {
     width: 50,

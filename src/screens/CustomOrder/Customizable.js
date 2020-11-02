@@ -168,7 +168,6 @@ class Customizable extends Component {
       date: d,
       isDateTimePickerVisible: false,
     });
-    // this.hideDateTimePicker();
   }
 
   handleGrossWeightChange = newText =>

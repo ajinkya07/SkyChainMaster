@@ -111,7 +111,6 @@ class SignIn extends React.Component {
     }
 
     if (this.state.successFcmVersion > prevState.successFcmVersion) {
-      console.warn("successFcmVersion", this.props.fcmData);
       this.props.navigation.navigate('Container');
     }
 

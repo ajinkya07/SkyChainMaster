@@ -33,9 +33,10 @@ import {
   addProductToWishlist,
   addProductToCart,
   addRemoveProductFromCartByOne,
+  getProductTotalCount
 } from '@productGrid/ProductGridAction';
 
-import { getTotalCartCount } from '@homepage/HomePageAction';
+import { getTotalCartCount, allParameters } from '@homepage/HomePageAction';
 
 import { Toast, CheckBox } from 'native-base';
 import Modal from 'react-native-modal';
@@ -107,7 +108,11 @@ class ProductGrid extends Component {
 
       isSelectPressed: false,
       selectedItem: '',
-      selectedProducts: []
+      selectedProducts: [],
+
+      productTotalcountSuccessVersion: 0,
+      productTotalcountErrorVersion: 0
+
     };
     userId = global.userId;
   }
@@ -126,6 +131,17 @@ class ProductGrid extends Component {
       data.append('sort_by', '2');
 
       this.props.getProductSubCategoryData(data);
+
+      const countData = new FormData();
+      countData.append('table', 'product_master');
+      countData.append('mode_type', 'normal');
+      countData.append('collection_id', categoryData.id);
+      countData.append('user_id', userId);
+      countData.append('record', 10);
+      countData.append('page_no', 0);
+      countData.append('sort_by', '2');
+
+      this.props.getProductTotalCount(countData)
     }
     let data2 = new FormData();
     data2.append('collection_id', categoryData.id);
@@ -149,7 +165,25 @@ class ProductGrid extends Component {
       excl.append('my_collection_id', categoryData.id);
 
       this.props.getProductSubCategoryData(excl);
+
+      const countData2 = new FormData();
+      countData2.append('table', 'product_master');
+      countData2.append('mode_type', 'my_collection');
+      countData2.append('collection_id', 0);
+      countData2.append('user_id', userId);
+      countData2.append('record', 10);
+      countData2.append('page_no', 0);
+      countData2.append('sort_by', '2');
+      countData2.append('my_collection_id', categoryData.id);
+
+      this.props.getProductTotalCount(countData2)
     }
+
+    const allData = new FormData();
+    allData.append('user_id', userId);
+
+    this.props.allParameters(allData)
+
 
   };
 
@@ -171,6 +205,8 @@ class ProductGrid extends Component {
       errorProductAddToCartPlusOneVersion,
       successTotalCartCountVersion,
       errorTotalCartCountVersion,
+      productTotalcountSuccessVersion,
+      productTotalcountErrorVersion
     } = nextProps;
     let newState = null;
 
@@ -225,20 +261,14 @@ class ProductGrid extends Component {
       };
     }
 
-    if (
-      successAddProductToWishlistVersion >
-      prevState.successAddProductToWishlistVersion
-    ) {
+    if (successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion) {
       newState = {
         ...newState,
         successAddProductToWishlistVersion:
           nextProps.successAddProductToWishlistVersion,
       };
     }
-    if (
-      errorAddProductToWishlistVersion >
-      prevState.errorAddProductToWishlistVersion
-    ) {
+    if (errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion) {
       newState = {
         ...newState,
         errorAddProductToWishlistVersion:
@@ -246,9 +276,7 @@ class ProductGrid extends Component {
       };
     }
 
-    if (
-      successAddProductToCartVersion > prevState.successAddProductToCartVersion
-    ) {
+    if (successAddProductToCartVersion > prevState.successAddProductToCartVersion) {
       newState = {
         ...newState,
         successAddProductToCartVersion:
@@ -262,10 +290,7 @@ class ProductGrid extends Component {
       };
     }
 
-    if (
-      successProductAddToCartPlusOneVersion >
-      prevState.successProductAddToCartPlusOneVersion
-    ) {
+    if (successProductAddToCartPlusOneVersion > prevState.successProductAddToCartPlusOneVersion) {
       newState = {
         ...newState,
         successProductAddToCartPlusOneVersion:
@@ -296,6 +321,20 @@ class ProductGrid extends Component {
       };
     }
 
+    if (productTotalcountSuccessVersion > prevState.productTotalcountSuccessVersion) {
+      newState = {
+        ...newState,
+        productTotalcountSuccessVersion: nextProps.productTotalcountSuccessVersion,
+      };
+    }
+    if (productTotalcountErrorVersion > prevState.productTotalcountErrorVersion) {
+      newState = {
+        ...newState,
+        productTotalcountErrorVersion: nextProps.productTotalcountErrorVersion,
+      };
+    }
+
+
     return newState;
   }
 
@@ -313,10 +352,6 @@ class ProductGrid extends Component {
 
     const { categoryData, page, selectedSortById, gridData, fromExclusive } = this.state;
 
-    // if (prevProps.isFocused !== this.props.isFocused) {
-    //   console.warn("isFocused");
-    //   await this.getData()
-    // }
 
     if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
       if (productGridData.products && productGridData.products.length > 0) {
@@ -326,18 +361,9 @@ class ProductGrid extends Component {
               ? productGridData.products
               : [...this.state.gridData, ...productGridData.products],
         });
-      } else {
-        this.showToast('Please contact admin', 'danger');
       }
     }
     if (this.state.errorProductGridVersion > prevState.errorProductGridVersion) {
-      Toast.show({
-        text: this.props.errorMsg
-          ? this.props.errorMsg
-          : strings.serverFailedMsg,
-        color: 'warning',
-        duration: 2500,
-      });
       this.setState({ page: 0 });
     }
 
@@ -785,7 +811,7 @@ class ProductGrid extends Component {
       iconView,
     } = ProductGridStyle;
 
-    let url = urls.imageUrl + 'public/backend/product_images/zoom_image/';
+    let url = urls.imageUrl + 'public/backend/product_images/small_image/';
 
     const { isSelectPressed, selectedItem, selectedProducts } = this.state;
 
@@ -828,7 +854,7 @@ class ProductGrid extends Component {
               }
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'contain'}
+                resizeMode={'cover'}
                 style={gridImage}
                 defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name }}
@@ -863,9 +889,8 @@ class ProductGrid extends Component {
                     <_Text
                       numberOfLines={1}
                       fsPrimary
-                      //textColor={color.brandColor}
                       textColor={'#000000'}
-                      style={{ ...Theme.ffLatoRegular12 }}>
+                      style={{ ...Theme.ffLatoRegular13, }}>
                       {value ? value : '-'}
                     </_Text>
                   );
@@ -1275,13 +1300,25 @@ class ProductGrid extends Component {
   };
 
   LoadMoreData = () => {
-    this.setState({
-      page: this.state.page + 1,
-      clickedLoadMore: true,
-    },
-      () => this.LoadRandomData(),
-    );
-  };
+    const { productTotalcount } = this.props
+    const { gridData } = this.state
+
+    let count = productTotalcount.count
+
+
+    if (gridData.length !== count && gridData.length < count) {
+      this.setState({
+        page: this.state.page + 1,
+      },
+        () => this.LoadRandomData(),
+      );
+    }
+    else if (gridData.length === count || gridData.length > count) {
+      Toast.show({
+        text: 'No more products to show',
+      })
+    }
+  }
 
   LoadRandomData = () => {
     const { categoryData, page, fromExclusive } = this.state;
@@ -1709,10 +1746,10 @@ class ProductGrid extends Component {
             numColumns={2}
             keyExtractor={(item, index) => item.product_inventory_id.toString()}
             style={{ marginTop: hp(1) }}
-            //onEndReachedThreshold={0.3}
-            // onEndReached={() => this.LoadMoreData()}
-            ListFooterComponent={this.footer()}
-            ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsg)}
+            onEndReachedThreshold={0.4}
+            onEndReached={() => this.LoadMoreData()}
+            // ListFooterComponent={this.footer()}
+            ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsgGrid)}
           />
         )}
 
@@ -2161,6 +2198,7 @@ class ProductGrid extends Component {
             </Modal>
           </View>
         )}
+
       </SafeAreaView>
     );
   }
@@ -2254,8 +2292,8 @@ function mapStateToProps(state) {
     isFetching: state.productGridReducer.isFetching,
     error: state.productGridReducer.error,
     errorMsg: state.productGridReducer.errorMsg,
-    successProductGridVersion:
-      state.productGridReducer.successProductGridVersion,
+    errorMsgGrid: state.productGridReducer.errorMsgGrid,
+    successProductGridVersion: state.productGridReducer.successProductGridVersion,
     errorProductGridVersion: state.productGridReducer.errorProductGridVersion,
     productGridData: state.productGridReducer.productGridData,
 
@@ -2291,6 +2329,12 @@ function mapStateToProps(state) {
     successAllParameterVersion: state.homePageReducer.successAllParameterVersion,
     errorAllParamaterVersion: state.homePageReducer.errorAllParamaterVersion,
 
+
+    productTotalcount: state.productGridReducer.productTotalcount,
+    productTotalcountSuccessVersion: state.productGridReducer.productTotalcountSuccessVersion,
+    productTotalcountErrorVersion: state.productGridReducer.productTotalcountErrorVersion,
+
+
   };
 }
 
@@ -2305,6 +2349,8 @@ export default connect(
     addProductToCart,
     addRemoveProductFromCartByOne,
     getTotalCartCount,
+    getProductTotalCount,
+    allParameters
   },
 )(withNavigationFocus(ProductGrid));
 

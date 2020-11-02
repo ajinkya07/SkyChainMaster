@@ -1,4 +1,4 @@
-import React, {Component, createRef} from 'react';
+import React, { Component, createRef } from 'react';
 import {
   Text,
   View,
@@ -15,9 +15,9 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
 import _Container from '@container/_Container';
 import {
@@ -25,7 +25,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import _Text from '@text/_Text';
-import {color} from '@values/colors';
+import { color } from '@values/colors';
 
 import HomePage from '@homepage/HomePage';
 import AccountContainer from '@accountContainer/AccountContainer';
@@ -91,7 +91,7 @@ class Container extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <HomePage navigation={this.props.navigation} />
       </View>
     );
@@ -101,7 +101,7 @@ class Container extends React.Component {
 class CategoryScreen extends React.Component {
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <CategoryContainer navigation={this.props.navigation} />
       </View>
     );
@@ -111,7 +111,7 @@ class CategoryScreen extends React.Component {
 class CustomOrderScreen extends React.Component {
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Customizable navigation={this.props.navigation} />
       </View>
     );
@@ -121,7 +121,7 @@ class CustomOrderScreen extends React.Component {
 class CartScreen extends React.Component {
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <CartContainer navigation={this.props.navigation} />
       </View>
     );
@@ -131,7 +131,7 @@ class CartScreen extends React.Component {
 class AccountScreen extends React.Component {
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <AccountContainer navigation={this.props.navigation} />
       </View>
     );
@@ -148,7 +148,7 @@ export default function _Tabs() {
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        style: {height: Platform.OS === 'ios' ? hp(10) : hp(9)},
+        style: { height: Platform.OS === 'ios' ? hp(10) : hp(9) },
         activeTintColor: color.brandColor,
         inactiveTintColor: 'gray',
         labelStyle: {
@@ -159,25 +159,24 @@ export default function _Tabs() {
           top: 2,
         },
       }}
-      //barStyle={{ backgroundColor: '#EEF8F7', }}
-      barStyle={{backgroundColor: '#FFFFFF'}}>
+      barStyle={{ backgroundColor: '#FFFFFF' }}>
       <Tab.Screen
         name="Home"
         options={{
           tabBarLabel: 'Home',
           activeTintColor: color.brandColor,
-          tabBarIcon: ({color, size, focused}) => {
+          tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
               return (
                 <Image
-                  style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
+                  style={{ height: hp(3.5), width: hp(3.5), marginTop: -2 }}
                   source={require('../../assets/image/Tabs/home_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
-                  style={{height: hp(3), width: hp(3), marginTop: 3}}
+                  style={{ height: hp(3), width: hp(3), marginTop: 3 }}
                   source={require('../../assets/image/Tabs/home_lightgrey.png')}
                 />
               );
@@ -193,18 +192,18 @@ export default function _Tabs() {
           tabBarLabel: 'Category',
           activeTintColor: color.brandColor,
 
-          tabBarIcon: ({color, size, focused}) => {
+          tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
               return (
                 <Image
-                  style={{height: hp(3.2), width: hp(3.2), marginTop: -2}}
+                  style={{ height: hp(3.2), width: hp(3.2), marginTop: -2 }}
                   source={require('../../assets/image/Tabs/category_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
-                  style={{height: hp(2.5), width: hp(2.5), marginTop: 4}}
+                  style={{ height: hp(2.5), width: hp(2.5), marginTop: 4 }}
                   source={require('../../assets/image/Tabs/category_lightgrey.png')}
                 />
               );
@@ -222,25 +221,25 @@ export default function _Tabs() {
           // tabBarBadge: totalCartCount ? totalCartCount : 0,
           tabBarIcon: (props) => <BottomTabIcon {...props} />
 
-        //   tabBarIcon: ({color, size, focused}) => {
-        //     if (focused) {
-        //       return (
-        //         <Image
-        //           style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
-        //           source={require('../../assets/image/BlueIcons/Cart.png')}
-        //         />
-        //       );
-        //     } else {
-        //       return (
-        //         <Image
-        //           style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
-        //           source={require('../../assets/image/BlueIcons/Cart-White.png')}
-        //         />
-        //       );
-        //     }
-        //   },
-        
-      }}
+          //   tabBarIcon: ({color, size, focused}) => {
+          //     if (focused) {
+          //       return (
+          //         <Image
+          //           style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
+          //           source={require('../../assets/image/BlueIcons/Cart.png')}
+          //         />
+          //       );
+          //     } else {
+          //       return (
+          //         <Image
+          //           style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
+          //           source={require('../../assets/image/BlueIcons/Cart-White.png')}
+          //         />
+          //       );
+          //     }
+          //   },
+
+        }}
         component={CartScreen}
       />
 
@@ -249,18 +248,18 @@ export default function _Tabs() {
         options={{
           tabBarLabel: 'Customize',
           activeTintColor: color.brandColor,
-          tabBarIcon: ({color, size, focused}) => {
+          tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
               return (
                 <Image
-                  style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
+                  style={{ height: hp(3.5), width: hp(3.5), marginTop: -2 }}
                   source={require('../../assets/image/Tabs/customeorder_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
-                  style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
+                  style={{ height: hp(2.8), width: hp(2.8), marginTop: 3 }}
                   source={require('../../assets/image/Tabs/customorder_lightgrey.png')}
                 />
               );
@@ -275,18 +274,18 @@ export default function _Tabs() {
         options={{
           tabBarLabel: 'Account',
           activeTintColor: color.brandColor,
-          tabBarIcon: ({color, size, focused}) => {
+          tabBarIcon: ({ color, size, focused }) => {
             if (focused) {
               return (
                 <Image
-                  style={{height: hp(3.5), width: hp(3.5), marginTop: -2}}
+                  style={{ height: hp(3.5), width: hp(3.5), marginTop: -2 }}
                   source={require('../../assets/image/Tabs/profie_grey.png')}
                 />
               );
             } else {
               return (
                 <Image
-                  style={{height: hp(2.8), width: hp(2.8), marginTop: 3}}
+                  style={{ height: hp(2.8), width: hp(2.8), marginTop: 3 }}
                   source={require('../../assets/image/Tabs/profile_lightgrey.png')}
                 />
               );

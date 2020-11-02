@@ -258,28 +258,19 @@ class ProductDetails extends React.Component {
 
   renderScreen = (data, k) => {
     const { productDetailsStateData } = this.state;
-    let url2 =
-      urls.imageUrl +
-      (productDetailsStateData !== undefined &&
-        productDetailsStateData.zoom_image);
+    let url2 = urls.imageUrl + (productDetailsStateData !== undefined && productDetailsStateData.thumb_image);
+
+    let bannerUrl = urls.imageUrl + (productDetailsStateData !== undefined && productDetailsStateData.zoom_image);
 
     return (
       <TouchableOpacity
         onPress={() =>
           this.props.navigation.navigate('BannerImage', {
             bannerDataImagePath: productDetailsStateData,
-            baseUrl: url2,
+            baseUrl: bannerUrl,
           })
         }>
         <View key={k}>
-          {/* <FastImage
-            style={{height: hp(30), width: wp(100)}}
-            source={{
-              uri: url2 + data,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-          /> */}
-
           <Image
             source={{ uri: url2 + data }}
             resizeMode='stretch'
