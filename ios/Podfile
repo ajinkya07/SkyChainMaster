@@ -84,8 +84,9 @@ target 'SkyChains' do
   # https://firebase.google.com/docs/ios/setup#available-pods
 
   pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
- pod 'Firebase/Messaging'
+  pod 'Firebase/Messaging'
 	
+
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 

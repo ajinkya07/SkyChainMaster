@@ -8,9 +8,6 @@ import {
     Image, Platform, SafeAreaView,
     Dimensions, FlatList,
 } from 'react-native';
-import {
-    DatePicker, Footer
-} from "native-base";
 import moment from 'moment';
 
 import _CustomHeader from '@customHeader/_CustomHeader'
@@ -32,9 +29,9 @@ import FromDatePicker from './FromDatePicker'
 import ToDatePicker from './ToDatePicker'
 import FloatingLabelTextInput from '@floatingInputBox/FloatingLabelTextInput';
 import Theme from '../../../values/Theme';
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon2 from 'react-native-vector-icons/MaterialIcons'
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
-
+import { Icon } from 'native-base'
 
 const { width } = Dimensions.get('window');
 
@@ -293,15 +290,11 @@ class SearchScreen extends Component {
 
 
     setToDate = (newDate) => {
-        const { fromDate } = this.state
-
         this.setState({ toDate: newDate });
-
     }
 
     setFromDate = (newDate) => {
         this.setState({ fromDate: newDate });
-
     }
 
     onTextChanged = (inputKey, value) => {
@@ -421,7 +414,7 @@ class SearchScreen extends Component {
                 <TouchableOpacity onPress={() => this.karatModal()}>
                     <View style={{
                         marginTop: hp(1), flexDirection: 'row',
-                        justifyContent: 'space-between', width: wp(92),
+                        justifyContent: 'space-between', width: wp(91),
                     }}>
                         {!isOkKaratClicked &&
                             <_Text fsHeading textColor={'gray'} style={{ marginLeft: wp(3) }}>Select Melting:</_Text>
@@ -722,15 +715,14 @@ class SearchScreen extends Component {
 
                     <View style={{ paddingVertical: hp(1.5), }}>
                         {this.productReleaseDate()}
-
                     </View>
 
                     <View style={{ paddingVertical: hp(1), marginHorizontal: wp(3) }}>
                         <_Text fsHeading>Product Status:</_Text>
                         <Picker
-                            iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 25, }} />}
+                            iosIcon={<Icon name="arrow-down" type='FontAwesome' style={{ marginRight: hp(1.5), fontSize: 15, }} />}
                             mode="dropdown"
-                            style={{ height: 45, width: '70%', justifyContent: 'space-between', width: wp(95), marginTop: -5 }}
+                            style={{ height: 45, width: '70%', justifyContent: 'space-between', width: wp(93), marginTop: -5 }}
                             selectedValue={this.state.selectedStatus}
                             onValueChange={(value) => this.setSelectedStatus(value)
                             }>
@@ -748,24 +740,26 @@ class SearchScreen extends Component {
                     {/* <View style={{ paddingVertical: hp(0.5), }}>
                         {this.selectCategories()}
                     </View> */}
-                    <SectionedMultiSelect
-                        items={collection}
-                        IconRenderer={Icon}
-                        uniqueKey="id"
-                        subKey="children"
-                        selectText="Select categories"
-                        showDropDowns={true}
-                        readOnlyHeadings={true}
-                        onSelectedItemsChange={this.onSelectedItemsChange}
-                        onSelectedItemObjectsChange={this.onSelectedItemsChange2}
-                        selectedItems={this.state.selectedItems}
-                        modalWithSafeAreaView={true}
-                        subItemFontFamily={'Roboto'}
-                        onConfirm={this.onConfirmCategory}
-                        onCancel={this.onCancelCategory}
-                        showCancelButton={true}
-                        showRemoveAll={true}
-                    />
+                    <View style={{ paddingHorizontal: wp(2), }}>
+                        <SectionedMultiSelect
+                            items={collection}
+                            IconRenderer={Icon2}
+                            uniqueKey="id"
+                            subKey="children"
+                            selectText="Select categories"
+                            showDropDowns={true}
+                            readOnlyHeadings={true}
+                            onSelectedItemsChange={this.onSelectedItemsChange}
+                            onSelectedItemObjectsChange={this.onSelectedItemsChange2}
+                            selectedItems={this.state.selectedItems}
+                            modalWithSafeAreaView={true}
+                            subItemFontFamily={'Roboto'}
+                            onConfirm={this.onConfirmCategory}
+                            onCancel={this.onCancelCategory}
+                            showCancelButton={true}
+                            showRemoveAll={true}
+                        />
+                    </View>
 
                 </ScrollView>
 

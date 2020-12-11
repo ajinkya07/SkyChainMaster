@@ -1588,12 +1588,7 @@ class CartContainer extends Component {
                       Select Weight
                   </Text>
                     <Picker
-                      iosIcon={
-                        <Icon
-                          name="arrow-down"
-                          style={{ marginRight: hp(3), fontSize: 25 }}
-                        />
-                      }
+                      iosIcon={<Icon name="arrow-down" type='FontAwesome' style={{ marginRight: hp(3), fontSize: 15, }} />}
                       mode="dropdown"
                       style={{ marginLeft: 52, height: 45, width: '70%' }}
                       selectedValue={this.state.weight}
@@ -1668,7 +1663,6 @@ class CartContainer extends Component {
                     ios: -125,
                     android: 500,
                   })}
-                // style={{ flex: 1 }}
                 >
                   <View
                     style={[

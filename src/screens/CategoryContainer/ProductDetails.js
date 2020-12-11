@@ -271,11 +271,18 @@ class ProductDetails extends React.Component {
           })
         }>
         <View key={k}>
-          <Image
+          {/* <Image
             source={{ uri: url2 + data }}
             resizeMode='stretch'
-            style={{ height: hp(33), width: wp(100) }}
+            style={{ height: hp(36), width: wp(100) }}
             defaultSource={IconPack.APP_LOGO}
+          /> */}
+          <FastImage
+            style={{ height: hp(36), width: wp(100), backgroundColor: '#fff' }}
+            source={{
+              uri: url2 + data,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
           />
 
         </View>
@@ -287,7 +294,7 @@ class ProductDetails extends React.Component {
     return (
       <View
         style={{
-          height: hp(33),
+          height: hp(36),
           width: wp(100),
         }}>
         {item ? (
@@ -390,7 +397,7 @@ class ProductDetails extends React.Component {
     return (
       <View>
         <Picker
-          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22, }} />}
+          iosIcon={<Icon name="arrow-down" type='FontAwesome' style={{ marginRight: hp(3), fontSize: 15, }} />}
           mode="dropdown"
           style={{ height: 40, width: wp(55) }}
           selectedValue={karatValue}
@@ -421,7 +428,7 @@ class ProductDetails extends React.Component {
     return (
       <View>
         <Picker
-          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22 }} />}
+          iosIcon={<Icon name="arrow-down" type='FontAwesome' style={{ marginRight: hp(3), fontSize: 15, }} />}
           mode="dropdown"
           style={{ height: 50, width: wp(55) }}
           selectedValue={this.state.weight}
@@ -547,11 +554,6 @@ class ProductDetails extends React.Component {
               <SafeAreaView style={styles.safeAreaViewStyle} >
                 <View style={{ flex: 1 }}>
                   <View>
-                    {/* <Image
-                      source={{ uri: url + productDetailsStateData.image_name[0] }}
-                      style={{ width: '100%', height: hp(38) }}
-                      resizeMode='cover'
-                    /> */}
                     {this.carausalView(productDetailsStateData)}
                   </View>
 
@@ -560,7 +562,7 @@ class ProductDetails extends React.Component {
                       <View style={{ width: wp(73) }}>
                         <Text
                           style={{
-                            color: '#8a8a8a',
+                            color: '#fff',
                             ...Theme.ffLatoRegular18,
                             letterSpacing: 0.8,
                           }}>

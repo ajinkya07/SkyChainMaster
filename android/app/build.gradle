@@ -128,14 +128,24 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+   
     defaultConfig {
         applicationId "com.skychains"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.2"
         multiDexEnabled true
+    }
+     signingConfigs {
+        release {
+            if (project.hasProperty('MYAPP_UPLOAD_STORE_FILE')) {
+                storeFile file(MYAPP_UPLOAD_STORE_FILE)
+                storePassword MYAPP_UPLOAD_STORE_PASSWORD
+                keyAlias MYAPP_UPLOAD_KEY_ALIAS
+                keyPassword MYAPP_UPLOAD_KEY_PASSWORD
+            }
+        }
     }
     splits {
         abi {
@@ -163,6 +173,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 
@@ -220,15 +231,6 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:2.0.0'
     implementation 'com.facebook.fresco:animated-gif:2.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'  // <-- for webview
-
-    // implementation "com.google.firebase:firebase-messaging:20.1.5"
-    // implementation "com.google.android.gms:play-services-base:17.2.1"
-    // implementation "com.google.firebase:firebase-core:16.0.9"
-    // implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
-
-    //  compile(project(':react-native-firebase')) {   
-    //    transitive = false
-    //  }
 
 }
 

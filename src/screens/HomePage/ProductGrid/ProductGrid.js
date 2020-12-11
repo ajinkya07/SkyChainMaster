@@ -101,6 +101,8 @@ class ProductGrid extends Component {
       errorProductAddToCartPlusOneVersion: 0,
       productInventoryId: '',
       productInventoryId2: '',
+      productInventoryId3: '',
+
       isGrossWtSelected: true,
       successTotalCartCountVersion: 0,
       errorTotalCartCountVersion: 0,
@@ -143,6 +145,7 @@ class ProductGrid extends Component {
 
       this.props.getProductTotalCount(countData)
     }
+
     let data2 = new FormData();
     data2.append('collection_id', categoryData.id);
     data2.append('table', 'product_master');
@@ -352,6 +355,7 @@ class ProductGrid extends Component {
 
     const { categoryData, page, selectedSortById, gridData, fromExclusive } = this.state;
 
+    console.log("page", page);
 
     if (this.state.successProductGridVersion > prevState.successProductGridVersion) {
       if (productGridData.products && productGridData.products.length > 0) {
@@ -379,7 +383,6 @@ class ProductGrid extends Component {
 
         this.setState({
           gridData: array2,
-          // gridData: this.state.page === 0 ? filteredProductData.products : [...this.state.gridData, ...filteredProductData.products]
         });
       } else {
         this.showToast(strings.serverFailedMsg, 'danger');
@@ -413,14 +416,40 @@ class ProductGrid extends Component {
     }
 
     if (this.state.successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion) {
+      const { categoryData, page, fromExclusive } = this.state;
+      console.log('addProductToWishlistData', addProductToWishlistData);
       if (addProductToWishlistData.ack === '1') {
         Toast.show({
           text: addProductToWishlistData && addProductToWishlistData.msg,
           duration: 2500,
         });
 
+        var dex2 = this.state.gridData.findIndex(
+          item => item.product_inventory_id == this.state.productInventoryId3,
+        );
+
+        if (dex2 !== -1) {
+          if (addProductToWishlistData.data && addProductToWishlistData.data.quantity !== null) {
+            this.state.gridData[dex2].in_wishlist = parseInt(addProductToWishlistData.data.quantity);
+
+            this.setState({ in_wishlist: addProductToWishlistData.data.quantity },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          } else if (addProductToWishlistData.data == null) {
+            this.state.gridData[dex2].in_wishlist = parseInt(0);
+            this.setState({ in_wishlist: '0' },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          }
+
+        }
         this.setState({ selectedProducts: [], isSelectPressed: false })
         selectedProductIds = []
+
       }
     }
     if (this.state.errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion) {
@@ -476,9 +505,7 @@ class ProductGrid extends Component {
 
     if (this.state.successProductAddToCartPlusOneVersion > prevState.successProductAddToCartPlusOneVersion) {
       if (productAddToCartPlusOneData.ack === '1') {
-        // var Index = _.findIndex(this.state.gridData, {
-        //     product_inventory_id: parseInt(this.state.productInventoryId),
-        // });
+
         var Index = this.state.gridData.findIndex(
           item => item.product_inventory_id == this.state.productInventoryId,
         );
@@ -829,7 +856,6 @@ class ProductGrid extends Component {
         <View
           style={{
             backgroundColor: color.white,
-            //height: Platform.OS === 'android' ? hp(34) : hp(33.5),
             width: wp(46),
             marginHorizontal: hp(1),
             borderRadius: 15,
@@ -854,7 +880,7 @@ class ProductGrid extends Component {
               }
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'cover'}
+                resizeMode={'contain'}
                 style={gridImage}
                 defaultSource={IconPack.APP_LOGO}
                 source={{ uri: url + item.image_name }}
@@ -908,11 +934,18 @@ class ProductGrid extends Component {
                       ? this.selectProduct(item, item.product_inventory_id)
                       : this.addProductToWishlist(item)
                   }>
-                  <Image
-                    source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
+                  {item.in_wishlist == 0 ? <Image
+                    source={require('../../../assets/image/heart1.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
                   />
+                    : item.in_wishlist == 1 ?
+                      <Image
+                        source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
+                        style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
+                        resizeMode="contain"
+                      />
+                      : null}
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() =>
@@ -1069,6 +1102,9 @@ class ProductGrid extends Component {
 
     await this.props.addProductToWishlist(wishlistData);
 
+    this.setState({
+      productInventoryId3: item.product_inventory_id,
+    });
   };
 
 
@@ -1092,7 +1128,6 @@ class ProductGrid extends Component {
           item => selectedProductIds[i] == item.product_inventory_id
         );
 
-        console.warn("dd", dd);
         this.state.gridData[dd].isSelect = false;
 
       }
@@ -1153,7 +1188,6 @@ class ProductGrid extends Component {
           i => selectedProductIds[j] == i.product_inventory_id
         );
 
-        console.warn("cc", cc);
         this.state.gridData[cc].isSelect = false;
 
       }
@@ -1163,10 +1197,6 @@ class ProductGrid extends Component {
       cd.append('table', 'cart');
 
       await this.props.getTotalCartCount(cd);
-
-      // this.setState({
-      //   productInventoryId2: item.product_inventory_id,
-      // });
 
     }
     else if (selectedProductIds.length <= 0) {
@@ -1563,7 +1593,8 @@ class ProductGrid extends Component {
 
     const { sortByParamsData, filterParamsData, allParameterData } = this.props;
 
-    let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+    let imageUrl = urls.imageUrl + 'public/backend/product_images/small_image/'
+
 
     return (
 
@@ -1748,7 +1779,6 @@ class ProductGrid extends Component {
             style={{ marginTop: hp(1) }}
             onEndReachedThreshold={0.4}
             onEndReached={() => this.LoadMoreData()}
-            // ListFooterComponent={this.footer()}
             ListEmptyComponent={() => this.showNoDataFound(this.props.errorMsgGrid)}
           />
         )}
@@ -2171,7 +2201,7 @@ class ProductGrid extends Component {
                       width: wp(90),
                     }}
                   />
-                  <Image
+                  {/* <Image
                     source={{ uri: imageUrl + productImageToBeDisplayed.image_name }}
                     defaultSource={IconPack.APP_LOGO}
                     style={{
@@ -2180,8 +2210,8 @@ class ProductGrid extends Component {
                       marginTop: hp(0.5)
                     }}
                     resizeMode='stretch'
-                  />
-                  {/* <FastImage
+                  /> */}
+                  <FastImage
                     style={{
                       height: hp(34),
                       width: wp(90),
@@ -2190,9 +2220,9 @@ class ProductGrid extends Component {
                     source={{
                       uri: imageUrl + productImageToBeDisplayed.image_name,
                     }}
-                    resizeMode={FastImage.resizeMode.cover}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
-                   */}
+
                 </View>
               </SafeAreaView>
             </Modal>

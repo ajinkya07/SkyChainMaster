@@ -358,7 +358,7 @@ class Customizable extends Component {
     return (
       <View>
         <Picker
-          iosIcon={<Icon name="arrow-down" style={{ marginRight: hp(3), fontSize: 22, }} />}
+          iosIcon={<Icon name="arrow-down" type='FontAwesome' style={{ marginRight: hp(3), fontSize: 15, }} />}
           mode="dropdown"
           style={{ height: 40, width: wp(40) }}
           selectedValue={karatValue}

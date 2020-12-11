@@ -155,7 +155,7 @@ class AccountContainer extends Component {
 
   showAppVersion = () => {
     Toast.show({
-      text: 'App version:  ' + version,
+      text: 'App version:  ' + '1.0.2',
       duration: 5000,
     });
   };
@@ -322,7 +322,7 @@ class AccountContainer extends Component {
             <AccountRow
               title="Catalogue"
               icon={IconPack.EXCLUSIVE}
-              onPress={() => this.props.navigation.navigate('CustomWebview', { link: catalog, title: 'Catalog' })}
+              onPress={() => this.props.navigation.navigate('CustomWebview', { link: catalog, title: 'Catalogue' })}
             />
             <AccountRow
               title="About Us"

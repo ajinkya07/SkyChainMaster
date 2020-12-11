@@ -15,7 +15,6 @@ export default class FromDatePicker extends Component {
     super(props);
     this.state = {
       isDateTimePickerVisible: false,
-      // date:moment(new Date().toISOString().slice(0, 10)).format('DD-MM-YYYY')
     };
   }
 

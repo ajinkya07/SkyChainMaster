@@ -71,7 +71,7 @@ export default {
     // top: 1,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
-    borderRadius: 15,
+    // borderRadius: 15,
     alignItems: 'center',
     justifyContent: 'center',
   },

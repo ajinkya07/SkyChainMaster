@@ -54,6 +54,7 @@ class SearchProductGrid extends Component {
       gridData: [],
       page: 0,
       productInventoryId: '',
+      productInventoryId3: '',
       isProductImageModalVisibel: false,
       productImageToBeDisplayed: '',
       clickedLoadMore: false,
@@ -208,8 +209,6 @@ class SearchProductGrid extends Component {
   }
 
 
-
-
   async componentDidUpdate(prevProps, prevState) {
     const {
       productGridData,
@@ -237,12 +236,41 @@ class SearchProductGrid extends Component {
 
 
     if (this.state.successAddProductToWishlistVersion > prevState.successAddProductToWishlistVersion) {
+
       if (addProductToWishlistData.ack === '1') {
         Toast.show({
           text: addProductToWishlistData && addProductToWishlistData.msg,
           duration: 2500,
         });
+
+        var dex2 = this.state.gridData.findIndex(
+          item => item.product_inventory_id == this.state.productInventoryId3,
+        );
+
+        if (dex2 !== -1) {
+          if (addProductToWishlistData.data && addProductToWishlistData.data.quantity !== null) {
+            this.state.gridData[dex2].in_wishlist = parseInt(addProductToWishlistData.data.quantity);
+
+            this.setState({ in_wishlist: addProductToWishlistData.data.quantity },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          } else if (addProductToWishlistData.data == null) {
+            this.state.gridData[dex2].in_wishlist = parseInt(0);
+            this.setState({ in_wishlist: '0' },
+              () => {
+                console.log(JSON.stringify(this.state.gridData));
+              },
+            );
+          }
+
+        }
+        this.setState({ selectedProducts: [], isSelectPressed: false })
+        selectedProductIds = []
+
       }
+
     }
 
     if (this.state.errorAddProductToWishlistVersion > prevState.errorAddProductToWishlistVersion) {
@@ -411,14 +439,14 @@ class SearchProductGrid extends Component {
               }
               onLongPress={() => this.showProductImageModal(item)}>
               <Image
-                resizeMode={'cover'}
+                resizeMode={'contain'}
                 style={{
                   height: hp(18),
                   // width: null,
                   width: wp(46),
                   borderBottomLeftRadius: 0,
                   borderBottomRightRadius: 0,
-                  borderRadius: 15,
+                  // borderRadius: 15,
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
@@ -470,11 +498,23 @@ class SearchProductGrid extends Component {
               <View style={[iconView, { marginBottom: 10 }]}>
                 <TouchableOpacity
                   onPress={() => this.addProductToWishlist(item)}>
-                  <Image
+                  {/* <Image
                     source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
                     style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
                     resizeMode="contain"
+                  /> */}
+                  {item.in_wishlist == 0 ? <Image
+                    source={require('../../../assets/image/heart1.png')}
+                    style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
+                    resizeMode="contain"
                   />
+                    : item.in_wishlist == 1 ?
+                      <Image
+                        source={require('../../../assets/image/BlueIcons/Green-Heart.png')}
+                        style={{ height: hp(3.1), width: hp(3), marginTop: 2 }}
+                        resizeMode="contain"
+                      />
+                      : null}
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => this.addProductToCart(item)}>
                   <Image
@@ -534,6 +574,10 @@ class SearchProductGrid extends Component {
     wishlistData.append('product_inventory_table', 'product_master');
 
     await this.props.addProductToWishlist(wishlistData);
+
+    this.setState({
+      productInventoryId3: item.product_inventory_id,
+    });
 
   };
 
@@ -657,7 +701,6 @@ class SearchProductGrid extends Component {
 
     let count = productTotalcount.count
 
-    console.log("count sss", count);
 
     if (gridData.length !== count && gridData.length < count) {
       this.setState({
@@ -753,7 +796,7 @@ class SearchProductGrid extends Component {
   render() {
     const { gridData, productImageToBeDisplayed, isProductImageModalVisibel, fromCodeSearch } = this.state;
 
-    let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
+    let imageUrl = urls.imageUrl + 'public/backend/product_images/small_image/'
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#f3fcf9' }}>
@@ -834,7 +877,7 @@ class SearchProductGrid extends Component {
                       width: wp(90),
                     }}
                   />
-                  <Image
+                  {/* <Image
                     source={{ uri: imageUrl + productImageToBeDisplayed.image_name }}
                     defaultSource={IconPack.APP_LOGO}
                     style={{
@@ -843,9 +886,9 @@ class SearchProductGrid extends Component {
                       marginTop: hp(0.5),
                     }}
                     resizeMode='stretch'
-                  />
-                  {/* 
-                   <FastImage
+                  /> */}
+
+                  <FastImage
                     style={{
                       height: hp(34),
                       width: wp(90),
@@ -854,8 +897,8 @@ class SearchProductGrid extends Component {
                     source={{
                       uri: imageUrl + productImageToBeDisplayed.image_name,
                     }}
-                    resizeMode={FastImage.resizeMode.cover}
-                  /> */}
+                    resizeMode={FastImage.resizeMode.contain}
+                  />
                 </View>
               </SafeAreaView>
             </Modal>

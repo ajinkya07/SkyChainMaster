@@ -258,11 +258,15 @@ class HomePage extends Component {
     }
 
     if (this.state.successAddToWishlistVersion > prevState.successAddToWishlistVersion) {
+      console.log("addToWishlistData", addToWishlistData);
       if (addToWishlistData.ack === '1') {
         Toast.show({
           text: addToWishlistData && addToWishlistData.msg,
           duration: 2500,
         });
+
+        await this.getHomePage()
+
       }
     }
     if (this.state.errorAddToWishlistVersion > prevState.errorAddToWishlistVersion) {
@@ -271,8 +275,10 @@ class HomePage extends Component {
         type: 'danger',
         duration: 2500,
       });
+
     }
     if (this.state.successAddToCartVersion > prevState.successAddToCartVersion) {
+      console.log("addToCartData", addToCartData);
       if (addToCartData.ack === '1') {
         var inx;
         var i;
@@ -747,11 +753,19 @@ class HomePage extends Component {
                 <View style={iconView}>
                   <TouchableOpacity
                     onPress={() => this.addToWishlist(item)}>
-                    <Image
-                      source={require('../../assets/image/BlueIcons/Green-Heart.png')}
-                      style={{ height: hp(3), width: hp(3) }}
+                    {item.in_wish == 0 ? <Image
+                      source={require('../../assets/image/heart1.png')}
+                      style={{ height: hp(3), width: hp(3), top: 2 }}
                       resizeMode="contain"
                     />
+                      : item.in_wish == 1 ?
+                        <Image
+                          source={require('../../assets/image/BlueIcons/Green-Heart.png')}
+                          style={{ height: hp(3), width: hp(3) }}
+                          resizeMode="contain"
+                        />
+                        : null
+                    }
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => this.addToCart(item)}>
@@ -767,7 +781,6 @@ class HomePage extends Component {
               {item.in_cart > 0 &&
                 <View style={iconView}>
                   <TouchableOpacity
-                    // onPress={() => alert('inProgress')}
                     onPress={() => this.removeFromCartByOne(item)}>
                     <Image
                       source={require('../../assets/image/BlueIcons/Minus.png')}
@@ -782,7 +795,6 @@ class HomePage extends Component {
                   </_Text>
 
                   <TouchableOpacity
-                    // onPress={() => alert('inProgress')}
                     onPress={() => this.addToCartPlusOne(item)}>
                     <Image
                       source={require('../../assets/image/BlueIcons/Plus.png')}
@@ -950,6 +962,8 @@ class HomePage extends Component {
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     let userStatus = allParameterData && allParameterData.splash_popup && allParameterData.splash_popup[0]
+
+    console.log("homePageData", homePageData.final_collection);
 
     return (
       <View style={mainContainer}>
