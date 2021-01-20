@@ -26,8 +26,6 @@ class App extends React.Component {
     fcmService.registerAppWithFCM();
     fcmService.register(this.onRegister, this.onNotification, this.onOpenNotification);
     local.configure(this.onOpenNotification)
-
-
   };
 
   onRegister = (token) => {

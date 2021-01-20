@@ -258,7 +258,7 @@ class ProductDetails extends React.Component {
 
   renderScreen = (data, k) => {
     const { productDetailsStateData } = this.state;
-    let url2 = urls.imageUrl + (productDetailsStateData !== undefined && productDetailsStateData.thumb_image);
+    let url2 = urls.imageUrl + (productDetailsStateData !== undefined && productDetailsStateData.zoom_image);
 
     let bannerUrl = urls.imageUrl + (productDetailsStateData !== undefined && productDetailsStateData.zoom_image);
 
