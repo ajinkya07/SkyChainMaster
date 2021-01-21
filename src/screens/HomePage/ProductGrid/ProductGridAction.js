@@ -149,10 +149,12 @@ export function getfilterParameters(data) {
 
 
 export function applyFilterProducts(data) {
+  console.log("data==", data);
   return dispatch => {
     dispatch(showLoadingIndicator(FILTER_PRODUCT_DATA));
 
     axios.post(urls.ProductGrid.url, data, header).then(response => {
+      console.log("applyFilterProducts response.data", response.data);
       if (response.data.ack === '1') {
         dispatch(
           onSuccess(response.data, FILTER_PRODUCT_DATA_SUCCESS)

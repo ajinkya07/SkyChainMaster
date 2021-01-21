@@ -258,7 +258,6 @@ class HomePage extends Component {
     }
 
     if (this.state.successAddToWishlistVersion > prevState.successAddToWishlistVersion) {
-      console.log("addToWishlistData", addToWishlistData);
       if (addToWishlistData.ack === '1') {
         Toast.show({
           text: addToWishlistData && addToWishlistData.msg,
@@ -278,7 +277,6 @@ class HomePage extends Component {
 
     }
     if (this.state.successAddToCartVersion > prevState.successAddToCartVersion) {
-      console.log("addToCartData", addToCartData);
       if (addToCartData.ack === '1') {
         var inx;
         var i;
@@ -962,8 +960,6 @@ class HomePage extends Component {
     let imageUrl = urls.imageUrl + 'public/backend/product_images/zoom_image/'
 
     let userStatus = allParameterData && allParameterData.splash_popup && allParameterData.splash_popup[0]
-
-    console.log("homePageData", homePageData.final_collection);
 
     return (
       <View style={mainContainer}>

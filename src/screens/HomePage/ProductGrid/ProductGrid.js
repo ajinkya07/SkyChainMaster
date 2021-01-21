@@ -377,7 +377,6 @@ class ProductGrid extends Component {
       fromExclusive,
     } = this.state;
 
-    console.log('page', page);
 
     if (
       this.state.successProductGridVersion > prevState.successProductGridVersion
