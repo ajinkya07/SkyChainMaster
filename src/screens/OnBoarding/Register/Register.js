@@ -307,7 +307,7 @@ class Register extends React.Component {
                     value={organisation ? organisation : null}
                     type="organisation"
                     inputKey="organisation"
-                    placeholder="Organisation"
+                    placeholder="Company"
                     maxLength={100}
                     minLength={3}
                     onChangeText={this.onInputChanged}

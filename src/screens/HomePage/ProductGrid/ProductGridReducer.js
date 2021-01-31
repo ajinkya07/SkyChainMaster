@@ -39,6 +39,8 @@ import {
   PRODUCT_TOTAL_COUNT_ERROR,
   PRODUCT_TOTAL_COUNT_SUCCESS,
 
+  FILTERED_TOTAL_COUNT_ERROR,
+  FILTERED_TOTAL_COUNT_SUCCESS
 
 } from "@redux/types";
 
@@ -78,7 +80,11 @@ const initialState = {
 
   productTotalcount: '',
   productTotalcountSuccessVersion: 0,
-  productTotalcountErrorVersion: 0
+  productTotalcountErrorVersion: 0,
+
+  filteredTotalcount: '',
+  filteredTotalcountSuccessVersion: 0,
+  filteredTotalcountErrorVersion: 0
 
 };
 
@@ -307,6 +313,25 @@ export default function dataReducer(state = initialState, action) {
         productTotalcountErrorVersion: ++state.productTotalcountErrorVersion
       };
 
+
+    case FILTERED_TOTAL_COUNT_SUCCESS:
+      return {
+        ...state,
+        errorMsg: "",
+        isFetching: false,
+        filteredTotalcount: action.data,
+        filteredTotalcountSuccessVersion: ++state.filteredTotalcountSuccessVersion,
+        error: false
+      };
+
+    case FILTERED_TOTAL_COUNT_ERROR:
+      return {
+        ...state,
+        isFetching: false,
+        error: true,
+        errorMsg: action.error,
+        filteredTotalcountErrorVersion: ++state.filteredTotalcountErrorVersion
+      };
 
 
     default:

@@ -102,8 +102,6 @@ class Scene extends React.Component {
     const { allParameterData } = this.props;
     const { isLoginValue } = this.state;
 
-    console.log("componentDidUpdate", allParameterData.user_status);
-
     if (this.state.successAllParameterVersion > prevState.successAllParameterVersion) {
 
       const stat = allParameterData && allParameterData.user_status

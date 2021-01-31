@@ -29,13 +29,11 @@ class App extends React.Component {
   };
 
   onRegister = (token) => {
-    console.warn("[App] Token", token);
     AsyncStorage.setItem('fcmToken', token)
   }
 
 
   onNotification = (notify) => {
-    console.warn("[App] onNotification", notify);
     const options = {
       soundName: 'default',
       playSound: true,
@@ -71,3 +69,5 @@ class App extends React.Component {
 
 export default App;
 
+// support@ptron.in
+// 9555245245

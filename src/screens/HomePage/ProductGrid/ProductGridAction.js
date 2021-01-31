@@ -36,8 +36,10 @@ import {
 
   PRODUCT_TOTAL_COUNT_ERROR,
   PRODUCT_TOTAL_COUNT_SUCCESS,
-  PRODUCT_TOTAL_COUNT
+  PRODUCT_TOTAL_COUNT,
 
+  FILTERED_TOTAL_COUNT_ERROR,
+  FILTERED_TOTAL_COUNT_SUCCESS
 } from "@redux/types";
 
 import { strings } from '@values/strings'
@@ -149,7 +151,6 @@ export function getfilterParameters(data) {
 
 
 export function applyFilterProducts(data) {
-  console.log("data==", data);
   return dispatch => {
     dispatch(showLoadingIndicator(FILTER_PRODUCT_DATA));
 
@@ -249,15 +250,11 @@ export function addRemoveProductFromCartByOne(data) {
 }
 
 
-
-
 export function getProductTotalCount(data) {
   return dispatch => {
     axios.post(urls.ProductGridCount.url, data, header).then(response => {
       if (response.data.ack === '1') {
-        dispatch(
-          onSuccess(response.data.data, PRODUCT_TOTAL_COUNT_SUCCESS)
-        )
+        dispatch(onSuccess(response.data.data, PRODUCT_TOTAL_COUNT_SUCCESS))
       }
       else {
         dispatch(
@@ -269,6 +266,23 @@ export function getProductTotalCount(data) {
         dispatch(
           onFailure(strings.serverFailedMsg, PRODUCT_TOTAL_COUNT_ERROR)
         );
+      });
+  }
+}
+
+export function getTotalFilteredCount(data) {
+  return dispatch => {
+    axios.post(urls.TotalFilteredCount.url, data, header).then(response => {
+      if (response.data.ack === '1') {
+        console.log("response.data.ack", response.data);
+        dispatch(onSuccess(response.data.data, FILTERED_TOTAL_COUNT_SUCCESS))
+      }
+      else {
+        dispatch(onFailure(response.data.msg, FILTERED_TOTAL_COUNT_ERROR))
+      }
+    })
+      .catch(function (error) {
+        dispatch(onFailure(strings.serverFailedMsg, FILTERED_TOTAL_COUNT_ERROR));
       });
   }
 }

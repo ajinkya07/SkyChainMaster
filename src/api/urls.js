@@ -2,12 +2,12 @@
 
 var url = "http://skychain.jewelmarts.in/webservices/"
 
+// http://vchains.jewelmarts.in/webservices/Push_notification_test?mobile_number=8446116325&title=first%20notification&subtitle=ok%20last
 export const urls = {
 
     baseUrl: "http://skychain.jewelmarts.in/webservices/",
 
     imageUrl: "http://skychain.jewelmarts.in/",
-
 
     Login: {
         url: url + "User_registration/userLogin",
@@ -134,5 +134,7 @@ export const urls = {
     sendFCMToken: {
         url: url + 'Worker/send_gcm'
     },
-
+    TotalFilteredCount: {
+        url: url + "Products_Count"
+    }
 }
