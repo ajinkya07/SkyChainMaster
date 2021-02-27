@@ -1019,12 +1019,8 @@ class HomePage extends Component {
 
           {collection && collection.length > 0 &&
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View
-                style={{
-                  paddingLeft: Platform.OS === 'ios' ? hp(2.2) : hp(1), flexDirection: 'row',
-                }}>
-                {collection &&
-                  collection.map((item, i) => this.getCategoryDesigns(item, i))}
+              <View style={{ paddingLeft: Platform.OS === 'ios' ? hp(2.2) : hp(1), flexDirection: 'row', }}>
+                {collection && collection.map((item, i) => this.getCategoryDesigns(item, i))}
               </View>
             </ScrollView>
           }
